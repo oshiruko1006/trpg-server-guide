@@ -82,5 +82,12 @@ collections:
         widget: select
         options: ["1～4時間", "5～8時間", "9～15時間", "16～20時間", "21時間～"]
       - {label: タグ, name: tags, widget: list, required: false, field: {label: タグ名, name: tag, widget: string}, hint: 追加ボタンで自由に登録}
+      - label: シナリオトレーラー画像
+        name: trailers
+        widget: list
+        required: false
+        summary: "{{fields.image}}"
+        hint: 画像を追加するとカード表示と詳細ページに表示されます。複数枚登録可能で、1枚目が一覧の表紙になります。
+        field: {label: トレーラー画像, name: image, widget: image, allow_multiple: false}
       - {label: あらすじ, name: summary, widget: markdown}
       - {label: 公開する, name: published, widget: boolean, default: false}
