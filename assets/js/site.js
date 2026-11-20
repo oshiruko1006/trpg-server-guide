@@ -39,6 +39,7 @@ function markdown(value) {
 }
 const textBlock = value => `<p class="preserve-lines">${esc(value)}</p>`;
 const sectionCard = (section,i) => `<section class="rule-card"><div class="rule-number">RULE ${String(i+1).padStart(2,'0')}</div><h2>${esc(section.heading)}</h2><div class="rich-text">${markdown(section.body)}</div></section>`;
+const allTags = s => [...new Set([...(Array.isArray(s.tags)?s.tags:[]),...(Array.isArray(s.custom_tags)?s.custom_tags:[])].map(t=>typeof t==='string'?t:t?.tag).filter(Boolean))];
 const tagsHtml = tags => (Array.isArray(tags)?tags:[]).map(t=>`<span class="tag">${esc(typeof t==='string'?t:t?.tag)}</span>`).join(' ');
 const info = s => [s.system,s.players,s.duration,s.age_rating].filter(Boolean).map(esc).join(' ・ ');
 // Only accept local image paths or secure remote URLs; never interpolate arbitrary schemes.
@@ -56,7 +57,7 @@ const trailerThumb = (s, cls='') => {
   return src ? `<div class="scenario-cover ${cls}"><img src="${esc(src)}" alt="${esc(s.title)}のトレーラー" loading="lazy"></div>`
     : `<div class="scenario-cover scenario-cover-empty ${cls}" aria-hidden="true"><span>NO TRAILER</span></div>`;
 };
-const scenarioCard = (s, view) => `<article class="scenario scenario-entry scenario-${view}"><a class="scenario-entry-link" href="/scenario/${encodeURIComponent(s.slug)}/">${trailerThumb(s)}<div class="scenario-entry-body"><h2>${esc(s.title)}</h2><p class="muted">${info(s)}</p><div class="scenario-tags">${tagsHtml(s.tags)}</div>${view==='list'?`<p class="scenario-excerpt">${esc(String(s.summary||'').replace(/[#*_`~\[\]]/g,'').slice(0,115))}</p>`:''}</div></a></article>`;
+const scenarioCard = (s, view) => `<article class="scenario scenario-entry scenario-${view}"><a class="scenario-entry-link" href="/scenario/${encodeURIComponent(s.slug)}/">${trailerThumb(s)}<div class="scenario-entry-body"><h2>${esc(s.title)}</h2><p class="muted">${info(s)}</p><div class="scenario-tags">${tagsHtml(allTags(s))}</div>${view==='list'?`<p class="scenario-excerpt">${esc(String(s.summary||'').replace(/[#*_`~\[\]]/g,'').slice(0,115))}</p>`:''}</div></a></article>`;
 
 fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(d=>{
   if(page==='home'){
@@ -87,7 +88,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     const gallery = images.length ? `<div class="scenario-gallery">${images.map((src,i)=>`<button class="trailer-open" type="button" data-index="${i}" aria-label="トレーラー画像${i+1}を拡大"><img src="${esc(src)}" alt="${esc(s.title)}のトレーラー ${i+1}" loading="lazy"></button>`).join('')}</div>` : '';
     const block = (heading,body) => String(body||'').trim()?`<section class="scenario-detail-block"><h2>${esc(heading)}</h2><div class="rich-text">${markdown(body)}</div></section>`:'';
     const extras = Array.isArray(s.extra_sections)?s.extra_sections:[];
-    el.innerHTML=`<a href="/scenario/">← SCENARIO一覧へ</a><div class="scenario-detail-head"><span class="scenario-eyebrow">SCENARIO</span><h1>${esc(s.title)}</h1><p class="scenario-detail-info">${info(s)}</p><div class="scenario-tags">${tagsHtml(s.tags)}</div></div>${gallery}${block('あらすじ',s.summary)}${block('概要',s.overview)}${block('注意事項',s.cautions)}${extras.map(x=>block(x.heading||'',x.body)).join('')}`;
+    el.innerHTML=`<a href="/scenario/">← SCENARIO一覧へ</a><div class="scenario-detail-head"><span class="scenario-eyebrow">SCENARIO</span><h1>${esc(s.title)}</h1><p class="scenario-detail-info">${info(s)}</p><div class="scenario-tags">${tagsHtml(allTags(s))}</div></div>${gallery}${block('あらすじ',s.summary)}${block('概要',s.overview)}${block('注意事項',s.cautions)}${extras.map(x=>block(x.heading||'',x.body)).join('')}`;
     if(images.length){
       const overlay=document.createElement('div');overlay.className='trailer-lightbox';overlay.hidden=true;
       overlay.innerHTML='<div class="lightbox-top"><span class="lightbox-counter"></span><button type="button" class="lightbox-close" aria-label="閉じる">×</button></div><button type="button" class="lightbox-prev" aria-label="前の画像">‹</button><img class="lightbox-image" alt="拡大トレーラー"><button type="button" class="lightbox-next" aria-label="次の画像">›</button>';
@@ -106,7 +107,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
   if(page==='scenario'){
     const options=(key)=>[...new Set(d.map(s=>s[key]).filter(Boolean))];
     const select=(id,label,values)=>`<label class="filter-label">${label}<select id="${id}"><option value="">すべて</option>${values.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select></label>`;
-    const allTags=[...new Set(d.flatMap(s=>(Array.isArray(s.tags)?s.tags:[]).map(t=>typeof t==='string'?t:t?.tag).filter(Boolean)))].sort((a,b)=>a.localeCompare(b,'ja'));
+    const allTags=[...new Set(d.flatMap(s=>allTags(s)))].sort((a,b)=>a.localeCompare(b,'ja'));
     el.innerHTML=`<h1>回せるシナリオ</h1><div class="scenario-filters"><div class="scenario-keyword-wrap"><label class="filter-label" for="query">キーワード<input id="query" placeholder="タイトル・読み仮名・タグで検索" aria-label="シナリオ検索" autocomplete="off"></label><div id="tag-panel" class="tag-panel" hidden><div class="tag-panel-heading"><strong>タグを選択（AND検索）</strong><button type="button" id="clear-tags">選択解除</button></div><div class="tag-choices">${allTags.map((tag,i)=>`<button type="button" class="tag-choice" data-tag-index="${i}" aria-pressed="false">${esc(tag)}</button>`).join('')||'<span>登録済みタグはありません</span>'}</div></div></div>${select('players','プレイ人数',['フリー','タイマン','1PL','2PL','3PL','4PL','5PL以上'])}${select('duration','プレイ時間',['1～4時間','5～8時間','9～15時間','16～20時間','21時間～'])}${select('system','システム',['CoC6版','CoC7版'])}${select('age_rating','対象年齢',['全年齢','R-15','R-18'])}</div><div class="scenario-toolbar"><span id="result-count" aria-live="polite"></span><div class="scenario-view-toggle" role="group" aria-label="表示形式"><button type="button" data-view="card" aria-pressed="true">▦ カード</button><button type="button" data-view="list" aria-pressed="false">☷ リスト</button></div></div><div id="results" class="scenario-results view-card"></div>`;
     const selectedTags=new Set();
     const panel=document.getElementById('tag-panel'),query=document.getElementById('query');
@@ -119,7 +120,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     const render=()=>{
       const q=document.getElementById('query').value.trim().toLocaleLowerCase();
       const players=document.getElementById('players').value,duration=document.getElementById('duration').value,system=document.getElementById('system').value,ageRating=document.getElementById('age_rating').value;
-      const items=d.filter(s=>{const tags=(Array.isArray(s.tags)?s.tags:[]).map(t=>typeof t==='string'?t:t?.tag).filter(Boolean);return [s.title,s.reading,s.system,s.summary,s.overview,s.cautions,...tags].join(' ').toLocaleLowerCase().includes(q)&&[...selectedTags].every(t=>tags.includes(t))&&(!players||s.players===players)&&(!duration||s.duration===duration)&&(!system||s.system===system)&&(!ageRating||(s.age_rating||'全年齢')===ageRating);});
+      const items=d.filter(s=>{const tags=allTags(s);return [s.title,s.reading,s.system,s.summary,s.overview,s.cautions,...tags].join(' ').toLocaleLowerCase().includes(q)&&[...selectedTags].every(t=>tags.includes(t))&&(!players||s.players===players)&&(!duration||s.duration===duration)&&(!system||s.system===system)&&(!ageRating||(s.age_rating||'全年齢')===ageRating);});
       items.sort((a,b)=>(a.reading||a.title).localeCompare(b.reading||b.title,'ja'));
       const results=document.getElementById('results');
       results.className=`scenario-results view-${view}`;
