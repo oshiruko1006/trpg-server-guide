@@ -35,7 +35,7 @@ function markdown(value) {
     }
     const boxStart=line.trim().match(/^:::(mint|sand|rose)$/);
     if(boxStart){flushP();flushL();boxTone=boxStart[1];continue;}
-    if(!line.trim()){flushP();flushL();continue;}
+    if(!line.trim()){flushP();flushL();result += '<div class="markdown-blank-line" style="height:1em" aria-hidden="true"></div>';continue;}
     const heading = line.match(/^\s{0,3}(#{1,4})\s+(.+)$/);
     const bullet = line.match(/^\s*[-*+]\s+(.+)$/);
     const number = line.match(/^\s*\d+[.)]\s+(.+)$/);
