@@ -83,15 +83,32 @@ collections:
     - label: 受付状況の説明
       name: status_message
       widget: text
-    - label: 依頼ルール
-      name: rules
-      widget: markdown
-    - label: 依頼手順
-      name: steps
+    - label: KP依頼について
+      name: kp_about
       widget: text
-    - label: コピー用テンプレート
+      required: false
+      hint: 改行を保持し、Markdown記法も公開ページに反映します
+    - label: 注意事項
+      name: notices
+      widget: text
+      required: false
+    - label: 依頼テンプレート（コピー可能）
       name: template
       widget: text
+      required: false
+    - label: 自由追加ブロック
+      name: extra_sections
+      widget: list
+      required: false
+      summary: '{{fields.heading}}'
+      fields:
+      - label: 題目
+        name: heading
+        widget: string
+      - label: 本文
+        name: body
+        widget: text
+        required: false
     - label: Discordリンク
       name: discord_url
       widget: string
@@ -138,11 +155,10 @@ collections:
     name: duration
     widget: select
     options:
-    - 1～4時間
-    - 5～8時間
-    - 9～15時間
-    - 16～20時間
-    - 21時間～
+    - 短編
+    - 中編
+    - 長編
+    - 超長編
   - label: 対象年齢
     name: age_rating
     widget: select
@@ -156,7 +172,6 @@ collections:
     name: tags
     widget: vanilla_tags
     required: false
-    # プリセットタグは admin/tag-widget.js で管理します
     options:
     - 低ロス
     - 中ロス
@@ -166,8 +181,8 @@ collections:
     - RP中心
     - クラシック
     - 探索中心
-    - 戦闘あり
-    - 謎解き
+    - 戦闘有
+    - 謎解き有
     - ホラー
     - エモ
     - ギャグ
@@ -179,6 +194,13 @@ collections:
     - 新規限定
     - 継続可
     - PvP有
+    - エロ
+    - エログロ
+    - インモラル
+    - 近親相姦
+    - バディ
+    - SAN値回復
+    - ロスト救済
     hint: ボタンで複数選択できます。下の入力欄から自由タグも追加できます。
   - label: 自由追加タグ（任意）
     name: custom_tags
