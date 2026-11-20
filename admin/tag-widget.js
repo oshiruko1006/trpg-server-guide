@@ -42,5 +42,5 @@
       );
     }
   }
-  CMS.registerWidget('vanilla_tags',Widget);
+  window.CMS.registerWidget('vanilla_tags', Widget);
 })();
