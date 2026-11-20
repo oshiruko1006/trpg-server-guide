@@ -87,7 +87,7 @@ const scenarioCard = (s, view) => `<article class="scenario scenario-entry scena
 fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(d=>{
   if(page==='home'){
     const sections = d.sections || (d.rules?[{heading:'ルール',body:d.rules}]:[]);
-    el.innerHTML = `<h1 class="home-title">${esc(d.title)}</h1>${d.intro?`<section class="intro-card">${textBlock(d.intro)}</section>`:''}<div class="rule-list">${sections.map(sectionCard).join('')}</div>`;
+    el.innerHTML = `${d.intro?`<section class="intro-card">${textBlock(d.intro)}</section>`:''}<div class="rule-list">${sections.map(sectionCard).join('')}</div>`;
   }
   if(page==='character'){
     const systems = d.systems || [];
