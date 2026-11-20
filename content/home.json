@@ -1,6 +1,10 @@
 {
-  "title": "TRPG SERVER GUIDE",
+  "title": "聖バニラ教会",
   "intro": "TRPG Discordサーバーのご案内です。",
-  "notice": "お知らせは管理画面から編集できます。",
-  "rules": "参加前にサーバールールをご確認ください。"
+  "sections": [
+    {
+      "heading": "サーバールール",
+      "body": "参加前にサーバールールをご確認ください。"
+    }
+  ]
 }
