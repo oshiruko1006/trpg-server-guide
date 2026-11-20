@@ -23,27 +23,31 @@
   }
 }
 
-/* Stage A: editor toolbar only. Do not change SplitPane, Pane, EditorContainer,
-   AppMainContainer, height, position or scrolling. */
+/* Collection list ONLY: stack the sidebar and entries on narrow screens.
+   This intentionally avoids editor/toolbar/split-pane rules. */
 @media screen and (max-width: 767px) {
-  [class*="ToolbarContainer"] {
-    min-width: 0 !important;
+  [class*="AppMainContainer"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  [class*="AppMainContainer"] > * {
+    flex: 0 0 auto !important;
     width: 100% !important;
     max-width: 100% !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    gap: 6px !important;
-    height: auto !important;
-  }
-  [class*="ToolbarContainer"] [class*="ToolbarSectionMain"],
-  [class*="ToolbarContainer"] [class*="ToolbarSubSection"] {
     min-width: 0 !important;
-    flex-wrap: wrap !important;
-    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
-  [class*="ToolbarContainer"] button {
-    white-space: normal !important;
+  [class*="AppMainContainer"] * {
+    overflow-wrap: break-word;
+  }
+  [class*="AppMainContainer"] h1,
+  [class*="AppMainContainer"] h2,
+  [class*="AppMainContainer"] h3 {
+    word-break: normal !important;
+    overflow-wrap: anywhere !important;
   }
 }
