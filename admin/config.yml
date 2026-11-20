@@ -30,6 +30,11 @@ collections:
       - label: 題目
         name: heading
         widget: string
+      - label: 英語見出し（任意）
+        name: heading_en
+        widget: string
+        required: false
+        hint: 例：COMBAT RULES。未入力なら日本語のみ表示（既存の題目は従来の英語を維持）
       - label: 本文
         name: body
         widget: vanilla_markdown
@@ -60,6 +65,11 @@ collections:
         - label: 題目
           name: heading
           widget: string
+        - label: 英語見出し（任意）
+          name: heading_en
+          widget: string
+          required: false
+          hint: 例：COMBAT RULES。未入力なら日本語のみ表示（既存の題目は従来の英語を維持）
         - label: 本文
           name: body
           widget: vanilla_markdown
@@ -105,6 +115,11 @@ collections:
       - label: 題目
         name: heading
         widget: string
+      - label: 英語見出し（任意）
+        name: heading_en
+        widget: string
+        required: false
+        hint: 例：COMBAT RULES。未入力なら日本語のみ表示（既存の題目は従来の英語を維持）
       - label: 本文
         name: body
         widget: vanilla_markdown
@@ -286,7 +301,9 @@ collections:
     - label: URL
       name: url
       widget: string
-      pattern: ['^https://.+', 'https://から始まるURLを入力してください']
+      pattern:
+      - ^https://.+
+      - https://から始まるURLを入力してください
   - label: 公開する
     name: published
     widget: boolean
