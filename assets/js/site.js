@@ -40,7 +40,7 @@ function markdown(value) {
 const textBlock = value => `<p class="preserve-lines">${esc(value)}</p>`;
 const sectionCard = (section,i) => `<section class="rule-card"><div class="rule-number">RULE ${String(i+1).padStart(2,'0')}</div><h2>${esc(section.heading)}</h2><div class="rich-text">${markdown(section.body)}</div></section>`;
 const tagsHtml = tags => (Array.isArray(tags)?tags:[]).map(t=>`<span class="tag">${esc(typeof t==='string'?t:t?.tag)}</span>`).join(' ');
-const info = s => [s.system,s.players,s.duration].filter(Boolean).map(esc).join(' ・ ');
+const info = s => [s.system,s.players,s.duration,s.age_rating].filter(Boolean).map(esc).join(' ・ ');
 // Only accept local image paths or secure remote URLs; never interpolate arbitrary schemes.
 const imageUrl = value => {
   const v = String(value ?? '').trim();
@@ -107,7 +107,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     const options=(key)=>[...new Set(d.map(s=>s[key]).filter(Boolean))];
     const select=(id,label,values)=>`<label class="filter-label">${label}<select id="${id}"><option value="">すべて</option>${values.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select></label>`;
     const allTags=[...new Set(d.flatMap(s=>(Array.isArray(s.tags)?s.tags:[]).map(t=>typeof t==='string'?t:t?.tag).filter(Boolean)))].sort((a,b)=>a.localeCompare(b,'ja'));
-    el.innerHTML=`<h1>回せるシナリオ</h1><div class="scenario-filters"><div class="scenario-keyword-wrap"><label class="filter-label" for="query">キーワード<input id="query" placeholder="タイトル・読み仮名・タグで検索" aria-label="シナリオ検索" autocomplete="off"></label><div id="tag-panel" class="tag-panel" hidden><div class="tag-panel-heading"><strong>タグを選択（AND検索）</strong><button type="button" id="clear-tags">選択解除</button></div><div class="tag-choices">${allTags.map((tag,i)=>`<button type="button" class="tag-choice" data-tag-index="${i}" aria-pressed="false">${esc(tag)}</button>`).join('')||'<span>登録済みタグはありません</span>'}</div></div></div>${select('players','プレイ人数',['フリー','タイマン','1PL','2PL','3PL','4PL','5PL以上'])}${select('duration','プレイ時間',['1～4時間','5～8時間','9～15時間','16～20時間','21時間～'])}${select('system','システム',['CoC6版','CoC7版'])}</div><div class="scenario-toolbar"><span id="result-count" aria-live="polite"></span><div class="scenario-view-toggle" role="group" aria-label="表示形式"><button type="button" data-view="card" aria-pressed="true">▦ カード</button><button type="button" data-view="list" aria-pressed="false">☷ リスト</button></div></div><div id="results" class="scenario-results view-card"></div>`;
+    el.innerHTML=`<h1>回せるシナリオ</h1><div class="scenario-filters"><div class="scenario-keyword-wrap"><label class="filter-label" for="query">キーワード<input id="query" placeholder="タイトル・読み仮名・タグで検索" aria-label="シナリオ検索" autocomplete="off"></label><div id="tag-panel" class="tag-panel" hidden><div class="tag-panel-heading"><strong>タグを選択（AND検索）</strong><button type="button" id="clear-tags">選択解除</button></div><div class="tag-choices">${allTags.map((tag,i)=>`<button type="button" class="tag-choice" data-tag-index="${i}" aria-pressed="false">${esc(tag)}</button>`).join('')||'<span>登録済みタグはありません</span>'}</div></div></div>${select('players','プレイ人数',['フリー','タイマン','1PL','2PL','3PL','4PL','5PL以上'])}${select('duration','プレイ時間',['1～4時間','5～8時間','9～15時間','16～20時間','21時間～'])}${select('system','システム',['CoC6版','CoC7版'])}${select('age_rating','対象年齢',['全年齢','R-15','R-18'])}</div><div class="scenario-toolbar"><span id="result-count" aria-live="polite"></span><div class="scenario-view-toggle" role="group" aria-label="表示形式"><button type="button" data-view="card" aria-pressed="true">▦ カード</button><button type="button" data-view="list" aria-pressed="false">☷ リスト</button></div></div><div id="results" class="scenario-results view-card"></div>`;
     const selectedTags=new Set();
     const panel=document.getElementById('tag-panel'),query=document.getElementById('query');
     query.addEventListener('focus',()=>{panel.hidden=false;});
@@ -118,8 +118,8 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     try { if(localStorage.getItem('vanilla-scenario-view')==='list') view='list'; } catch (_) {}
     const render=()=>{
       const q=document.getElementById('query').value.trim().toLocaleLowerCase();
-      const players=document.getElementById('players').value,duration=document.getElementById('duration').value,system=document.getElementById('system').value;
-      const items=d.filter(s=>{const tags=(Array.isArray(s.tags)?s.tags:[]).map(t=>typeof t==='string'?t:t?.tag).filter(Boolean);return [s.title,s.reading,s.system,s.summary,s.overview,s.cautions,...tags].join(' ').toLocaleLowerCase().includes(q)&&[...selectedTags].every(t=>tags.includes(t))&&(!players||s.players===players)&&(!duration||s.duration===duration)&&(!system||s.system===system);});
+      const players=document.getElementById('players').value,duration=document.getElementById('duration').value,system=document.getElementById('system').value,ageRating=document.getElementById('age_rating').value;
+      const items=d.filter(s=>{const tags=(Array.isArray(s.tags)?s.tags:[]).map(t=>typeof t==='string'?t:t?.tag).filter(Boolean);return [s.title,s.reading,s.system,s.summary,s.overview,s.cautions,...tags].join(' ').toLocaleLowerCase().includes(q)&&[...selectedTags].every(t=>tags.includes(t))&&(!players||s.players===players)&&(!duration||s.duration===duration)&&(!system||s.system===system)&&(!ageRating||(s.age_rating||'全年齢')===ageRating);});
       items.sort((a,b)=>(a.reading||a.title).localeCompare(b.reading||b.title,'ja'));
       const results=document.getElementById('results');
       results.className=`scenario-results view-${view}`;
