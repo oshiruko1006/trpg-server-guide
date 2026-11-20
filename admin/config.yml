@@ -66,12 +66,12 @@ collections:
     create: true
     extension: json
     format: json
-    slug: "{{slug}}"
+    slug: "{{year}}{{month}}{{day}}-{{hour}}{{minute}}{{second}}"
     identifier_field: title
     fields:
       - {label: タイトル, name: title, widget: string}
       - {label: 読み仮名（ひらがな）, name: reading, widget: string, required: false, hint: 五十音順・検索に使用}
-      - {label: URL識別子, name: slug, widget: string, hint: 半角小文字・数字・ハイフンのみ}
+      - {label: URL識別子（既存データ保持用）, name: slug, widget: hidden, required: false}
       - {label: システム, name: system, widget: string}
       - label: プレイ人数
         name: players
