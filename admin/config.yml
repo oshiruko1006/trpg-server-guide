@@ -122,7 +122,6 @@ collections:
         - label: ファイルを選択
           name: file
           widget: file
-        required: false
     - label: Discordリンク
       name: discord_url
       widget: string
