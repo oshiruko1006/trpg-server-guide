@@ -1,30 +1,78 @@
-/* Plain-text Markdown editor: keeps every newline and provides formatting controls. */
-(function(){
- 'use strict';
- if(!window.CMS||!window.React)return;
- const h=window.React.createElement;
- class MarkdownTools extends window.React.Component {
-  constructor(p){super(p);this.area=window.React.createRef();this.state={};}
-  format(kind){
-   const area=this.area.current;if(!area)return;
-   const text=String(this.props.value||'');const start=area.selectionStart,end=area.selectionEnd;
-   const selected=text.slice(start,end);
-   const specs={bold:['**','**','太字'],italic:['*','*','斜体'],link:['[','](https://example.com)','リンク文字'],h2:['## ','','見出し'],h3:['### ','','小見出し'],ul:['- ','','項目'],ol:['1. ','','項目']};
-   const [before,after,placeholder]=specs[kind];
-   const lineBased=['h2','h3','ul','ol'].includes(kind);
-   let a=start,b=end,insert='';
-   if(lineBased){a=text.lastIndexOf('\n',start-1)+1;insert=text.slice(a,start)+before+(selected||placeholder)+after;}
-   else insert=before+(selected||placeholder)+after;
-   const result=text.slice(0,a)+insert+text.slice(b);
-   this.props.onChange(result);
-   const caret=a+insert.length-after.length;
-   requestAnimationFrame(()=>{if(this.area.current){this.area.current.focus();this.area.current.setSelectionRange(caret,caret);}});
+/* Markdown toolbar for Decap CMS. Plain textarea preserves line breaks. */
+(function () {
+  'use strict';
+  if (!window.CMS || !window.React) return;
+  const React = window.React;
+  const h = React.createElement;
+  class MarkdownTools extends React.Component {
+    constructor(props) {
+      super(props);
+      this.area = React.createRef();
+      this.selection = null;
+    }
+    rememberSelection() {
+      const el = this.area.current;
+      if (el) this.selection = [el.selectionStart, el.selectionEnd];
+    }
+    format(kind) {
+      const el = this.area.current;
+      if (!el) return;
+      const value = typeof this.props.value === 'string' ? this.props.value : String(this.props.value || '');
+      const range = this.selection || [el.selectionStart, el.selectionEnd];
+      let [start, end] = range;
+      start = Math.max(0, Math.min(value.length, start));
+      end = Math.max(start, Math.min(value.length, end));
+      const selected = value.slice(start, end);
+      let replacement, from = start, to = end;
+      if (kind === 'bold' || kind === 'italic' || kind === 'link') {
+        const wrappers = {
+          bold: ['**', '**', '太字'],
+          italic: ['*', '*', '斜体'],
+          link: ['[', '](https://example.com)', 'リンク文字']
+        };
+        const [left, right, placeholder] = wrappers[kind];
+        replacement = left + (selected || placeholder) + right;
+      } else {
+        const prefix = { h2: '## ', h3: '### ', ul: '- ', ol: '1. ' }[kind];
+        if (!prefix) return;
+        from = value.lastIndexOf('\n', Math.max(0, start - 1)) + 1;
+        to = value.indexOf('\n', end);
+        if (to < 0) to = value.length;
+        const block = value.slice(from, to);
+        replacement = (block || '項目').split('\n').map(line => prefix + line).join('\n');
+      }
+      const result = value.slice(0, from) + replacement + value.slice(to);
+      this.props.onChange(result);
+      const caret = from + replacement.length;
+      this.selection = [caret, caret];
+      // Wait until React updates the controlled textarea.
+      requestAnimationFrame(() => {
+        const input = this.area.current;
+        if (input) { input.focus(); input.setSelectionRange(caret, caret); }
+      });
+    }
+    render() {
+      const value = typeof this.props.value === 'string' ? this.props.value : String(this.props.value || '');
+      const actions = [['bold', '太字'], ['italic', '斜体'], ['h2', '見出し'], ['h3', '小見出し'], ['ul', '箇条書き'], ['ol', '番号'], ['link', 'リンク']];
+      return h('div', { className: 'vanilla-md-editor' },
+        h('div', { className: 'vanilla-md-toolbar', role: 'toolbar', 'aria-label': 'Markdown装飾' },
+          ...actions.map(([kind, label]) => h('button', {
+            key: kind, type: 'button',
+            onPointerDown: () => this.rememberSelection(),
+            onMouseDown: e => e.preventDefault(),
+            onClick: () => this.format(kind)
+          }, label))),
+        h('textarea', {
+          ref: this.area, value, rows: 9, spellCheck: false,
+          onSelect: () => this.rememberSelection(),
+          onClick: () => this.rememberSelection(),
+          onKeyUp: () => this.rememberSelection(),
+          onChange: e => { this.selection = [e.target.selectionStart, e.target.selectionEnd]; this.props.onChange(e.target.value); },
+          'aria-label': (this.props.field && this.props.field.get && this.props.field.get('label')) || '本文'
+        }),
+        h('p', { className: 'vanilla-md-help' }, '選択した文字に装飾を付けられます。改行はそのまま保存します。')
+      );
+    }
   }
-  render(){const value=typeof this.props.value==='string'?this.props.value:String(this.props.value||'');const actions=[['bold','太字'],['italic','斜体'],['h2','見出し'],['h3','小見出し'],['ul','箇条書き'],['ol','番号'],['link','リンク']];return h('div',{className:'vanilla-md-editor'},
-   h('div',{className:'vanilla-md-toolbar',role:'toolbar','aria-label':'Markdown装飾'},...actions.map(([id,label])=>h('button',{type:'button',key:id,onMouseDown:e=>e.preventDefault(),onClick:()=>this.format(id)},label))),
-   h('textarea',{ref:this.area,value,onChange:e=>this.props.onChange(e.target.value),rows:9,spellCheck:false,'aria-label':this.props.field?.get?.('label')||'本文'}),
-   h('p',{className:'vanilla-md-help'},'改行はそのまま保存されます。装飾は公開ページに反映されます。')
-  );}
- }
- window.CMS.registerWidget('vanilla_markdown',MarkdownTools);
+  window.CMS.registerWidget('vanilla_markdown', MarkdownTools);
 })();
