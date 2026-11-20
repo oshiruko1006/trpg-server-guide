@@ -1,0 +1,9 @@
+{
+  "title": "REQUEST",
+  "status": "consult",
+  "status_message": "KP依頼についてはご相談ください。",
+  "rules": "依頼前にご確認ください。",
+  "steps": "1. テンプレートを記入\n2. Discordで連絡",
+  "template": "シナリオ名：\n希望日程：\n参加人数：",
+  "discord_url": ""
+}
