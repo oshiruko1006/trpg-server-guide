@@ -97,3 +97,12 @@ header .brand img {
   header .brand {max-width:calc(100% - 55px)}
   header .brand img {left:calc(100% + 5px)}
 }
+
+/* Keep the complete header visible while the page scrolls. */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #fffdfa;
+  box-shadow: 0 1px 0 rgba(96, 75, 62, .12);
+}
