@@ -32,6 +32,11 @@
         };
         const [left, right, placeholder] = wrappers[kind];
         replacement = left + (selected || placeholder) + right;
+      } else if (['mint','sand','rose'].includes(kind)) {
+        from = value.lastIndexOf('\n', Math.max(0, start - 1)) + 1;
+        to = value.indexOf('\n', end);
+        if (to < 0) to = value.length;
+        replacement = `:::${kind}\n${value.slice(from,to) || '囲みたい文章'}\n:::`;
       } else {
         const prefix = { h2: '## ', h3: '### ', ul: '- ', ol: '1. ' }[kind];
         if (!prefix) return;
@@ -53,7 +58,7 @@
     }
     render() {
       const value = typeof this.props.value === 'string' ? this.props.value : String(this.props.value || '');
-      const actions = [['bold', '太字'], ['italic', '斜体'], ['h2', '見出し'], ['h3', '小見出し'], ['ul', '箇条書き'], ['ol', '番号'], ['link', 'リンク']];
+      const actions = [['bold', '太字'], ['italic', '斜体'], ['h2', '見出し'], ['h3', '小見出し'], ['ul', '箇条書き'], ['ol', '番号'], ['link', 'リンク'], ['mint','囲み・ミント'], ['sand','囲み・ベージュ'], ['rose','囲み・ピンク']];
       return h('div', { className: 'vanilla-md-editor' },
         h('div', { className: 'vanilla-md-toolbar', role: 'toolbar', 'aria-label': 'Markdown装飾' },
           ...actions.map(([kind, label]) => h('button', {
