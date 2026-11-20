@@ -143,15 +143,20 @@ collections:
     - 9～15時間
     - 16～20時間
     - 21時間～
+  - label: 対象年齢
+    name: age_rating
+    widget: select
+    default: 全年齢
+    options:
+    - 全年齢
+    - R-15
+    - R-18
+    hint: 公開ページの基本情報と絞り込みに反映します
   - label: タグ
     name: tags
-    widget: list
+    widget: vanilla_tags
     required: false
-    field:
-      label: タグ名
-      name: tag
-      widget: string
-    hint: 追加ボタンで自由に登録
+    hint: よく使うタグをボタンで選び、必要なら自由入力で追加できます
   - label: シナリオトレーラー画像
     name: trailers
     widget: list
