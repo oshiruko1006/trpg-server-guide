@@ -376,3 +376,11 @@ nav a small {
 .mobile-filter-toggle[aria-expanded="true"]+.advanced-filters{display:grid!important}
 @media(max-width:650px){.advanced-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.site-accordion .accordion-trigger{padding:17px 15px}.accordion-panel-inner{padding-left:15px;padding-right:15px}.site-accordion.is-open .accordion-panel-inner{padding:0 15px 17px}}
 @media(prefers-reduced-motion:reduce){.accordion-panel,.accordion-chevron,.accordion-panel-inner{transition:none!important}}
+
+/* 2026-11-21: restore and center the homepage title; remove redundant footer. */
+body[data-page="home"] #content > h1.home-title {
+  display: block;
+  text-align: center;
+  margin-inline: auto;
+}
+body > footer { display: none; }
