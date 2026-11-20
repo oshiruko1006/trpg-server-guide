@@ -1,1 +1,349 @@
-*{box-sizing:border-box}body{margin:0;background:#f8f5ef;color:#493e36;font-family:system-ui,"Noto Sans JP",sans-serif;line-height:1.8}header,main,footer{max-width:940px;margin:auto;padding:22px}header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}nav{display:flex;gap:14px;flex-wrap:wrap}a{color:#795c48}nav a{text-decoration:none;font-size:.9rem}.brand{font-weight:700;letter-spacing:.08em}h1{font-family:Georgia,serif;font-size:2rem;letter-spacing:.06em}h2{font-size:1.1rem}section,.scenario{background:#fffcf8;border:1px solid #e8dfd4;border-radius:14px;padding:20px;margin:16px 0}.muted{color:#89776a}.tag{display:inline-block;background:#eee5d9;border-radius:30px;padding:2px 12px;font-size:.85rem}button{border:0;background:#695545;color:white;padding:9px 15px;border-radius:7px;cursor:pointer}input{padding:10px;border:1px solid #c9b9a9;border-radius:7px;width:100%;max-width:380px}pre{white-space:pre-wrap;font-family:inherit}footer{font-size:.8rem;color:#8d7d6f}@media(max-width:600px){header,main,footer{padding:16px}h1{font-size:1.6rem}}
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #f6f2ec;
+  --paper: #fffcf8;
+  --text: #55473e;
+  --muted: #928072;
+  --accent: #826958;
+  --accent-dark: #624c3e;
+  --line: #e5dacf;
+  --soft: #eee7de;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      #fffdf9 0%,
+      transparent 55%
+    ),
+    var(--bg);
+  color: var(--text);
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 2;
+  letter-spacing: .035em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* COMMON LAYOUT */
+
+header,
+main,
+footer {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 32px 28px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+main {
+  padding: 42px 28px 80px;
+  min-height: 65vh;
+}
+
+footer {
+  padding: 30px 28px 45px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  text-align: center;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 15px;
+  letter-spacing: .18em;
+}
+
+/* HEADER */
+
+.brand {
+  color: var(--accent-dark);
+  text-decoration: none;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: .09em;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+nav a {
+  position: relative;
+  color: var(--muted);
+  text-decoration: none;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: .09em;
+  transition: color .2s ease;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width .2s ease;
+}
+
+nav a:hover,
+nav a:focus-visible {
+  color: var(--accent-dark);
+}
+
+nav a:hover::after,
+nav a:focus-visible::after {
+  width: 100%;
+}
+
+/* TYPOGRAPHY */
+
+h1,
+h2,
+h3 {
+  margin-top: 0;
+  color: var(--accent-dark);
+}
+
+h1 {
+  margin-bottom: 32px;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: .07em;
+}
+
+h1::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 1px;
+  margin-top: 22px;
+  background: #b49c86;
+}
+
+h2 {
+  margin-bottom: 18px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: .09em;
+}
+
+h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+p {
+  margin: 0 0 1.2em;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 4px;
+}
+
+a:hover {
+  color: var(--accent-dark);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* CONTENT CARDS */
+
+section,
+.scenario {
+  position: relative;
+  margin: 22px 0;
+  padding: 32px 36px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 5px 24px rgba(91, 69, 49, .025);
+}
+
+section::before,
+.scenario::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 36px;
+  width: 35px;
+  height: 2px;
+  background: #bda692;
+}
+
+section h2::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-top: 14px;
+  background: var(--line);
+}
+
+.scenario {
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.scenario:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(91, 69, 49, .06);
+}
+
+/* LABELS */
+
+.tag {
+  display: inline-block;
+  margin: 3px 5px 3px 0;
+  padding: 3px 13px;
+  background: var(--soft);
+  border: 1px solid #e4d8ca;
+  border-radius: 4px;
+  color: var(--accent-dark);
+  font-size: 12px;
+  line-height: 1.8;
+  letter-spacing: .04em;
+}
+
+/* BUTTONS AND INPUTS */
+
+button {
+  padding: 11px 20px;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: .05em;
+  cursor: pointer;
+  transition:
+    background .2s ease,
+    transform .2s ease;
+}
+
+button:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid #ad8e76;
+  outline-offset: 3px;
+}
+
+input {
+  width: 100%;
+  max-width: 380px;
+  padding: 12px 14px;
+  background: #fffdfa;
+  border: 1px solid #d7c9bc;
+  border-radius: 5px;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+
+input::placeholder {
+  color: #aa9a8d;
+}
+
+pre {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  header {
+    padding: 22px 18px;
+    gap: 14px;
+  }
+
+  .brand {
+    font-size: 21px;
+  }
+
+  nav {
+    gap: 12px 18px;
+  }
+
+  nav a {
+    font-size: 15px;
+  }
+
+  main {
+    padding: 30px 18px 60px;
+  }
+
+  h1 {
+    margin-bottom: 26px;
+  }
+
+  section,
+  .scenario {
+    margin: 16px 0;
+    padding: 24px 21px;
+    border-radius: 8px;
+  }
+
+  section::before,
+  .scenario::before {
+    left: 21px;
+  }
+
+  footer {
+    padding: 26px 18px 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
