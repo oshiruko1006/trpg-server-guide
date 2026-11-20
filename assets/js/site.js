@@ -41,6 +41,22 @@ const textBlock = value => `<p class="preserve-lines">${esc(value)}</p>`;
 const sectionCard = (section,i) => `<section class="rule-card"><div class="rule-number">RULE ${String(i+1).padStart(2,'0')}</div><h2>${esc(section.heading)}</h2><div class="rich-text">${markdown(section.body)}</div></section>`;
 const tagsHtml = tags => (Array.isArray(tags)?tags:[]).map(t=>`<span class="tag">${esc(typeof t==='string'?t:t?.tag)}</span>`).join(' ');
 const info = s => [s.system,s.players,s.duration].filter(Boolean).map(esc).join(' ・ ');
+// Only accept local image paths or secure remote URLs; never interpolate arbitrary schemes.
+const imageUrl = value => {
+  const v = String(value ?? '').trim();
+  if (/^\/(?!\/)[^<>"'\s]*$/u.test(v) || /^https:\/\/[^<>"'\s]+$/iu.test(v)) return v;
+  return '';
+};
+const trailerUrls = s => {
+  const raw = Array.isArray(s.trailers) ? s.trailers : (s.trailer ? [s.trailer] : []);
+  return raw.map(x => imageUrl(typeof x === 'string' ? x : x?.image)).filter(Boolean);
+};
+const trailerThumb = (s, cls='') => {
+  const src = trailerUrls(s)[0];
+  return src ? `<div class="scenario-cover ${cls}"><img src="${esc(src)}" alt="${esc(s.title)}のトレーラー" loading="lazy"></div>`
+    : `<div class="scenario-cover scenario-cover-empty ${cls}" aria-hidden="true"><span>NO TRAILER</span></div>`;
+};
+const scenarioCard = (s, view) => `<article class="scenario scenario-entry scenario-${view}"><a class="scenario-entry-link" href="/scenario/${encodeURIComponent(s.slug)}/">${trailerThumb(s)}<div class="scenario-entry-body"><h2>${esc(s.title)}</h2><p class="muted">${info(s)}</p><div class="scenario-tags">${tagsHtml(s.tags)}</div>${view==='list'?`<p class="scenario-excerpt">${esc(String(s.summary||'').replace(/[#*_`~\[\]]/g,'').slice(0,115))}</p>`:''}</div></a></article>`;
 
 fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(d=>{
   if(page==='home'){
@@ -67,19 +83,33 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
   if(page==='detail'){
     const s=d.find(x=>x.slug===document.body.dataset.slug);
     if(!s){el.textContent='シナリオが見つかりません。';return;}
-    el.innerHTML=`<a href="/scenario/">← SCENARIO一覧へ</a><h1>${esc(s.title)}</h1><section><p class="muted">${info(s)}</p><div class="scenario-tags">${tagsHtml(s.tags)}</div><h2>あらすじ</h2><div class="rich-text">${markdown(s.summary)}</div></section>`;
+    const images = trailerUrls(s);
+    const gallery = images.length ? `<div class="scenario-gallery">${images.map((src,i)=>`<a href="${esc(src)}" target="_blank" rel="noopener noreferrer" aria-label="トレーラー画像${i+1}を拡大"><img src="${esc(src)}" alt="${esc(s.title)}のトレーラー ${i+1}" loading="lazy"></a>`).join('')}</div>` : '';
+    el.innerHTML=`<a href="/scenario/">← SCENARIO一覧へ</a><h1>${esc(s.title)}</h1>${gallery}<section><p class="muted">${info(s)}</p><div class="scenario-tags">${tagsHtml(s.tags)}</div><h2>あらすじ</h2><div class="rich-text">${markdown(s.summary)}</div></section>`;
   }
   if(page==='scenario'){
     const options=(key)=>[...new Set(d.map(s=>s[key]).filter(Boolean))];
     const select=(id,label,values)=>`<label class="filter-label">${label}<select id="${id}"><option value="">すべて</option>${values.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select></label>`;
-    el.innerHTML=`<h1>回せるシナリオ</h1><div class="scenario-filters"><label class="filter-label">キーワード<input id="query" placeholder="タイトル・読み仮名・タグで検索" aria-label="シナリオ検索"></label>${select('players','プレイ人数',['フリー','タイマン','1PL','2PL','3PL','4PL','5PL以上'])}${select('duration','プレイ時間',['1～4時間','5～8時間','9～15時間','16～20時間','21時間～'])}${select('system','システム',options('system'))}</div><div id="results"></div>`;
+    el.innerHTML=`<h1>回せるシナリオ</h1><div class="scenario-filters"><label class="filter-label">キーワード<input id="query" placeholder="タイトル・読み仮名・タグで検索" aria-label="シナリオ検索"></label>${select('players','プレイ人数',['フリー','タイマン','1PL','2PL','3PL','4PL','5PL以上'])}${select('duration','プレイ時間',['1～4時間','5～8時間','9～15時間','16～20時間','21時間～'])}${select('system','システム',options('system'))}</div><div class="scenario-toolbar"><span id="result-count" aria-live="polite"></span><div class="scenario-view-toggle" role="group" aria-label="表示形式"><button type="button" data-view="card" aria-pressed="true">▦ カード</button><button type="button" data-view="list" aria-pressed="false">☷ リスト</button></div></div><div id="results" class="scenario-results view-card"></div>`;
+    let view = 'card';
+    try { if(localStorage.getItem('vanilla-scenario-view')==='list') view='list'; } catch (_) {}
     const render=()=>{
       const q=document.getElementById('query').value.trim().toLocaleLowerCase();
       const players=document.getElementById('players').value,duration=document.getElementById('duration').value,system=document.getElementById('system').value;
       const items=d.filter(s=>[s.title,s.reading,s.system,s.summary,...(s.tags||[]).map(t=>typeof t==='string'?t:t?.tag)].join(' ').toLocaleLowerCase().includes(q)&&(!players||s.players===players)&&(!duration||s.duration===duration)&&(!system||s.system===system));
       items.sort((a,b)=>(a.reading||a.title).localeCompare(b.reading||b.title,'ja'));
-      document.getElementById('results').innerHTML=items.length?items.map(s=>`<article class="scenario"><h2><a href="/scenario/${encodeURIComponent(s.slug)}/">${esc(s.title)}</a></h2><p class="muted">${info(s)}</p><div class="scenario-tags">${tagsHtml(s.tags)}</div><div class="rich-text">${markdown(s.summary)}</div></article>`).join(''):'<p>該当するシナリオはありません。</p>';
+      const results=document.getElementById('results');
+      results.className=`scenario-results view-${view}`;
+      results.innerHTML=items.length?items.map(s=>scenarioCard(s,view)).join(''):'<p class="scenario-empty">該当するシナリオはありません。</p>';
+      document.getElementById('result-count').textContent=`${items.length} 件`;
+      document.querySelectorAll('.scenario-view-toggle button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===view)));
     };
-    document.querySelectorAll('.scenario-filters input,.scenario-filters select').forEach(x=>x.addEventListener('input',render));render();
+    document.querySelectorAll('.scenario-filters input,.scenario-filters select').forEach(x=>x.addEventListener('input',render));
+    document.querySelectorAll('.scenario-view-toggle button').forEach(b=>b.addEventListener('click',()=>{
+      view=b.dataset.view;
+      try { localStorage.setItem('vanilla-scenario-view',view); } catch (_) {}
+      render();
+    }));
+    render();
   }
 }).catch(err=>{console.error(err);el.textContent='データを読み込めませんでした。';});
