@@ -12,27 +12,39 @@ collections:
     label: ページ設定
     files:
       - name: home
-        label: HOME
+        label: HOME（聖規則）
         file: content/home.json
         fields:
           - {label: タイトル, name: title, widget: string}
-          - {label: 紹介文, name: intro, widget: text}
-          - {label: お知らせ, name: notice, widget: text}
-          - {label: ルール, name: rules, widget: markdown}
+          - {label: 紹介文, name: intro, widget: text, required: false}
+          - label: ルールの項目
+            name: sections
+            widget: list
+            summary: "{{fields.heading}}"
+            fields:
+              - {label: 題目, name: heading, widget: string}
+              - {label: 本文, name: body, widget: markdown}
       - name: character
-        label: CHARACTER
+        label: CS GUIDE（CS作成）
         file: content/character.json
         fields:
           - {label: タイトル, name: title, widget: string}
-          - {label: 説明, name: intro, widget: text}
+          - {label: 説明, name: intro, widget: text, required: false}
           - label: システム別ルール
             name: systems
             widget: list
+            summary: "{{fields.name}}"
             fields:
               - {label: システム名, name: name, widget: string}
-              - {label: ルール, name: rules, widget: markdown}
+              - label: ルールのブロック
+                name: sections
+                widget: list
+                summary: "{{fields.heading}}"
+                fields:
+                  - {label: 題目, name: heading, widget: string}
+                  - {label: 本文, name: body, widget: markdown}
       - name: request
-        label: REQUEST
+        label: REQUEST（KP依頼）
         file: content/request.json
         fields:
           - {label: タイトル, name: title, widget: string}
@@ -49,7 +61,7 @@ collections:
           - {label: コピー用テンプレート, name: template, widget: text}
           - {label: Discordリンク, name: discord_url, widget: string, required: false}
   - name: scenarios
-    label: SCENARIO
+    label: SCENARIO（回せるシナリオ）
     folder: content/scenarios
     create: true
     extension: json
@@ -58,9 +70,17 @@ collections:
     identifier_field: title
     fields:
       - {label: タイトル, name: title, widget: string}
-      - {label: URL識別子, name: slug, widget: string, hint: 半角英数字とハイフンを推奨}
+      - {label: 読み仮名（ひらがな）, name: reading, widget: string, required: false, hint: 五十音順・検索に使用}
+      - {label: URL識別子, name: slug, widget: string, hint: 半角小文字・数字・ハイフンのみ}
       - {label: システム, name: system, widget: string}
-      - {label: プレイ人数, name: players, widget: string}
-      - {label: 所要時間, name: duration, widget: string}
+      - label: プレイ人数
+        name: players
+        widget: select
+        options: ["フリー", "タイマン", "1PL", "2PL", "3PL", "4PL", "5PL以上"]
+      - label: 所要時間
+        name: duration
+        widget: select
+        options: ["1～4時間", "5～8時間", "9～15時間", "16～20時間", "21時間～"]
+      - {label: タグ, name: tags, widget: list, required: false, field: {label: タグ名, name: tag, widget: string}, hint: 追加ボタンで自由に登録}
       - {label: あらすじ, name: summary, widget: markdown}
       - {label: 公開する, name: published, widget: boolean, default: false}
