@@ -7,25 +7,18 @@
 .vanilla-md-help{font:12px/1.5 system-ui,sans-serif;color:#697a75;margin:6px 0 0}
 @media(max-width:767px){.vanilla-md-toolbar{gap:5px}.vanilla-md-toolbar button{padding:9px 10px;min-height:38px}}
 
-/* Stage 1: collection listing only. Do not alter the editor layout. */
+/* Mobile stage 1 — verified by the user's width diagnostic.
+   Only remove the 800px floor on the collection listing and shared header.
+   Do NOT change editor panes or the markdown widget in this stage. */
 @media screen and (max-width: 767px) {
-  /* Decap CMS uses named containers; match only collection-related ones. */
-  [class*="CollectionContainer"],
-  [class*="CollectionsContainer"] {
+  [class*="AppHeaderContent"],
+  [class*="AppMainContainer"] {
     min-width: 0 !important;
-    max-width: 100vw !important;
     width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  [class*="CollectionContainer"] [class*="CollectionMain"],
-  [class*="CollectionContainer"] [class*="CollectionContent"],
-  [class*="CollectionContainer"] [class*="EntriesContainer"] {
-    min-width: 0 !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
   }
-  [class*="CollectionContainer"] [class*="CollectionSidebar"] {
-    min-width: 0 !important;
-    max-width: 100% !important;
+  [class*="AppMainContainer"] {
+    flex-wrap: wrap !important;
   }
 }
