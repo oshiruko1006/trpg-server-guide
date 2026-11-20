@@ -347,3 +347,149 @@ pre {
     transition: none !important;
   }
 }
+
+
+/* MINT GREEN THEME */
+
+:root {
+  --bg: #f8f6f1;
+  --paper: #ffffff;
+  --text: #62584f;
+  --muted: #8b8b80;
+  --accent: #76a99c;
+  --accent-dark: #527e73;
+  --line: #e0e8e2;
+  --soft: #e5f2ed;
+}
+
+/* 背景 */
+body {
+  background:
+    radial-gradient(
+      ellipse at top,
+      #ffffff 0%,
+      transparent 58%
+    ),
+    var(--bg);
+}
+
+/* 見出し */
+h1,
+h2,
+h3 {
+  color: var(--text);
+}
+
+h1::after,
+section::before,
+.scenario::before {
+  background: #a5cfc2;
+}
+
+section h2::after {
+  background: linear-gradient(
+    to right,
+    #a5cfc2,
+    var(--line) 40%,
+    var(--line)
+  );
+}
+
+/* カード */
+section,
+.scenario {
+  border-color: var(--line);
+  box-shadow: 0 5px 22px rgba(83, 126, 111, .035);
+}
+
+.scenario:hover {
+  box-shadow: 0 9px 25px rgba(83, 126, 111, .09);
+}
+
+/* ボタン */
+button {
+  background: #b7dcd2;
+  color: #355c52;
+  border: 1px solid #a3c9be;
+  border-radius: 7px;
+  padding: 11px 22px;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(83, 126, 111, .05);
+}
+
+button:hover {
+  background: #9acbbe;
+  border-color: #76a99c;
+  color: #294e44;
+  box-shadow: 0 4px 12px rgba(83, 126, 111, .12);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* タグ */
+.tag {
+  background: #e5f2ed;
+  border: 1px solid #cce3da;
+  color: #527e73;
+  border-radius: 20px;
+  padding: 3px 13px;
+}
+
+/* リンク */
+a {
+  color: #527e73;
+}
+
+a:hover {
+  color: #355c52;
+}
+
+/* ナビゲーション */
+.brand {
+  color: #62584f;
+}
+
+nav a {
+  color: #7a877f;
+}
+
+nav a:hover,
+nav a:focus-visible {
+  color: #527e73;
+}
+
+nav a::after {
+  background: #76a99c;
+}
+
+/* 入力欄 */
+input {
+  background: #ffffff;
+  border-color: #d4e3db;
+}
+
+input:focus {
+  border-color: #76a99c;
+}
+
+input:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #76a99c;
+  outline-offset: 3px;
+}
+
+/* フッター */
+footer {
+  border-color: var(--line);
+  color: #8a9a8f;
+}
