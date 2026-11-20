@@ -352,3 +352,27 @@ nav a small {
 .scenario-results.view-list .scenario-cover-wrap{flex:0 0 170px;width:170px}
 .scenario-results.view-list .scenario-cover-wrap .scenario-cover{width:100%;height:100%;aspect-ratio:16/10}
 @media(max-width:600px){.scenario-results.view-list .scenario-cover-wrap{flex:0 0 100px;width:100px}.kp-experience-badge{top:6px;right:6px;font-size:10px;padding:4px 7px}.scenario-title-row{gap:5px}.preparation-badge{font-size:10px;padding:3px 7px}}
+
+/* Site-wide polished headings and expandable sections; CMS styles unaffected */
+.home-title{text-align:center}
+.rule-card.site-accordion{padding:0!important;overflow:hidden}
+.site-accordion h2{margin:0!important;font-family:"Noto Sans JP",system-ui,sans-serif}
+.site-accordion .accordion-trigger{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:transparent;border:0;border-radius:0;padding:22px 23px;color:#344b48;font:600 clamp(17px,2.2vw,21px)/1.5 "Noto Sans JP",system-ui,sans-serif;letter-spacing:.01em;box-shadow:none}
+.site-accordion .accordion-trigger:hover{background:#f6faf6}
+.accordion-mark{flex:0 0 4px;align-self:stretch;min-height:29px;background:#86afa2;border-radius:3px}
+.accordion-chevron{margin-left:auto;flex-shrink:0;color:#729a90;font-size:25px;line-height:1;transition:transform .3s ease}
+.site-accordion.is-open .accordion-chevron{transform:rotate(180deg)}
+.accordion-panel{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .32s ease,opacity .28s ease}
+.site-accordion.is-open .accordion-panel{grid-template-rows:1fr;opacity:1}
+.accordion-panel-inner{min-height:0;overflow:hidden;padding:0 23px;visibility:hidden;transition:visibility 0s linear .32s,padding .32s ease}
+.site-accordion.is-open .accordion-panel-inner{visibility:visible;padding:0 23px 22px;transition:visibility 0s,padding .32s ease}
+.rich-text h3,.rich-text h4,.rich-text h5,.rich-text h6{border-left:0!important;padding-left:0!important;color:#4e8073!important;font-family:"Noto Sans JP",system-ui,sans-serif;font-weight:700}
+.rich-text h3{font-size:1.1rem}.rich-text h4{font-size:1rem}.rich-text h5,.rich-text h6{font-size:.95rem}
+.text-callout{display:flow-root;width:fit-content;max-width:100%;padding:10px 14px;margin:12px 0;border-radius:11px;overflow-wrap:anywhere}
+.text-callout p{margin:0 0 .45em}.text-callout p:last-child{margin-bottom:0}
+.text-callout-mint{background:#ddeee5;color:#34594a}.text-callout-sand{background:#f2e9d8;color:#6b543c}.text-callout-rose{background:#f5e5e2;color:#84504b}
+.advanced-filters{display:none!important;grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mobile-filter-toggle{display:block;width:100%;grid-column:1/-1;font:600 13px "Noto Sans JP",sans-serif}
+.mobile-filter-toggle[aria-expanded="true"]+.advanced-filters{display:grid!important}
+@media(max-width:650px){.advanced-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.site-accordion .accordion-trigger{padding:17px 15px}.accordion-panel-inner{padding-left:15px;padding-right:15px}.site-accordion.is-open .accordion-panel-inner{padding:0 15px 17px}}
+@media(prefers-reduced-motion:reduce){.accordion-panel,.accordion-chevron,.accordion-panel-inner{transition:none!important}}
