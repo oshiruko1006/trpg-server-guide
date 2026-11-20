@@ -154,9 +154,40 @@ collections:
     hint: 公開ページの基本情報と絞り込みに反映します
   - label: タグ
     name: tags
-    widget: vanilla_tags
+    widget: select
+    multiple: true
     required: false
-    hint: よく使うタグをボタンで選び、必要なら自由入力で追加できます
+    options:
+    - 低ロス
+    - 中ロス
+    - 高ロス
+    - 描写多め
+    - 描写少なめ
+    - RP中心
+    - クラシック
+    - 探索中心
+    - 戦闘あり
+    - 謎解き
+    - ホラー
+    - エモ
+    - ギャグ
+    - クローズド
+    - シティ
+    - 秘匿HO
+    - 公開HO
+    - HOなし
+    - 新規限定
+    - 継続可
+    - PvP有
+    hint: 安定版：複数選択できます。自由タグは次の自由入力欄に記入してください。
+  - label: 自由追加タグ（任意）
+    name: custom_tags
+    widget: list
+    required: false
+    field:
+      label: タグ
+      name: tag
+      widget: string
   - label: シナリオトレーラー画像
     name: trailers
     widget: list
@@ -170,15 +201,15 @@ collections:
       allow_multiple: false
   - label: あらすじ
     name: summary
-    widget: markdown
+    widget: text
     required: false
   - label: 概要
     name: overview
-    widget: markdown
+    widget: text
     required: false
   - label: 注意事項
     name: cautions
-    widget: markdown
+    widget: text
     required: false
   - label: 自由追加ブロック
     name: extra_sections
@@ -191,7 +222,7 @@ collections:
       widget: string
     - label: 本文
       name: body
-      widget: markdown
+      widget: text
       required: false
   - label: 公開する
     name: published
