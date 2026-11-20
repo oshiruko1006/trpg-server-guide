@@ -22,3 +22,28 @@
     flex-wrap: wrap !important;
   }
 }
+
+/* Stage A: editor toolbar only. Do not change SplitPane, Pane, EditorContainer,
+   AppMainContainer, height, position or scrolling. */
+@media screen and (max-width: 767px) {
+  [class*="ToolbarContainer"] {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    height: auto !important;
+  }
+  [class*="ToolbarContainer"] [class*="ToolbarSectionMain"],
+  [class*="ToolbarContainer"] [class*="ToolbarSubSection"] {
+    min-width: 0 !important;
+    flex-wrap: wrap !important;
+    max-width: 100% !important;
+  }
+  [class*="ToolbarContainer"] button {
+    white-space: normal !important;
+  }
+}
