@@ -17,11 +17,11 @@
     return [...new Set((Array.isArray(input) ? input : []).map(x =>
       (typeof x === 'string' ? x : x && x.tag || '') .trim()).filter(Boolean))];
   };
-  const Widget = ReactAPI.createClass({
-    getInitialState() { return {custom:''}; },
-    update(tags) { this.props.onChange(tags); },
-    toggle(tag) { const tags=normalize(this.props.value); this.update(tags.includes(tag) ? tags.filter(t=>t!==tag) : [...tags,tag]); },
-    add() { const tag=this.state.custom.trim(); if(!tag)return; const tags=normalize(this.props.value); if(!tags.includes(tag))this.update([...tags,tag]); this.setState({custom:''}); },
+  class Widget extends ReactAPI.Component {
+    constructor(props) { super(props); this.state = {custom:''}; this.add = this.add.bind(this); }
+    update(tags) { this.props.onChange(tags); }
+    toggle(tag) { const tags=normalize(this.props.value); this.update(tags.includes(tag) ? tags.filter(t=>t!==tag) : [...tags,tag]); }
+    add() { const tag=this.state.custom.trim(); if(!tag)return; const tags=normalize(this.props.value); if(!tags.includes(tag))this.update([...tags,tag]); this.setState({custom:''}); }
     render() {
       const selected=normalize(this.props.value);
       return h('div',{className:'vanilla-tags-widget'},
@@ -41,6 +41,6 @@
           ...(selected.length?selected.map(tag=>h('button',{key:tag,type:'button',className:'vanilla-tag-button is-selected',onClick:()=>this.toggle(tag),'aria-label':tag+'を解除'},tag+' ×')):[h('span',{key:'empty',className:'vanilla-tags-empty'},'未選択')]))
       );
     }
-  });
+  }
   CMS.registerWidget('vanilla_tags',Widget);
 })();
