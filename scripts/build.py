@@ -20,7 +20,9 @@ for f in sorted((root / 'content/scenarios').glob('*.json')):
     data = json.loads(f.read_text(encoding='utf-8'))
     if data.get('published') is not True:
         continue
-    slug = data.get('slug', '')
+    # Keep existing published URLs; new CMS entries use their generated filename.
+    slug = data.get('slug') or f.stem
+    data['slug'] = slug
     if not isinstance(slug, str) or not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', slug):
         raise ValueError(f'{f}: slug must contain only lowercase letters, numbers and hyphens')
     if slug in seen:
