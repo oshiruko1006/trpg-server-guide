@@ -172,6 +172,21 @@ collections:
     - 中編
     - 長編
     - 超長編
+  - label: 準備状況
+    name: preparation_status
+    widget: select
+    required: false
+    hint: 所持・未読／読了済／準備完了から選択。既存シナリオは必要に応じて設定してください。
+    options:
+    - 所持・未読
+    - 読了済
+    - 準備完了
+  - label: KP経験有
+    name: kp_experienced
+    widget: boolean
+    default: false
+    required: false
+    hint: 一度でもKPを担当したシナリオならオンにしてください。
   - label: 対象年齢
     name: age_rating
     widget: select
