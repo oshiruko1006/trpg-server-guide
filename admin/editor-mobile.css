@@ -6,3 +6,26 @@
 .vanilla-md-editor textarea{box-sizing:border-box;display:block;width:100%;min-width:0;max-width:100%;min-height:190px;padding:12px;border:1px solid #c9d0ce;border-radius:7px;resize:vertical;font:15px/1.75 system-ui,sans-serif;white-space:pre-wrap;overflow-wrap:anywhere}
 .vanilla-md-help{font:12px/1.5 system-ui,sans-serif;color:#697a75;margin:6px 0 0}
 @media(max-width:767px){.vanilla-md-toolbar{gap:5px}.vanilla-md-toolbar button{padding:9px 10px;min-height:38px}}
+
+/* Stage 1: collection listing only. Do not alter the editor layout. */
+@media screen and (max-width: 767px) {
+  /* Decap CMS uses named containers; match only collection-related ones. */
+  [class*="CollectionContainer"],
+  [class*="CollectionsContainer"] {
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  [class*="CollectionContainer"] [class*="CollectionMain"],
+  [class*="CollectionContainer"] [class*="CollectionContent"],
+  [class*="CollectionContainer"] [class*="EntriesContainer"] {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  [class*="CollectionContainer"] [class*="CollectionSidebar"] {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
