@@ -24,3 +24,48 @@ body[data-page="detail"] nav a[href="/scenario/"] { background:#d6efe3; color:#4
   header nav a span { font-size:12px; }
   header nav a small { font-size:9px; }
 }
+
+/* 小さな聖堂風ロゴ：HTMLの変更不要 */
+header .brand { gap: 11px; color: #58483f; }
+header .brand > span {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 1.3;
+  letter-spacing: .07em;
+  padding-right: 19px;
+  white-space: nowrap;
+}
+header .brand > span::before {
+  content: "✦";
+  position: absolute;
+  right: 1px;
+  top: 4px;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  color: #91b5a6;
+}
+header .brand > span::after {
+  content: "— Vanilla's little sanctuary —";
+  display: block;
+  margin-top: 3px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 1.5;
+  letter-spacing: .045em;
+  color: #9b9c8d;
+}
+header .brand img { width: 49px; height: 49px; }
+@media (max-width: 600px) {
+  header .brand { gap: 6px; }
+  header .brand > span { font-size: 21px; padding-right: 14px; letter-spacing: .035em; }
+  header .brand > span::before { font-size: 10px; top: 2px; }
+  header .brand > span::after { font-size: 8px; letter-spacing: 0; }
+  header .brand img { width: 39px; height: 39px; }
+}
