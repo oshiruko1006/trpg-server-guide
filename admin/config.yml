@@ -1,8 +1,9 @@
 backend:
   name: github
-  repo: REPLACE_WITH_OWNER/REPLACE_WITH_REPOSITORY
+  repo: oshiruko1006/trpg-server-guide
   branch: main
-  base_url: https://REPLACE_WITH_OAUTH_WORKER_DOMAIN
+  base_url: https://trpg-server-guide-auth.kocco-and-chiri.workers.dev
+  auth_endpoint: auth
 media_folder: "assets/images"
 public_folder: "/assets/images"
 locale: ja
