@@ -22,3 +22,92 @@
     flex-wrap: wrap !important;
   }
 }
+
+/* Mobile stage 2: Decap 3.0.12 containers identified by the width diagnostic.
+   Scoped to narrow viewports; do not modify the markdown widget or desktop. */
+@media screen and (max-width: 767px) {
+  html, body, #nc-root { max-width: 100%; }
+  [class*="AppHeaderContent"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    height: auto !important;
+    min-height: 0 !important;
+    gap: 4px;
+  }
+  [class*="AppHeaderContent"] > * { min-width: 0 !important; }
+
+  /* Collection selector and entry list become stacked, full-width blocks. */
+  [class*="AppMainContainer"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  [class*="AppMainContainer"] > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex: 0 1 auto !important;
+    box-sizing: border-box !important;
+  }
+  [class*="AppMainContainer"] [class*="Collection"] {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere;
+  }
+
+  /* Editing: eliminate the measured 800px floors. */
+  [class*="EditorContainer"],
+  [class*="ToolbarContainer"],
+  [class*="-Editor"],
+  .SplitPane {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  [class*="ToolbarContainer"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    height: auto !important;
+    min-height: 0 !important;
+    gap: 6px;
+  }
+  [class*="ToolbarContainer"] > *,
+  [class*="ToolbarSection"] {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+  [class*="ToolbarContainer"] button { max-width: 100%; }
+
+  /* React SplitPane: first Pane is the form, last Pane is the preview.
+     Keep the first Pane mounted and visible to avoid the previous blank-screen regression. */
+  [class*="EditorContainer"] .SplitPane {
+    position: relative !important;
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  [class*="EditorContainer"] .SplitPane > .Pane:first-child {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  [class*="EditorContainer"] .SplitPane > .Pane:last-child,
+  [class*="EditorContainer"] .SplitPane > .Resizer {
+    display: none !important;
+  }
+  [class*="EditorContainer"] .SplitPane > .Pane:first-child > * {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
