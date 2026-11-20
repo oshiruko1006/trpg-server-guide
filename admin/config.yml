@@ -109,6 +109,20 @@ collections:
         name: body
         widget: text
         required: false
+      - label: 添付ファイル（複数追加可）
+        name: attachments
+        widget: list
+        required: false
+        summary: '{{fields.label}}'
+        fields:
+        - label: ファイル名・説明（任意）
+          name: label
+          widget: string
+          required: false
+        - label: ファイルを選択
+          name: file
+          widget: file
+        required: false
     - label: Discordリンク
       name: discord_url
       widget: string
@@ -246,6 +260,19 @@ collections:
       name: body
       widget: text
       required: false
+  - label: 配布・販売ページのリンク（BOOTHなど）
+    name: external_links
+    widget: list
+    required: false
+    summary: '{{fields.label}}'
+    fields:
+    - label: リンク名（例：BOOTH）
+      name: label
+      widget: string
+    - label: URL
+      name: url
+      widget: string
+      pattern: ['^https://.+', 'https://から始まるURLを入力してください']
   - label: 公開する
     name: published
     widget: boolean
