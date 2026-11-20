@@ -338,3 +338,17 @@ nav a small {
  .tag-choices{gap:5px}
  .tag-choice{font-size:11px;padding:5px 9px}
 }
+
+/* Scenario preparation state and KP experience */
+.scenario-cover-wrap{position:relative;min-width:0}
+.kp-experience-badge{position:absolute;top:10px;right:10px;z-index:2;display:inline-flex;align-items:center;max-width:calc(100% - 20px);padding:5px 10px;border-radius:999px;background:rgba(35,45,43,.86);color:#fff;font:700 11px/1.4 "Noto Sans JP",system-ui,sans-serif;box-shadow:0 2px 7px rgba(0,0,0,.2);pointer-events:none}
+.scenario-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.scenario-title-row h2{min-width:0;flex:1}
+.preparation-badge,.kp-detail-badge{display:inline-flex;align-items:center;flex-shrink:0;border-radius:999px;padding:4px 9px;font:700 11px/1.4 "Noto Sans JP",system-ui,sans-serif;white-space:nowrap;background:#edf0ed;color:#686c68}
+.preparation-badge[data-status="読了済"]{background:#e4f0f6;color:#4c7689}
+.preparation-badge[data-status="準備完了"]{background:#d9efe2;color:#3d7960}
+.kp-detail-badge{background:#e7e3ef;color:#68577e}
+.scenario-detail-status{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}
+.scenario-results.view-list .scenario-cover-wrap{flex:0 0 170px;width:170px}
+.scenario-results.view-list .scenario-cover-wrap .scenario-cover{width:100%;height:100%;aspect-ratio:16/10}
+@media(max-width:600px){.scenario-results.view-list .scenario-cover-wrap{flex:0 0 100px;width:100px}.kp-experience-badge{top:6px;right:6px;font-size:10px;padding:4px 7px}.scenario-title-row{gap:5px}.preparation-badge{font-size:10px;padding:3px 7px}}
