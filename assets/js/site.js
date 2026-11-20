@@ -24,9 +24,17 @@ function inlineMd(value) {
 function markdown(value) {
   const lines = String(value ?? '').replace(/\r\n?/g,'\n').split('\n');
   let result = '', paragraph = [], list = [], listType = '';
+  let boxTone = '', boxLines = [];
   const flushP = () => { if(paragraph.length){result += `<p>${paragraph.map(inlineMd).join('<br>')}</p>`; paragraph=[];} };
   const flushL = () => {if(list.length){result += `<${listType}>${list.map(x=>`<li>${inlineMd(x)}</li>`).join('')}</${listType}>`;list=[];listType='';}};
   for(const line of lines){
+    if(boxTone){
+      if(line.trim()===':::'){result += `<div class="text-callout text-callout-${boxTone}">${markdown(boxLines.join('\n'))}</div>`;boxTone='';boxLines=[];}
+      else boxLines.push(line);
+      continue;
+    }
+    const boxStart=line.trim().match(/^:::(mint|sand|rose)$/);
+    if(boxStart){flushP();flushL();boxTone=boxStart[1];continue;}
     if(!line.trim()){flushP();flushL();continue;}
     const heading = line.match(/^\s{0,3}(#{1,4})\s+(.+)$/);
     const bullet = line.match(/^\s*[-*+]\s+(.+)$/);
@@ -35,10 +43,20 @@ function markdown(value) {
     else if(bullet||number){flushP();const type=bullet?'ul':'ol';if(listType&&listType!==type)flushL();listType=type;list.push((bullet||number)[1]);}
     else {flushL();paragraph.push(line);}
   }
+  if(boxTone){result += `<div class="text-callout text-callout-${boxTone}">${markdown(boxLines.join('\n'))}</div>`;}
   flushP();flushL();return result;
 }
 const textBlock = value => `<p class="preserve-lines">${esc(value)}</p>`;
-const sectionCard = (section,i) => `<section class="rule-card"><div class="rule-number">RULE ${String(i+1).padStart(2,'0')}</div><h2>${esc(section.heading)}</h2><div class="rich-text">${markdown(section.body)}</div></section>`;
+const accordion = (title, body, extra='') => `<section class="rule-card site-accordion ${extra}"><h2><button type="button" class="accordion-trigger" aria-expanded="false"><span class="accordion-mark" aria-hidden="true"></span><span>${esc(title)}</span><span class="accordion-chevron" aria-hidden="true">⌄</span></button></h2><div class="accordion-panel"><div class="accordion-panel-inner"><div class="rich-text">${markdown(body)}</div></div></div></section>`;
+const sectionCard = section => accordion(section.heading, section.body);
+document.addEventListener('click', event => {
+  const button = event.target.closest('.accordion-trigger');
+  if(!button) return;
+  const card=button.closest('.site-accordion');
+  const open=button.getAttribute('aria-expanded')!=='true';
+  button.setAttribute('aria-expanded', String(open));
+  card.classList.toggle('is-open',open);
+});
 const tagAliases = {'戦闘あり':'戦闘有','謎解き':'謎解き有','PvP可能':'PvP有'};
 const allTags = s => [...new Set([...(Array.isArray(s.tags)?s.tags:[]),...(Array.isArray(s.custom_tags)?s.custom_tags:[])].map(t=>typeof t==='string'?t:t?.tag).filter(Boolean).map(t=>tagAliases[t]||t))];
 const tagsHtml = tags => (Array.isArray(tags)?tags:[]).map(t=>`<span class="tag">${esc(typeof t==='string'?t:t?.tag)}</span>`).join(' ');
@@ -67,7 +85,7 @@ const scenarioCard = (s, view) => `<article class="scenario scenario-entry scena
 fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(d=>{
   if(page==='home'){
     const sections = d.sections || (d.rules?[{heading:'ルール',body:d.rules}]:[]);
-    el.innerHTML = `<h1>${esc(d.title)}</h1>${d.intro?`<section class="intro-card">${textBlock(d.intro)}</section>`:''}<div class="rule-list">${sections.map(sectionCard).join('')}</div>`;
+    el.innerHTML = `<h1 class="home-title">${esc(d.title)}</h1>${d.intro?`<section class="intro-card">${textBlock(d.intro)}</section>`:''}<div class="rule-list">${sections.map(sectionCard).join('')}</div>`;
   }
   if(page==='character'){
     const systems = d.systems || [];
@@ -85,11 +103,11 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     const statuses={open:'受付中',consult:'要相談',closed:'受付停止'};
     const about=d.kp_about??[String(d.rules||'').split(/^### 注意事項\s*$/m)[0].trim(),d.steps?'### 依頼手順\n'+d.steps:''].filter(Boolean).join('\n\n');
     const notices=d.notices??(String(d.rules||'').split(/^### 注意事項\s*$/m)[1]||'').trim();
-    const requestBlock=(title,body)=>String(body||'').trim()?`<section class="scenario-detail-block"><h2>${esc(title)}</h2><div class="rich-text">${markdown(body)}</div></section>`:'';
+    const requestBlock=(title,body)=>String(body||'').trim()?accordion(title,body,'request-accordion'):'';
     const extras=Array.isArray(d.extra_sections)?d.extra_sections:[];
     const attachmentUrl = value => {const v=String(value||'').trim();return (/^\/(?!\/)[^<>"'\s]*$/u.test(v)||/^https:\/\/[^<>"'\s]+$/i.test(v))?v:'';};
-    const extraBlock = x => {const files=Array.isArray(x.attachments)?x.attachments:[];const media=files.map(f=>{const url=attachmentUrl(typeof f==='string'?f:f?.file);if(!url)return '';const label=String((typeof f==='object'&&f?.label)||decodeURIComponent(url.split('/').pop()||'添付ファイル'));const image=/\.(?:png|jpe?g|gif|webp|avif)(?:\?.*)?$/i.test(url);return image?`<figure class="request-attachment-image"><a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><img src="${esc(url)}" alt="${esc(label)}" loading="lazy"></a><figcaption>${esc(label)}</figcaption></figure>`:`<a class="request-attachment-file" href="${esc(url)}" target="_blank" rel="noopener noreferrer">📎 ${esc(label)} ↗</a>`;}).filter(Boolean).join('');return (String(x.body||'').trim()||media)?`<section class="scenario-detail-block"><h2>${esc(x.heading||'補足資料')}</h2><div class="rich-text">${markdown(x.body||'')}</div>${media?`<div class="request-attachments">${media}</div>`:''}</section>`:'';};
-    el.innerHTML=`<h1>${esc(d.title)}</h1><section><h2>KP受付状況</h2><span class="tag">${esc(statuses[d.status]||'未設定')}</span>${textBlock(d.status_message)}</section>${requestBlock('KP依頼について',about)}${requestBlock('注意事項',notices)}<section class="scenario-detail-block"><h2>依頼テンプレート</h2><pre id="template">${esc(d.template)}</pre><button id="copy" type="button">コピーする</button></section>${extras.map(extraBlock).join('')}${/^https?:\/\//.test(d.discord_url||'')&&d.status!=='closed'?`<section><a href="${esc(d.discord_url)}" target="_blank" rel="noopener noreferrer">Discordで連絡する</a></section>`:''}`;
+    const extraBlock = x => {const files=Array.isArray(x.attachments)?x.attachments:[];const media=files.map(f=>{const url=attachmentUrl(typeof f==='string'?f:f?.file);if(!url)return '';const label=String((typeof f==='object'&&f?.label)||decodeURIComponent(url.split('/').pop()||'添付ファイル'));const image=/\.(?:png|jpe?g|gif|webp|avif)(?:\?.*)?$/i.test(url);return image?`<figure class="request-attachment-image"><a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><img src="${esc(url)}" alt="${esc(label)}" loading="lazy"></a><figcaption>${esc(label)}</figcaption></figure>`:`<a class="request-attachment-file" href="${esc(url)}" target="_blank" rel="noopener noreferrer">📎 ${esc(label)} ↗</a>`;}).filter(Boolean).join('');return (String(x.body||'').trim()||media)?`<section class="rule-card site-accordion request-accordion"><h2><button type="button" class="accordion-trigger" aria-expanded="false"><span class="accordion-mark" aria-hidden="true"></span><span>${esc(x.heading||'補足資料')}</span><span class="accordion-chevron" aria-hidden="true">⌄</span></button></h2><div class="accordion-panel"><div class="accordion-panel-inner"><div class="rich-text">${markdown(x.body||'')}</div>${media?`<div class="request-attachments">${media}</div>`:''}</div></div></section>`:'';};
+    el.innerHTML=`<h1>${esc(d.title)}</h1><section><h2>KP受付状況</h2><span class="tag">${esc(statuses[d.status]||'未設定')}</span>${textBlock(d.status_message)}</section>${requestBlock('KP依頼について',about)}${requestBlock('注意事項',notices)}<section class="rule-card site-accordion request-accordion"><h2><button type="button" class="accordion-trigger" aria-expanded="false"><span class="accordion-mark" aria-hidden="true"></span><span>依頼テンプレート</span><span class="accordion-chevron" aria-hidden="true">⌄</span></button></h2><div class="accordion-panel"><div class="accordion-panel-inner"><pre id="template">${esc(d.template)}</pre><button id="copy" type="button">コピーする</button></div></div></section>${extras.map(extraBlock).join('')}${/^https?:\/\//.test(d.discord_url||'')&&d.status!=='closed'?`<section><a href="${esc(d.discord_url)}" target="_blank" rel="noopener noreferrer">Discordで連絡する</a></section>`:''}`;
     document.getElementById('copy').addEventListener('click',()=>navigator.clipboard.writeText(d.template||'').then(()=>alert('コピーしました')).catch(()=>alert('コピーできませんでした')));
   }
   if(page==='detail'){
@@ -141,6 +159,13 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
       document.getElementById('result-count').textContent=`${items.length} 件`;
       document.querySelectorAll('.scenario-view-toggle button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===view)));
     };
+    const filterToggle=document.getElementById('mobile-filter-toggle');
+    filterToggle.textContent='詳細検索を開く ▾';
+    filterToggle.addEventListener('click',()=>{
+      const open=filterToggle.getAttribute('aria-expanded')!=='true';
+      filterToggle.setAttribute('aria-expanded',String(open));
+      filterToggle.textContent=open?'詳細検索を閉じる ▴':'詳細検索を開く ▾';
+    });
     document.querySelectorAll('.scenario-filters input,.scenario-filters select').forEach(x=>x.addEventListener('input',render));
     document.querySelectorAll('.scenario-view-toggle button').forEach(b=>b.addEventListener('click',()=>{
       view=b.dataset.view;
