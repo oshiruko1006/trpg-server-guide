@@ -39,7 +39,8 @@ function markdown(value) {
 }
 const textBlock = value => `<p class="preserve-lines">${esc(value)}</p>`;
 const sectionCard = (section,i) => `<section class="rule-card"><div class="rule-number">RULE ${String(i+1).padStart(2,'0')}</div><h2>${esc(section.heading)}</h2><div class="rich-text">${markdown(section.body)}</div></section>`;
-const allTags = s => [...new Set([...(Array.isArray(s.tags)?s.tags:[]),...(Array.isArray(s.custom_tags)?s.custom_tags:[])].map(t=>typeof t==='string'?t:t?.tag).filter(Boolean))];
+const tagAliases = {'戦闘あり':'戦闘有','謎解き':'謎解き有','PvP可能':'PvP有'};
+const allTags = s => [...new Set([...(Array.isArray(s.tags)?s.tags:[]),...(Array.isArray(s.custom_tags)?s.custom_tags:[])].map(t=>typeof t==='string'?t:t?.tag).filter(Boolean).map(t=>tagAliases[t]||t))];
 const tagsHtml = tags => (Array.isArray(tags)?tags:[]).map(t=>`<span class="tag">${esc(typeof t==='string'?t:t?.tag)}</span>`).join(' ');
 const info = s => [s.system,s.players,s.duration,s.age_rating].filter(Boolean).map(esc).join(' ・ ');
 // Only accept local image paths or secure remote URLs; never interpolate arbitrary schemes.
@@ -78,7 +79,11 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
   }
   if(page==='request'){
     const statuses={open:'受付中',consult:'要相談',closed:'受付停止'};
-    el.innerHTML=`<h1>${esc(d.title)}</h1><section><h2>KP受付状況</h2><span class="tag">${esc(statuses[d.status]||'未設定')}</span>${textBlock(d.status_message)}</section><section><h2>依頼ルール</h2><div class="rich-text">${markdown(d.rules)}</div></section><section><h2>依頼手順</h2>${textBlock(d.steps)}</section><section><h2>依頼テンプレート</h2><pre id="template">${esc(d.template)}</pre><button id="copy" type="button">コピーする</button></section>${/^https?:\/\//.test(d.discord_url||'')&&d.status!=='closed'?`<section><a href="${esc(d.discord_url)}" target="_blank" rel="noopener noreferrer">Discordで連絡する</a></section>`:''}`;
+    const about=d.kp_about??[String(d.rules||'').split(/^### 注意事項\s*$/m)[0].trim(),d.steps?'### 依頼手順\n'+d.steps:''].filter(Boolean).join('\n\n');
+    const notices=d.notices??(String(d.rules||'').split(/^### 注意事項\s*$/m)[1]||'').trim();
+    const requestBlock=(title,body)=>String(body||'').trim()?`<section class="scenario-detail-block"><h2>${esc(title)}</h2><div class="rich-text">${markdown(body)}</div></section>`:'';
+    const extras=Array.isArray(d.extra_sections)?d.extra_sections:[];
+    el.innerHTML=`<h1>${esc(d.title)}</h1><section><h2>KP受付状況</h2><span class="tag">${esc(statuses[d.status]||'未設定')}</span>${textBlock(d.status_message)}</section>${requestBlock('KP依頼について',about)}${requestBlock('注意事項',notices)}<section class="scenario-detail-block"><h2>依頼テンプレート</h2><pre id="template">${esc(d.template)}</pre><button id="copy" type="button">コピーする</button></section>${extras.map(x=>requestBlock(x.heading||'',x.body)).join('')}${/^https?:\/\//.test(d.discord_url||'')&&d.status!=='closed'?`<section><a href="${esc(d.discord_url)}" target="_blank" rel="noopener noreferrer">Discordで連絡する</a></section>`:''}`;
     document.getElementById('copy').addEventListener('click',()=>navigator.clipboard.writeText(d.template||'').then(()=>alert('コピーしました')).catch(()=>alert('コピーできませんでした')));
   }
   if(page==='detail'){
@@ -108,7 +113,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     const options=(key)=>[...new Set(d.map(s=>s[key]).filter(Boolean))];
     const select=(id,label,values)=>`<label class="filter-label">${label}<select id="${id}"><option value="">すべて</option>${values.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select></label>`;
     const availableTags=[...new Set(d.flatMap(s=>allTags(s)))].sort((a,b)=>a.localeCompare(b,'ja'));
-    el.innerHTML=`<h1>回せるシナリオ</h1><div class="scenario-filters"><div class="scenario-keyword-wrap"><label class="filter-label" for="query">キーワード<input id="query" placeholder="タイトル・読み仮名・タグで検索" aria-label="シナリオ検索" autocomplete="off"></label><div id="tag-panel" class="tag-panel" hidden><div class="tag-panel-heading"><strong>タグを選択（AND検索）</strong><button type="button" id="clear-tags">選択解除</button></div><div class="tag-choices">${availableTags.map((tag,i)=>`<button type="button" class="tag-choice" data-tag-index="${i}" aria-pressed="false">${esc(tag)}</button>`).join('')||'<span>登録済みタグはありません</span>'}</div></div></div>${select('players','プレイ人数',['フリー','タイマン','1PL','2PL','3PL','4PL','5PL以上'])}${select('duration','プレイ時間',['1～4時間','5～8時間','9～15時間','16～20時間','21時間～'])}${select('system','システム',['CoC6版','CoC7版'])}${select('age_rating','対象年齢',['全年齢','R-15','R-18'])}</div><div class="scenario-toolbar"><span id="result-count" aria-live="polite"></span><div class="scenario-view-toggle" role="group" aria-label="表示形式"><button type="button" data-view="card" aria-pressed="true">▦ カード</button><button type="button" data-view="list" aria-pressed="false">☷ リスト</button></div></div><div id="results" class="scenario-results view-card"></div>`;
+    el.innerHTML=`<h1>回せるシナリオ</h1><div class="scenario-filters"><div class="scenario-keyword-wrap"><label class="filter-label" for="query">キーワード<input id="query" placeholder="タイトル・読み仮名・タグで検索" aria-label="シナリオ検索" autocomplete="off"></label><div id="tag-panel" class="tag-panel" hidden><div class="tag-panel-heading"><strong>タグを選択（AND検索）</strong><button type="button" id="clear-tags">選択解除</button></div><div class="tag-choices">${availableTags.map((tag,i)=>`<button type="button" class="tag-choice" data-tag-index="${i}" aria-pressed="false">${esc(tag)}</button>`).join('')||'<span>登録済みタグはありません</span>'}</div></div></div>${select('players','プレイ人数',['フリー','タイマン','1PL','2PL','3PL','4PL','5PL以上'])}${select('duration','プレイ時間',['短編','中編','長編','超長編'])}${select('system','システム',['CoC6版','CoC7版'])}${select('age_rating','対象年齢',['全年齢','R-15','R-18'])}</div><div class="scenario-toolbar"><span id="result-count" aria-live="polite"></span><div class="scenario-view-toggle" role="group" aria-label="表示形式"><button type="button" data-view="card" aria-pressed="true">▦ カード</button><button type="button" data-view="list" aria-pressed="false">☷ リスト</button></div></div><div id="results" class="scenario-results view-card"></div>`;
     const selectedTags=new Set();
     const panel=document.getElementById('tag-panel'),query=document.getElementById('query');
     query.addEventListener('focus',()=>{panel.hidden=false;});
