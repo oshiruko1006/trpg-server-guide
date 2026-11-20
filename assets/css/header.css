@@ -69,3 +69,9 @@ header .brand img { width: 49px; height: 49px; }
   header .brand > span::after { font-size: 8px; letter-spacing: 0; }
   header .brand img { width: 39px; height: 39px; }
 }
+
+/* Center site identity, with navigation on its own row on every screen size. */
+header {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding-block:15px 12px;}
+header .brand {display:inline-flex;align-items:center;justify-content:center;max-width:100%;margin-inline:auto;}
+header nav {width:100%;justify-content:center;}
+@media(max-width:600px){header{gap:9px;padding:12px 10px;}header nav{justify-content:center;}header nav a{min-width:0;}}

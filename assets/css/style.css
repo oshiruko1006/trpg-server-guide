@@ -384,3 +384,26 @@ body[data-page="home"] #content > h1.home-title {
   margin-inline: auto;
 }
 body > footer { display: none; }
+
+/* Classic accordion heading: aligned line + floral icon + English/Japanese title. */
+.site-accordion .accordion-trigger {
+  display:grid;grid-template-columns:24px 18px minmax(0,1fr) 24px;
+  align-items:center;column-gap:11px;min-width:0;
+  color:#604b3e;padding:19px 22px;
+}
+.site-accordion .accordion-trigger::before {
+  content:"";display:block;width:24px;height:1px;background:#bdd2c3;
+}
+.site-accordion .accordion-mark {
+  display:block;align-self:center;min-height:0;width:18px;height:18px;
+  background:none;border-radius:0;position:relative;flex:none;
+}
+.site-accordion .accordion-mark::after {
+  content:"✿";position:absolute;inset:0;display:grid;place-items:center;
+  color:#88a996;font:17px/1 Georgia,serif;
+}
+.site-accordion .accordion-title-group {display:flex;flex-direction:column;gap:2px;min-width:0;line-height:1.35;}
+.site-accordion .accordion-title-en {font:500 10px/1.4 Georgia,serif;letter-spacing:.15em;color:#86a797;overflow-wrap:anywhere;}
+.site-accordion .accordion-title-ja {font-family:"Noto Serif JP","Yu Mincho",serif;font-weight:600;font-size:clamp(16px,2.1vw,20px);line-height:1.5;color:#604b3e;overflow-wrap:anywhere;}
+.site-accordion .accordion-chevron {margin:0;justify-self:end;align-self:center;}
+@media(max-width:650px){.site-accordion .accordion-trigger{grid-template-columns:20px 16px minmax(0,1fr) 20px;column-gap:8px;padding:16px 13px}.site-accordion .accordion-trigger::before{width:20px}.site-accordion .accordion-mark{width:16px;height:16px}.site-accordion .accordion-title-en{font-size:9px;letter-spacing:.08em}}
