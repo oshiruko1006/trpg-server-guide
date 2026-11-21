@@ -410,3 +410,8 @@ body > footer { display: none; }
 
 /* Decorative mark matches the header sparkle. */
 .site-accordion .accordion-mark::after{content:"✦";font:14px/1 Georgia,serif;color:#91b5a6}
+
+/* HOME only: match the compact spacing used on the KP request page.
+   Override the mobile section margin:11px !important without changing other pages. */
+body[data-page="home"] .rule-list { gap: 12px; }
+body[data-page="home"] .rule-list > .rule-card { margin: 0 !important; }
