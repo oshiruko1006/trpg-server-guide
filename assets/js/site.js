@@ -116,7 +116,8 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
   }
   if(page==='character'){
     const systems = d.systems || [];
-    el.innerHTML = `<h1>${esc(d.title)}</h1><div class="switcher" role="group" aria-label="システム切り替え">${systems.map((s,i)=>`<button type="button" class="system-tab" data-index="${i}" aria-pressed="${i===0}">${esc(s.name)}</button>`).join('')}</div><div id="system-content"></div>`;
+    const systemTabLabel = name => ({'CoC6':'CoC6版','CoC7':'CoC7版'}[String(name || '').trim()] || String(name || ''));
+    el.innerHTML = `<h1>${esc(d.title)}</h1><div class="switcher" role="group" aria-label="システム切り替え">${systems.map((s,i)=>`<button type="button" class="system-tab" data-index="${i}" aria-pressed="${i===0}">${esc(systemTabLabel(s.name))}</button>`).join('')}</div><div id="system-content"></div>`;
     const display = i => {
       const s=systems[i];if(!s)return;
       const sections=s.sections || (s.rules?[{heading:'基本ルール',body:s.rules}]:[]);
