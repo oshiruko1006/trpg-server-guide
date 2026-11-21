@@ -220,6 +220,12 @@ collections:
     widget: string
     required: false
     hint: 例：2〜4PL、10PL固定。未入力時は検索用の人数を表示します
+  - label: KPC可
+    name: kpc_allowed
+    widget: boolean
+    default: false
+    required: false
+    hint: ONにすると公開ページに「KPC可」タグを自動表示します
   - label: 所要時間
     name: duration
     widget: select
@@ -381,7 +387,6 @@ collections:
     - 因習村
     - 協力型
     - NPC交流多め
-    - タイマン改変可
     - コメディ
     - 和風
     - 可愛い
