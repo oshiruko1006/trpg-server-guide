@@ -458,3 +458,12 @@ body[data-page="detail"] .scenario-facts dt{font-size:.73rem;margin-bottom:2px}
 body[data-page="detail"] .scenario-facts dd{font-size:.88rem;line-height:1.45}
 body[data-page="detail"] .scenario-detail-block>.rich-text{margin:0}
 @media(max-width:480px){body[data-page="detail"] .scenario-detail-block{padding:15px 13px 17px}body[data-page="detail"] .scenario-summary-bar>div{padding:2px 3px}body[data-page="detail"] .scenario-summary-bar dd{font-size:.7rem}body[data-page="detail"] .scenario-heading-copy{font-size:1.13rem}}
+
+/* Scenario detail: understated editorial headings, distinct from accordion controls */
+body[data-page="detail"] .scenario-detail-block>.scenario-section-heading{gap:10px;margin-bottom:13px;align-items:center}
+body[data-page="detail"] .scenario-heading-mark{display:block;width:3px;height:32px;min-width:3px;padding:0;background:#91b6a5;border-radius:3px;font-size:0}
+body[data-page="detail"] .scenario-heading-mark:before{content:none}
+body[data-page="detail"] .scenario-heading-copy{gap:1px;font-size:1.14rem;line-height:1.32}
+body[data-page="detail"] .scenario-heading-copy small{font-size:.6rem;letter-spacing:.12em}
+body[data-page="detail"] .scenario-detail-block{padding:17px 18px 19px}
+@media(max-width:480px){body[data-page="detail"] .scenario-detail-block{padding:15px 13px 17px}body[data-page="detail"] .scenario-heading-copy{font-size:1.09rem}body[data-page="detail"] .scenario-heading-mark{height:30px}}
