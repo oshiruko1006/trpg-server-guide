@@ -467,3 +467,9 @@ body[data-page="detail"] .scenario-heading-copy{gap:1px;font-size:1.14rem;line-h
 body[data-page="detail"] .scenario-heading-copy small{font-size:.6rem;letter-spacing:.12em}
 body[data-page="detail"] .scenario-detail-block{padding:17px 18px 19px}
 @media(max-width:480px){body[data-page="detail"] .scenario-detail-block{padding:15px 13px 17px}body[data-page="detail"] .scenario-heading-copy{font-size:1.09rem}body[data-page="detail"] .scenario-heading-mark{height:30px}}
+
+/* シナリオ見出し行にKP管理情報を収め、タイトルの幅を確保 */
+body[data-page="detail"] .scenario-eyebrow-row{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+body[data-page="detail"] .scenario-eyebrow-row .scenario-eyebrow{flex-shrink:0}
+body[data-page="detail"] .scenario-eyebrow-row .scenario-detail-status{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:5px;margin:0;min-width:0}
+body[data-page="detail"] .scenario-eyebrow-row .preparation-badge,body[data-page="detail"] .scenario-eyebrow-row .kp-detail-badge{font-size:clamp(9px,2.5vw,12px);padding:3px 7px;white-space:nowrap}
