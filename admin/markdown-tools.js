@@ -24,10 +24,11 @@
       end = Math.max(start, Math.min(value.length, end));
       const selected = value.slice(start, end);
       let replacement, from = start, to = end;
-      if (kind === 'bold' || kind === 'italic' || kind === 'link') {
+      if (kind === 'bold' || kind === 'italic' || kind === 'link' || kind === 'underline') {
         const wrappers = {
           bold: ['**', '**', '太字'],
           italic: ['*', '*', '斜体'],
+          underline: ['++', '++', '下線'],
           link: ['[', '](https://example.com)', 'リンク文字']
         };
         const [left, right, placeholder] = wrappers[kind];
@@ -58,7 +59,7 @@
     }
     render() {
       const value = typeof this.props.value === 'string' ? this.props.value : String(this.props.value || '');
-      const actions = [['bold', '太字'], ['italic', '斜体'], ['h2', '見出し'], ['h3', '小見出し'], ['ul', '箇条書き'], ['ol', '番号'], ['link', 'リンク'], ['mint','囲み・ミント'], ['sand','囲み・ベージュ'], ['rose','囲み・ピンク']];
+      const actions = [['bold', '太字'], ['italic', '斜体'], ['h2', '見出し'], ['h3', '小見出し'], ['ul', '箇条書き'], ['ol', '番号'], ['link', 'リンク'], ['mint','囲み・ミント'], ['sand','囲み・ベージュ'], ['underline','下線']];
       return h('div', { className: 'vanilla-md-editor' },
         h('div', { className: 'vanilla-md-toolbar', role: 'toolbar', 'aria-label': 'Markdown装飾' },
           ...actions.map(([kind, label]) => h('button', {
