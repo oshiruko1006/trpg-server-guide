@@ -148,7 +148,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
       '準推奨技能':'OPTIONAL SKILLS','あらすじ':'STORY','ハンドアウト':'HANDOUTS',
       '概要・補足':'OVERVIEW','注意事項':'IMPORTANT NOTES'
     };
-    const detailHeading=(heading)=>`<h2 class="scenario-section-heading"><span class="scenario-heading-mark" aria-hidden="true">✦</span><span class="scenario-heading-copy"><small>${esc(headingEn[heading]||'SCENARIO NOTES')}</small><span>${esc(heading)}</span></span></h2>`;
+    const detailHeading=(heading)=>`<h2 class="scenario-section-heading"><span class="scenario-heading-mark" aria-hidden="true"></span><span class="scenario-heading-copy"><small>${esc(headingEn[heading]||'SCENARIO NOTES')}</small><span>${esc(heading)}</span></span></h2>`;
     const block = (heading,body) => String(body||'').trim()?`<section class="scenario-detail-block">${detailHeading(heading)}<div class="rich-text">${markdown(body)}</div></section>`:'';
     const compactInfo=[['SYSTEM',s.system],['人数',s.players_display||s.players],['時間',s.duration_display||s.duration],['対象年齢',s.age_rating]].filter(([,v])=>String(v||'').trim());
     const infoBar=`<dl class="scenario-summary-bar">${compactInfo.map(([label,value])=>`<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>`;
