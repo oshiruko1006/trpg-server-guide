@@ -65,28 +65,36 @@ document.addEventListener('click', event => {
   card.classList.toggle('is-open',open);
 });
 const tagAliases = {'戦闘あり':'戦闘有','謎解き':'謎解き有','PvP可能':'PvP'};
+// 表示順：探索者条件 → HO・PvP → 形式 → ロスト率 → 手動タグ。
 const lossTagMap = {'低':['低ロス'],'低〜中':['低ロス','中ロス'],'中':['中ロス'],'中〜高':['中ロス','高ロス'],'高':['高ロス']};
 const derivedTags = s => [
-  ...(lossTagMap[s.loss_rate] || []),
-  ...(['クローズド','シティ','半クローズド'].includes(s.scenario_type) ? [s.scenario_type] : []),
   ...(s.character_policy==='新規限定' ? ['新規限定'] : ['継続限定','どちらも可'].includes(s.character_policy) ? ['継続可'] : []),
   ...(['あり','一部あり'].includes(s.secret_ho) ? ['秘匿'] : []),
-  ...(['あり','可能性あり'].includes(s.pvp) ? ['PvP'] : [])
+  ...(['あり','可能性あり'].includes(s.pvp) ? ['PvP'] : []),
+  ...(['クローズド','シティ','半クローズド'].includes(s.scenario_type) ? [s.scenario_type] : []),
+  ...(lossTagMap[s.loss_rate] || [])
 ];
-const managedTags = new Set(['低ロス','中ロス','高ロス','クローズド','シティ','半クローズド','新規限定','継続可','秘匿','PvP','PvP有','PvP可能']);
+const tagOrder = [
+  ['新規限定','継続可'],
+  ['秘匿','秘匿HO','公開HO','HOなし','PvP','PvP有'],
+  ['クローズド','シティ','半クローズド'],
+  ['低ロス','中ロス','高ロス']
+];
 const allTags = s => {
   const manual=[...(Array.isArray(s.tags)?s.tags:[]),...(Array.isArray(s.custom_tags)?s.custom_tags:[])]
     .map(t=>typeof t==='string'?t:t?.tag).filter(Boolean).map(t=>tagAliases[t]||t);
-  // Legacy tags are retained only if the corresponding structured field is absent.
+  // 旧データの自動タグは、対応する専用項目が未入力のときだけ残す。
   const filtered=manual.filter(t=>{
     if(['低ロス','中ロス','高ロス'].includes(t)) return !s.loss_rate;
     if(['クローズド','シティ','半クローズド'].includes(t)) return !s.scenario_type;
     if(['新規限定','継続可'].includes(t)) return !s.character_policy;
-    if(t==='秘匿') return !s.secret_ho;
+    if(['秘匿','秘匿HO'].includes(t)) return !s.secret_ho;
     if(['PvP','PvP有'].includes(t)) return !s.pvp;
     return true;
   });
-  return [...new Set([...filtered,...derivedTags(s)])];
+  const unique=[...new Set([...filtered,...derivedTags(s)])];
+  const priority=tagOrder.flat();
+  return [...priority.filter(t=>unique.includes(t)),...unique.filter(t=>!priority.includes(t))];
 };
 const tagsHtml = tags => (Array.isArray(tags)?tags:[]).map(t=>`<span class="tag">${esc(typeof t==='string'?t:t?.tag)}</span>`).join(' ');
 const info = s => [s.system,s.players_display||s.players,s.duration_display||s.duration,s.age_rating].filter(Boolean).map(esc).join(' ・ ');
@@ -112,7 +120,10 @@ const externalLinks = s => (Array.isArray(s.external_links)?s.external_links:[])
 const externalLinksHtml = (s, cls='') => {const links=externalLinks(s);return links.length?`<div class="external-links ${cls}">${links.map(x=>`<a class="external-link" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.label)} <span aria-hidden="true">↗</span></a>`).join('')}</div>`:'';};
 const validStatuses = ['所持・未読','読了済','準備完了'];
 const statusBadge = s => validStatuses.includes(s.preparation_status) ? `<span class="preparation-badge" data-status="${esc(s.preparation_status)}">${esc(s.preparation_status)}</span>` : '';
-const scenarioCard = (s, view) => `<article class="scenario scenario-entry scenario-${view}"><a class="scenario-entry-link" href="/scenario/${encodeURIComponent(s.slug)}/"><div class="scenario-cover-wrap">${trailerThumb(s)}${s.kp_experienced===true?'<span class="kp-experience-badge">✓ KP経験有</span>':''}</div><div class="scenario-entry-body"><div class="scenario-title-row"><h2>${esc(s.title)}</h2>${statusBadge(s)}</div><p class="muted">${info(s)}</p><div class="scenario-tags">${tagsHtml(scenarioTags(s))}</div>${view==='list'?`<p class="scenario-excerpt">${esc(String(s.summary||'').replace(/[#*_`~\[\]]/g,'').slice(0,115))}</p>`:''}</div></a>${externalLinksHtml(s,'scenario-card-links')}</article>`;
+const authorHtml = s => String(s.author||'').trim()
+  ? `<span class="scenario-author" style="font-size:.76em;font-weight:400;color:var(--muted, #777);white-space:normal;">作者：${esc(String(s.author).trim())}</span>` : '';
+const titleWithAuthor = (s, heading) => `<span class="scenario-title-author" style="display:inline-flex;align-items:baseline;gap:.4em .7em;flex-wrap:wrap;max-width:100%;"><${heading} style="margin:0;">${esc(s.title)}</${heading}>${authorHtml(s)}</span>`;
+const scenarioCard = (s, view) => `<article class="scenario scenario-entry scenario-${view}"><a class="scenario-entry-link" href="/scenario/${encodeURIComponent(s.slug)}/"><div class="scenario-cover-wrap">${trailerThumb(s)}${s.kp_experienced===true?'<span class="kp-experience-badge">✓ KP経験有</span>':''}</div><div class="scenario-entry-body"><div class="scenario-title-row">${titleWithAuthor(s,'h2')}${statusBadge(s)}</div><p class="muted">${info(s)}</p><div class="scenario-tags">${tagsHtml(scenarioTags(s))}</div>${view==='list'?`<p class="scenario-excerpt">${esc(String(s.summary||'').replace(/[#*_`~\[\]]/g,'').slice(0,115))}</p>`:''}</div></a>${externalLinksHtml(s,'scenario-card-links')}</article>`;
 
 fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(d=>{
   if(page==='home'){
@@ -164,7 +175,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     const overview=entries.some(([,value])=>String(value||'').trim())?`<section class="scenario-detail-block">${detailHeading('シナリオ情報')}<dl class="scenario-facts">${entries.filter(([,v])=>String(v||'').trim()).map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl></section>`:'';
     const handouts=Array.isArray(s.handouts)?s.handouts:[];
     const hoHtml=handouts.some(h=>h.title||h.body)?`<section class="scenario-detail-block">${detailHeading('ハンドアウト')}<div class="scenario-handouts">${handouts.filter(h=>h.title||h.body).map(h=>`<article class="scenario-ho"><h3>${esc(h.title||'HO')}</h3><div class="rich-text">${markdown(h.body||'')}</div></article>`).join('')}</div></section>`:'';
-    el.innerHTML=`<a href="/scenario/">← SCENARIO一覧へ</a><div class="scenario-detail-head"><div class="scenario-eyebrow-row"><span class="scenario-eyebrow">SCENARIO</span><div class="scenario-detail-status">${statusBadge(s)}${s.kp_experienced===true?'<span class="kp-detail-badge">✓ KP経験有</span>':''}</div></div><h1>${esc(s.title)}</h1>${infoBar}<div class="scenario-tags">${tagsHtml(scenarioTags(s))}</div></div>${gallery}${externalLinksHtml(s,'scenario-detail-links')}${overview}${block('推奨技能',s.recommended_skills)}${block('準推奨技能',s.optional_skills)}${block('あらすじ',s.summary)}${block('概要',s.overview)}${hoHtml}${block('注意事項',s.cautions)}${extras.map(x=>block(x.heading||'',x.body)).join('')}`;
+    el.innerHTML=`<a href="/scenario/">← SCENARIO一覧へ</a><div class="scenario-detail-head"><div class="scenario-eyebrow-row"><span class="scenario-eyebrow">SCENARIO</span><div class="scenario-detail-status">${statusBadge(s)}${s.kp_experienced===true?'<span class="kp-detail-badge">✓ KP経験有</span>':''}</div></div>${titleWithAuthor(s,'h1')}${infoBar}<div class="scenario-tags">${tagsHtml(scenarioTags(s))}</div></div>${gallery}${externalLinksHtml(s,'scenario-detail-links')}${overview}${block('推奨技能',s.recommended_skills)}${block('準推奨技能',s.optional_skills)}${block('あらすじ',s.summary)}${block('概要',s.overview)}${hoHtml}${block('注意事項',s.cautions)}${extras.map(x=>block(x.heading||'',x.body)).join('')}`;
     if(images.length>1){let current=0;const main=el.querySelector('.scenario-main-trailer'),count=el.querySelector('.gallery-count'),thumbs=[...el.querySelectorAll('[data-gallery-index]')];const change=i=>{current=(i+images.length)%images.length;main.querySelector('img').src=images[current];main.dataset.index=String(current);count.textContent=`${current+1} / ${images.length}`;thumbs.forEach((b,j)=>b.setAttribute('aria-pressed',String(j===current)));};el.querySelector('.gallery-prev').addEventListener('click',()=>change(current-1));el.querySelector('.gallery-next').addEventListener('click',()=>change(current+1));thumbs.forEach(b=>b.addEventListener('click',()=>change(Number(b.dataset.galleryIndex))));}
     if(images.length){
       const overlay=document.createElement('div');overlay.className='trailer-lightbox';overlay.hidden=true;
@@ -185,7 +196,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     const options=(key)=>[...new Set(d.map(s=>s[key]).filter(Boolean))];
     const select=(id,label,values)=>`<label class="filter-label">${label}<select id="${id}"><option value="">すべて</option>${values.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select></label>`;
     const availableTags=[...new Set(d.flatMap(s=>allTags(s)))].sort((a,b)=>a.localeCompare(b,'ja'));
-    el.innerHTML=`<h1>回せるシナリオ</h1><div class="scenario-filters"><div class="scenario-keyword-wrap"><label class="filter-label" for="query">キーワード<input id="query" placeholder="タイトル・読み仮名・タグで検索" aria-label="シナリオ検索" autocomplete="off"></label><div id="tag-panel" class="tag-panel" hidden><div class="tag-panel-heading"><strong>タグを選択（AND検索）</strong><button type="button" id="clear-tags">選択解除</button></div><div class="tag-choices">${availableTags.map((tag,i)=>`<button type="button" class="tag-choice" data-tag-index="${i}" aria-pressed="false">${esc(tag)}</button>`).join('')||'<span>登録済みタグはありません</span>'}</div></div></div><button type="button" id="mobile-filter-toggle" class="mobile-filter-toggle" aria-expanded="false" aria-controls="advanced-filters">絞り込み条件を表示 ▾</button><div id="advanced-filters" class="advanced-filters">${select('players','プレイ人数',['フリー','タイマン','1PL','2PL','3PL','4PL','5PL以上'])}${select('duration','プレイ時間',['短編','中編','長編','超長編'])}${select('loss_rate','ロスト率',['低','中','高','不明','特殊','その他'])}${select('system','システム',['CoC6版','CoC7版'])}${select('age_rating','対象年齢',['全年齢','R-15','R-18'])}${select('preparation_status','準備状況',validStatuses)}${select('kp_experienced','KP経験',['KP経験有'])}</div></div><div class="scenario-toolbar"><span id="result-count" aria-live="polite"></span><div class="scenario-view-toggle" role="group" aria-label="表示形式"><button type="button" data-view="card" aria-pressed="true">▦ カード</button><button type="button" data-view="list" aria-pressed="false">☷ リスト</button></div></div><div id="results" class="scenario-results view-card"></div>`;
+    el.innerHTML=`<h1>回せるシナリオ</h1><div class="scenario-filters"><div class="scenario-keyword-wrap"><label class="filter-label" for="query">キーワード<input id="query" placeholder="タイトル・作者名・読み仮名・タグで検索" aria-label="シナリオ検索" autocomplete="off"></label><div id="tag-panel" class="tag-panel" hidden><div class="tag-panel-heading"><strong>タグを選択（AND検索）</strong><button type="button" id="clear-tags">選択解除</button></div><div class="tag-choices">${availableTags.map((tag,i)=>`<button type="button" class="tag-choice" data-tag-index="${i}" aria-pressed="false">${esc(tag)}</button>`).join('')||'<span>登録済みタグはありません</span>'}</div></div></div><button type="button" id="mobile-filter-toggle" class="mobile-filter-toggle" aria-expanded="false" aria-controls="advanced-filters">絞り込み条件を表示 ▾</button><div id="advanced-filters" class="advanced-filters">${select('players','プレイ人数',['フリー','タイマン','1PL','2PL','3PL','4PL','5PL以上'])}${select('duration','プレイ時間',['短編','中編','長編','超長編'])}${select('loss_rate','ロスト率',['低','中','高','不明','特殊','その他'])}${select('system','システム',['CoC6版','CoC7版'])}${select('age_rating','対象年齢',['全年齢','R-15','R-18'])}${select('preparation_status','準備状況',validStatuses)}${select('kp_experienced','KP経験',['KP経験有'])}</div></div><div class="scenario-toolbar"><span id="result-count" aria-live="polite"></span><div class="scenario-view-toggle" role="group" aria-label="表示形式"><button type="button" data-view="card" aria-pressed="true">▦ カード</button><button type="button" data-view="list" aria-pressed="false">☷ リスト</button></div></div><div id="results" class="scenario-results view-card"></div>`;
     const selectedTags=new Set();
     const panel=document.getElementById('tag-panel'),query=document.getElementById('query');
     query.addEventListener('focus',()=>{panel.hidden=false;});
@@ -197,7 +208,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     const render=()=>{
       const q=document.getElementById('query').value.trim().toLocaleLowerCase();
       const players=document.getElementById('players').value,duration=document.getElementById('duration').value,lossRate=document.getElementById('loss_rate').value,system=document.getElementById('system').value,ageRating=document.getElementById('age_rating').value,preparationStatus=document.getElementById('preparation_status').value,kpExperienced=document.getElementById('kp_experienced').value;
-      const items=d.filter(s=>{const tags=allTags(s);return [s.title,s.reading,s.system,s.summary,s.overview,s.cautions,s.players_display,s.duration_display,s.setting,s.recommended_skills,s.optional_skills,displayLoss(s),...tags].join(' ').toLocaleLowerCase().includes(q)&&[...selectedTags].every(t=>tags.includes(t))&&(!players||s.players===players)&&(!duration||s.duration===duration)&&lossMatches(s,lossRate)&&(!system||s.system===system)&&(!ageRating||(s.age_rating||'全年齢')===ageRating)&&(!preparationStatus||s.preparation_status===preparationStatus)&&(!kpExperienced||s.kp_experienced===true);});
+      const items=d.filter(s=>{const tags=allTags(s);return [s.title,s.author,s.reading,s.system,s.summary,s.overview,s.cautions,s.players_display,s.duration_display,s.setting,s.recommended_skills,s.optional_skills,displayLoss(s),...tags].join(' ').toLocaleLowerCase().includes(q)&&[...selectedTags].every(t=>tags.includes(t))&&(!players||s.players===players)&&(!duration||s.duration===duration)&&lossMatches(s,lossRate)&&(!system||s.system===system)&&(!ageRating||(s.age_rating||'全年齢')===ageRating)&&(!preparationStatus||s.preparation_status===preparationStatus)&&(!kpExperienced||s.kp_experienced===true);});
       items.sort((a,b)=>(a.reading||a.title).localeCompare(b.reading||b.title,'ja'));
       const results=document.getElementById('results');
       results.className=`scenario-results view-${view}`;
