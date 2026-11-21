@@ -1,7 +1,8 @@
 {
   "title": "二万海里と30センチメートル",
   "players": "タイマン",
-  "published": false,
+  "published": true,
   "preparation_status": "準備完了",
-  "kp_experienced": true
+  "kp_experienced": true,
+  "system": "CoC6版"
 }

@@ -1,7 +1,8 @@
 {
   "title": "拝啓、花棺の君へ",
   "players": "タイマン",
-  "published": false,
+  "published": true,
   "preparation_status": "準備完了",
-  "kp_experienced": true
+  "kp_experienced": true,
+  "system": "CoC6版"
 }
