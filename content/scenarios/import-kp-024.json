@@ -1,7 +1,61 @@
 {
-  "title": "旅館の捕食者",
+  "kp_experienced": true,
+  "trailers": [
+    "/assets/images/トレーラー-1.png",
+    "/assets/images/トレーラー-2.png",
+    "/assets/images/トレーラー-3.png",
+    "/assets/images/トレーラー-4.png"
+  ],
+  "optional_skills": "心理学・応急手当・医学・薬学",
+  "external_links": [
+    {
+      "url": "https://booth.pm/ja/items/2655195",
+      "label": "BOOTH"
+    }
+  ],
+  "recommended_skills": "探索技能・交渉技能・回避含む戦闘技能",
+  "summary": "季節は秋。\n休暇を取った探索者たちは二泊三日の旅行へと向かう。\n行き先は自然豊かな秘境の地に建つ、とある旅館だ。",
+  "cautions": "- PVP非推奨。野良卓非推奨。\n- 探索者、NPCが理不尽に酷い目に遭う。\n- 理不尽なロストの可能性あり。\n- 性暴力・暴力・暴言などの犯罪的な描写あり。\n- 苦手な要素がある場合、KPに申告すること。\n- 元々ゆっくりリプレイ動画として公開していたシナリオなので、「旅館の捕食者」をインターネットやSNSで検索するとワンクッションのないネタバレ画像や文章が出てくる可能性があります。\n\n上記、注意事項の一部です（重要度が高いものを掲載しています）\n他内容はKPから共有されます。",
+  "character_policy": "新規限定",
+  "scenario_type": "クローズド",
+  "author": "ねこずし卓",
+  "reading": "りょかんのほしょくしゃ",
+  "published": true,
+  "system": "CoC6版",
+  "setting": "現代日本",
   "players": "3PL",
-  "published": false,
+  "duration": "中編",
+  "handouts": [
+    {
+      "title": "HO1：ジャーナリスト",
+      "body": "RP方針…あなたには曲げられない正義感がある。"
+    },
+    {
+      "title": "HO2：ミステリー or ホラー作家",
+      "body": "RP方針…スランプに陥っているため、現状から抜け出したい。"
+    },
+    {
+      "title": "HO：医療従事者",
+      "body": "RP方針…多くの命を救いたいと思っている。"
+    }
+  ],
+  "secret_ho": "なし",
+  "duration_display": "10～13時間程度",
+  "title": "旅館の捕食者",
+  "tags": [
+    "サイコホラー",
+    "サスペンス",
+    "協力型",
+    "戦闘有",
+    "NPC交流多め"
+  ],
   "preparation_status": "準備完了",
-  "kp_experienced": true
+  "loss_rate": "中〜高",
+  "age_rating": "R-18",
+  "extra_sections": [
+    {
+      "heading": "R-18G要素・描写について",
+      "body": "「注意事項」に記載ある通り、性暴力・暴力・暴言などの犯罪的な描写が多く含まれます。性暴力は探索者（PC）に向けられたものではありません。\nKPの裁量（改変処理など）で変動するので、その場合は上記の限りではありません。"
+    }
+  ]
 }
