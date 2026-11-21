@@ -170,6 +170,11 @@ collections:
     widget: string
     required: false
     hint: 五十音順・検索に使用
+  - label: 作者名
+    name: author
+    widget: string
+    required: false
+    hint: シナリオ名の右側に小さく表示し、キーワード検索にも使用します
   - label: URL識別子（既存データ保持用）
     name: slug
     widget: hidden
