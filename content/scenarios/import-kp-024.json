@@ -35,7 +35,7 @@
       "body": "RP方針…スランプに陥っているため、現状から抜け出したい。"
     },
     {
-      "title": "HO：医療従事者",
+      "title": "HO3：医療従事者",
       "body": "RP方針…多くの命を救いたいと思っている。"
     }
   ],
@@ -50,7 +50,7 @@
     "NPC交流多め"
   ],
   "preparation_status": "準備完了",
-  "loss_rate": "中〜高",
+  "loss_rate": "高",
   "age_rating": "R-18",
   "extra_sections": [
     {
