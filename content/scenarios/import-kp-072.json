@@ -1,7 +1,8 @@
 {
   "title": "6番線4時44分発の",
   "players": "タイマン",
-  "published": false,
+  "published": true,
   "preparation_status": "準備完了",
-  "kp_experienced": true
+  "kp_experienced": true,
+  "system": "CoC6版"
 }

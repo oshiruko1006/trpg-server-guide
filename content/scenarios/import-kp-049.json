@@ -1,7 +1,8 @@
 {
   "title": "堕獄の夜籠り、断つ双刀",
   "players": "2PL",
-  "published": false,
+  "published": true,
   "preparation_status": "準備完了",
-  "kp_experienced": true
+  "kp_experienced": true,
+  "system": "CoC6版"
 }

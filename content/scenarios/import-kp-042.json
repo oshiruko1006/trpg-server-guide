@@ -1,7 +1,8 @@
 {
   "title": "DOGMA",
   "players": "2PL",
-  "published": false,
+  "published": true,
   "preparation_status": "準備完了",
-  "kp_experienced": true
+  "kp_experienced": true,
+  "system": "CoC6版"
 }
