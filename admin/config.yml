@@ -76,6 +76,12 @@ collections:
           widget: string
           required: false
           hint: 例：COMBAT RULES。未入力なら日本語のみ表示（既存の題目は従来の英語を維持）
+        - label: 常に表示する（ONで開いたまま・OFFで折りたたみ式）
+          name: always_open
+          widget: boolean
+          default: false
+          required: false
+          hint: OFFなら従来どおり開閉できます。ONなら本文を常に表示します。
         - label: 本文
           name: body
           widget: vanilla_markdown
