@@ -140,6 +140,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
   if(page==='detail'){
     const s=d.find(x=>x.slug===document.body.dataset.slug);
     if(!s){el.textContent='シナリオが見つかりません。';return;}
+    const extras=Array.isArray(s.extra_sections)?s.extra_sections:[];
     const images = trailerUrls(s);
     const gallery = images.length ? `<div class="scenario-gallery-viewer"><button class="trailer-open scenario-main-trailer" type="button" data-index="0" aria-label="トレーラーを拡大"><img src="${esc(images[0])}" alt="${esc(s.title)}のトレーラー"></button>${images.length>1?`<div class="scenario-gallery-controls"><button type="button" class="gallery-prev" aria-label="前のトレーラー">‹</button><span class="gallery-count">1 / ${images.length}</span><button type="button" class="gallery-next" aria-label="次のトレーラー">›</button></div><div class="scenario-gallery-thumbs">${images.map((src,i)=>`<button type="button" data-gallery-index="${i}" aria-label="トレーラー${i+1}を表示" aria-pressed="${i===0}"><img src="${esc(src)}" alt="" loading="lazy"></button>`).join('')}</div>`:''}</div>` : '';
     const block = (heading,body) => String(body||'').trim()?`<section class="scenario-detail-block"><h2>${esc(heading)}</h2><div class="rich-text">${markdown(body)}</div></section>`:'';
