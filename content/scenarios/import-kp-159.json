@@ -1,8 +1,9 @@
 {
   "title": "殺意の余白を埋めるなら",
   "players": "タイマン",
-  "published": false,
+  "published": true,
   "age_rating": "R-18",
   "preparation_status": "準備完了",
-  "kp_experienced": true
+  "kp_experienced": true,
+  "system": "CoC6版"
 }
