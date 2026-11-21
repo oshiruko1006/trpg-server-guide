@@ -165,6 +165,11 @@ collections:
   - label: タイトル
     name: title
     widget: string
+  - label: 読み仮名（ひらがな）
+    name: reading
+    widget: string
+    required: false
+    hint: 五十音順・検索に使用
   - label: 🖼️ トレーラー画像（個別追加・既存画像）
     name: trailers
     widget: list
@@ -184,11 +189,6 @@ collections:
     widget: vanilla_trailer_paths
     required: false
     hint: GitHubにアップロード済みの画像ファイル名をまとめて登録します。画像本体のアップロードは行いません。
-  - label: 読み仮名（ひらがな）
-    name: reading
-    widget: string
-    required: false
-    hint: 五十音順・検索に使用
   - label: 作者名
     name: author
     widget: string
@@ -377,6 +377,7 @@ collections:
     - ギャグ
     - エロ
     - エログロ
+    - グロ
     - インモラル
     - 近親相姦
     - バディ
