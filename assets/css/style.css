@@ -415,3 +415,9 @@ body > footer { display: none; }
    Override the mobile section margin:11px !important without changing other pages. */
 body[data-page="home"] .rule-list { gap: 12px; }
 body[data-page="home"] .rule-list > .rule-card { margin: 0 !important; }
+
+/* 2026-11-21: compact accordion spacing on HOME and CS GUIDE. */
+.rule-list > .rule-card.site-accordion { margin: 0 !important; }
+body[data-page="character"] .rule-list { gap: 12px; }
+/* Request accordions are direct children, so keep consistent vertical margins. */
+body[data-page="request"] #content > .request-accordion { margin: 12px 0 !important; }
