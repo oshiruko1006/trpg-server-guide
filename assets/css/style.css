@@ -473,3 +473,14 @@ body[data-page="detail"] .scenario-eyebrow-row{display:flex;align-items:center;j
 body[data-page="detail"] .scenario-eyebrow-row .scenario-eyebrow{flex-shrink:0}
 body[data-page="detail"] .scenario-eyebrow-row .scenario-detail-status{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:5px;margin:0;min-width:0}
 body[data-page="detail"] .scenario-eyebrow-row .preparation-badge,body[data-page="detail"] .scenario-eyebrow-row .kp-detail-badge{font-size:clamp(9px,2.5vw,12px);padding:3px 7px;white-space:nowrap}
+
+/* Scenario trailer: smaller desktop preview, preserve full-size lightbox */
+body[data-page="detail"] .scenario-gallery-viewer{width:70%;max-width:680px;margin:14px auto 20px}
+body[data-page="detail"] .scenario-main-trailer{max-width:none}
+body[data-page="detail"] .scenario-main-trailer img{max-height:520px}
+body[data-page="detail"] .scenario-gallery-controls{margin:7px 0;gap:16px}
+body[data-page="detail"] .scenario-gallery-controls button{font-size:21px;padding:1px 12px}
+body[data-page="detail"] .scenario-gallery-thumbs{gap:7px}
+body[data-page="detail"] .scenario-gallery-thumbs button{width:66px;height:48px}
+@media(max-width:900px){body[data-page="detail"] .scenario-gallery-viewer{width:80%}}
+@media(max-width:600px){body[data-page="detail"] .scenario-gallery-viewer{width:100%;margin:12px auto 17px}body[data-page="detail"] .scenario-main-trailer img{max-height:none}body[data-page="detail"] .scenario-gallery-thumbs button{width:62px;height:45px}}
