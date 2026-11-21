@@ -9,6 +9,7 @@
   "character_policy": "新規限定",
   "scenario_type": null,
   "pvp": "なし",
+  "author": "臓器売買 / popo",
   "reading": "ふかんぜんむけつ",
   "published": true,
   "system": "CoC6版",
@@ -29,7 +30,9 @@
     "探索中心",
     "謎解き有",
     "エログロ",
-    "インモラル"
+    "インモラル",
+    "サスペンス",
+    "NPC交流多め"
   ],
   "overview": "私を理解しない私から、私を理解しないあなたへ",
   "preparation_status": "準備完了",
