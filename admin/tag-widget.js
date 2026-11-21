@@ -1,14 +1,16 @@
 /* Decap CMS custom tags widget. Stores an array of strings; reads legacy {tag: ...} entries too. */
 (function () {
   'use strict';
+  // 専用の概要項目から自動生成するタグはここには表示しない。
   const categories = [
-    ['ロスト率', ['低ロス','中ロス','高ロス']],
     ['描写・雰囲気', ['描写多め','描写少なめ','RP中心','クラシック']],
     ['プレイ傾向', ['探索中心','戦闘有','謎解き有']],
-    ['ジャンル', ['ホラー','エモ','ギャグ','エロ','エログロ','インモラル','近親相姦','バディ','SAN値回復','ロスト救済']],
-    ['舞台', ['クローズド','シティ']],
-    ['HO・探索者', ['秘匿HO','公開HO','HOなし','新規限定','継続可','PvP有']]
+    ['ジャンル', ['ホラー','エモ','ギャグ','エロ','エログロ','インモラル','近親相姦','バディ','SAN値回復','ロスト救済']]
   ];
+  const managedTags = new Set([
+    '低ロス','中ロス','高ロス','クローズド','シティ','半クローズド',
+    '秘匿HO','公開HO','HOなし','新規限定','継続可','PvP有','PvP可能','PvP','秘匿'
+  ]);
   const ReactAPI = window.React;
   if (!window.CMS || !ReactAPI) { console.error('Decap CMS tags widget: React/CMS unavailable'); return; }
   const h = ReactAPI.createElement;
@@ -16,7 +18,7 @@
   const normalize = value => {
     const input = value && typeof value.toJS === 'function' ? value.toJS() : value;
     return [...new Set((Array.isArray(input) ? input : []).map(x =>
-      aliases[(typeof x === 'string' ? x : x && x.tag || '').trim()] || (typeof x === 'string' ? x : x && x.tag || '').trim()).filter(Boolean))];
+      aliases[(typeof x === 'string' ? x : x && x.tag || '').trim()] || (typeof x === 'string' ? x : x && x.tag || '').trim()).filter(tag => tag && !managedTags.has(tag)))];
   };
   class Widget extends ReactAPI.Component {
     constructor(props) { super(props); this.state = {custom:''}; this.add = this.add.bind(this); }
