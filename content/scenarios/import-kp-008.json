@@ -1,7 +1,23 @@
 {
-  "title": "B'ASH",
-  "players": "4PL",
+  "kp_experienced": true,
+  "trailers": [],
+  "scenario_type": "シティ",
+  "author": "はっぱやで",
+  "reading": "びーあっしゅ",
+  "trailer_batch": [
+    "/assets/images/mwqhvtmm-6acc6gv-1.jpeg",
+    "/assets/images/mwqhvtmn-w3cijqb-2.png",
+    "/assets/images/mwqhvtmp-cv6sluz-3.png",
+    "/assets/images/mwqhvtmq-8x7yql6-4.png",
+    "/assets/images/mwqhvtmh-amwewv1-npc.jpeg"
+  ],
   "published": false,
+  "system": "CoC6版",
+  "setting": "近未来シティ",
+  "players": "4PL",
+  "duration": "長編",
+  "duration_display": "20時間程度",
+  "title": "B'ASH",
   "preparation_status": "準備完了",
-  "kp_experienced": true
+  "age_rating": "全年齢"
 }
