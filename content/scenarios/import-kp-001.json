@@ -1,7 +1,39 @@
 {
-  "title": "虚校の餞",
+  "kp_experienced": true,
+  "trailers": [
+    "/assets/images/トレーラー_虚校の餞.png",
+    "/assets/images/トレーラー_虚校の餞2.png"
+  ],
+  "summary": "とある中学校では、七不思議が流行っている。\nそれにともない、教師や生徒の失踪、街では不可解な事件が発生した。\n\n騒動に現を抜かす生徒も多く、\n噂の終息を図るよう職員会議で決定した。\n\n貴方達は、その中学校に勤務する十人の教師である。\n\n「学校の七不思議で被害に？」\n「今の時代にそんなこと、あるわけないじゃないですか」",
+  "aftereffects": "その他",
+  "cautions": "- 基本協力型秘匿HO8～10PLシナリオ(8人で行う場合、KPCで補ってください)\n- 新規中学校教師限定。また、全員同じ母校出身。\n- PCは主に教師、たまに学生姿の出番があります。\n- 全員生還難易度 高（HOによって生還率に違いがあります）\n- HOにより後遺症可能性有り\n- 神話生物の独自解釈、創作があります。\n- 七不思議、微ホラー、夜の学校、PCへの一部感情指定、協力型PvPの可能性、一部PCの嘔吐、欠損・カニバリズムの可能性　それらが苦手な方は通過非推奨です。",
+  "character_policy": "新規限定",
+  "scenario_type": "クローズド",
+  "aftereffects_custom": "HOにより後遺症可能性有",
+  "pvp": "可能性あり",
+  "author": "待機™",
+  "reading": "きょこうのはなむけ",
+  "published": true,
+  "system": "CoC6版",
+  "setting": "現代日本・卒業シーズン",
   "players": "5PL以上",
-  "published": false,
+  "loss_rate_custom": "HOによって生還率に違い有",
+  "duration": "長編",
+  "handouts": [],
+  "players_display": "8～10PL",
+  "secret_ho": "あり",
+  "duration_display": "半テキセ24時間",
+  "title": "虚校の餞",
+  "tags": [
+    "協力型"
+  ],
   "preparation_status": "準備完了",
-  "kp_experienced": true
+  "loss_rate": "その他",
+  "age_rating": "全年齢",
+  "extra_sections": [
+    {
+      "body": "### ■ HO一覧\n:::mint\n国語の先生　　　社会の先生\n数学の先生　　　化学の先生\n音楽の先生　　　美術の先生\n体育の先生　　　英語の先生\n家庭科の先生　　保健室の先生\n:::\n### ▼ 秘匿について\n:::mint\nHOごとに「教師」「秘密」「噂」の秘匿内容が付きます\n- 教師…学校での役割。貴方の教室などについて\n- 秘密…学校内外問わず貴方が抱えている秘密\n- 噂…最近聞いた噂、貴方は何を知っているかな\n:::\n",
+      "heading": "公開ハンドアウト・秘匿"
+    }
+  ]
 }
