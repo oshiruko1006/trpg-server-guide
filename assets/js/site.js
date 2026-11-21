@@ -70,6 +70,7 @@ const tagAliases = {'戦闘あり':'戦闘有','謎解き':'謎解き有','PvP�
 const lossTagMap = {'低':['低ロス'],'低〜中':['低ロス','中ロス'],'中':['中ロス'],'中〜高':['中ロス','高ロス'],'高':['高ロス']};
 const derivedTags = s => [
   ...(s.character_policy==='新規限定' ? ['新規限定'] : ['継続限定','どちらも可'].includes(s.character_policy) ? ['継続可'] : []),
+  ...(s.kpc_allowed===true ? ['KPC可'] : []),
   ...(['あり','一部あり'].includes(s.secret_ho) ? ['秘匿'] : []),
   ...(['あり','可能性あり'].includes(s.pvp) ? ['PvP'] : []),
   ...(['クローズド','シティ','半クローズド'].includes(s.scenario_type) ? [s.scenario_type] : []),
@@ -77,6 +78,7 @@ const derivedTags = s => [
 ];
 const tagOrder = [
   ['新規限定','継続可'],
+  ['KPC可'],
   ['秘匿','秘匿HO','公開HO','HOなし','PvP','PvP有'],
   ['クローズド','シティ','半クローズド'],
   ['低ロス','中ロス','高ロス']
@@ -89,6 +91,7 @@ const allTags = s => {
     if(['低ロス','中ロス','高ロス'].includes(t)) return !s.loss_rate;
     if(['クローズド','シティ','半クローズド'].includes(t)) return !s.scenario_type;
     if(['新規限定','継続可'].includes(t)) return !s.character_policy;
+    if(t==='KPC可') return s.kpc_allowed!==true;
     if(['秘匿','秘匿HO'].includes(t)) return !s.secret_ho;
     if(['PvP','PvP有'].includes(t)) return !s.pvp;
     return true;
