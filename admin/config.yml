@@ -348,19 +348,6 @@ collections:
     name: optional_skills
     widget: vanilla_markdown
     required: false
-  - label: ハンドアウト（HOを追加）
-    name: handouts
-    widget: list
-    required: false
-    summary: '{{fields.title}}'
-    fields:
-    - label: HOタイトル
-      name: title
-      widget: string
-    - label: HO本文
-      name: body
-      widget: vanilla_markdown
-      required: false
   - label: タグ
     name: tags
     widget: vanilla_tags
@@ -382,6 +369,7 @@ collections:
     - インモラル
     - 近親相姦
     - バディ
+    - うちよそ
     - SAN値回復
     - ロスト救済
     - シリアス
@@ -417,6 +405,19 @@ collections:
     name: overview
     widget: vanilla_markdown
     required: false
+  - label: ハンドアウト（HOを追加）
+    name: handouts
+    widget: list
+    required: false
+    summary: '{{fields.title}}'
+    fields:
+    - label: HOタイトル
+      name: title
+      widget: string
+    - label: HO本文
+      name: body
+      widget: vanilla_markdown
+      required: false
   - label: 注意事項
     name: cautions
     widget: vanilla_markdown
