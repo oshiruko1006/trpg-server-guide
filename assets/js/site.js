@@ -59,13 +59,35 @@ document.addEventListener('click', event => {
   button.setAttribute('aria-expanded', String(open));
   card.classList.toggle('is-open',open);
 });
-const tagAliases = {'戦闘あり':'戦闘有','謎解き':'謎解き有','PvP可能':'PvP有'};
-const allTags = s => [...new Set([...(Array.isArray(s.tags)?s.tags:[]),...(Array.isArray(s.custom_tags)?s.custom_tags:[])].map(t=>typeof t==='string'?t:t?.tag).filter(Boolean).map(t=>tagAliases[t]||t))];
+const tagAliases = {'戦闘あり':'戦闘有','謎解き':'謎解き有','PvP可能':'PvP'};
+const lossTagMap = {'低':['低ロス'],'低〜中':['低ロス','中ロス'],'中':['中ロス'],'中〜高':['中ロス','高ロス'],'高':['高ロス']};
+const derivedTags = s => [
+  ...(lossTagMap[s.loss_rate] || []),
+  ...(['クローズド','シティ','半クローズド'].includes(s.scenario_type) ? [s.scenario_type] : []),
+  ...(s.character_policy==='新規限定' ? ['新規限定'] : ['継続限定','どちらも可'].includes(s.character_policy) ? ['継続可'] : []),
+  ...(['あり','一部あり'].includes(s.secret_ho) ? ['秘匿'] : []),
+  ...(['あり','可能性あり'].includes(s.pvp) ? ['PvP'] : [])
+];
+const managedTags = new Set(['低ロス','中ロス','高ロス','クローズド','シティ','半クローズド','新規限定','継続可','秘匿','PvP','PvP有','PvP可能']);
+const allTags = s => {
+  const manual=[...(Array.isArray(s.tags)?s.tags:[]),...(Array.isArray(s.custom_tags)?s.custom_tags:[])]
+    .map(t=>typeof t==='string'?t:t?.tag).filter(Boolean).map(t=>tagAliases[t]||t);
+  // Legacy tags are retained only if the corresponding structured field is absent.
+  const filtered=manual.filter(t=>{
+    if(['低ロス','中ロス','高ロス'].includes(t)) return !s.loss_rate;
+    if(['クローズド','シティ','半クローズド'].includes(t)) return !s.scenario_type;
+    if(['新規限定','継続可'].includes(t)) return !s.character_policy;
+    if(t==='秘匿') return !s.secret_ho;
+    if(['PvP','PvP有'].includes(t)) return !s.pvp;
+    return true;
+  });
+  return [...new Set([...filtered,...derivedTags(s)])];
+};
 const tagsHtml = tags => (Array.isArray(tags)?tags:[]).map(t=>`<span class="tag">${esc(typeof t==='string'?t:t?.tag)}</span>`).join(' ');
 const info = s => [s.system,s.players_display||s.players,s.duration_display||s.duration,s.age_rating].filter(Boolean).map(esc).join(' ・ ');
 const lossMatches = (s, selected) => { if(!selected)return true; const value=s.loss_rate||({'低ロス':'低','中ロス':'中','高ロス':'高'}[allTags(s).find(t=>['低ロス','中ロス','高ロス'].includes(t))]||''); return value===selected || (value==='低〜中'&&['低','中'].includes(selected)) || (value==='中〜高'&&['中','高'].includes(selected)); };
 const displayLoss = s => s.loss_rate==='その他' ? (s.loss_rate_custom||'その他') : (s.loss_rate||'');
-const scenarioTags = s => allTags(s).filter(t=>!['低ロス','中ロス','高ロス'].includes(t));
+const scenarioTags = s => allTags(s);
 // Only accept local image paths or secure remote URLs; never interpolate arbitrary schemes.
 const imageUrl = value => {
   const v = String(value ?? '').trim();
