@@ -179,6 +179,11 @@ collections:
         allow_multiple: true
         config:
           multiple: true
+  - label: 🖼️ トレーラー一括登録（GitHubアップロード後）
+    name: trailer_batch
+    widget: vanilla_trailer_paths
+    required: false
+    hint: GitHubにアップロード済みの画像ファイル名をまとめて登録します。画像本体のアップロードは行いません。
   - label: 読み仮名（ひらがな）
     name: reading
     widget: string
