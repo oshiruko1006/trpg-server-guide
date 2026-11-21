@@ -537,3 +537,19 @@ body[data-page="detail"] .scenario-gallery-thumbs button{width:66px;height:48px}
   .switcher .system-tab,
   .switcher .system-tab[aria-pressed="true"]{font-size:12px;}
 }
+
+/* HOME / CS GUIDE: non-collapsible CMS sections, matching accordion heading style */
+.rule-card-always .rule-static-heading {
+  display:grid;grid-template-columns:24px 18px minmax(0,1fr);
+  align-items:center;column-gap:11px;min-width:0;
+  margin:0!important;padding:19px 22px 0;
+}
+.rule-card-always .rule-static-heading::before {
+  content:"";display:block;width:24px;height:1px;background:#bdd2c3;
+}
+.rule-card-always .rule-static-body {padding:12px 23px 22px;}
+@media(max-width:650px){
+  .rule-card-always .rule-static-heading {grid-template-columns:20px 16px minmax(0,1fr);column-gap:8px;padding:16px 13px 0;}
+  .rule-card-always .rule-static-heading::before {width:20px;}
+  .rule-card-always .rule-static-body {padding:10px 15px 17px;}
+}
