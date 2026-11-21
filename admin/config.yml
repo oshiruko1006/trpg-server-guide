@@ -165,22 +165,20 @@ collections:
   - label: タイトル
     name: title
     widget: string
-  - label: 🧪 トレーラー一括ドロップ（試験版）
-    name: trailer_batch
-    widget: vanilla_trailer_drop
-    required: false
-    hint: 複数枚をドロップして追加。まず非公開のテストシナリオで保存を確認してください。従来の個別追加欄も残しています。
   - label: 🖼️ トレーラー画像（個別追加・既存画像）
     name: trailers
     widget: list
     required: false
     summary: '{{fields.image}}'
-    hint: ここで画像を登録します。複数枚追加でき、1枚目が一覧の表紙になります。
+    hint: 標準の画像登録欄です。複数選択の可否をテストできますが、保存はまず非公開のテスト用シナリオで確認してください。1枚目が一覧の表紙になります。
     field:
       label: トレーラー画像
       name: image
       widget: image
-      allow_multiple: false
+      media_library:
+        allow_multiple: true
+        config:
+          multiple: true
   - label: 読み仮名（ひらがな）
     name: reading
     widget: string
