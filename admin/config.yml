@@ -30,7 +30,7 @@ collections:
       - label: 題目
         name: heading
         widget: string
-      - label: 英語見出し（任意）
+      - label: 英語見出し
         name: heading_en
         widget: string
         required: false
@@ -71,17 +71,11 @@ collections:
         - label: 題目
           name: heading
           widget: string
-        - label: 英語見出し（任意）
+        - label: 英語見出し
           name: heading_en
           widget: string
           required: false
           hint: 例：COMBAT RULES。未入力なら日本語のみ表示（既存の題目は従来の英語を維持）
-        - label: 常に表示する（ONで開いたまま・OFFで折りたたみ式）
-          name: always_open
-          widget: boolean
-          default: false
-          required: false
-          hint: OFFなら従来どおり開閉できます。ONなら本文を常に表示します。
         - label: 本文
           name: body
           widget: vanilla_markdown
@@ -127,7 +121,7 @@ collections:
       - label: 題目
         name: heading
         widget: string
-      - label: 英語見出し（任意）
+      - label: 英語見出し
         name: heading_en
         widget: string
         required: false
@@ -148,7 +142,7 @@ collections:
         required: false
         summary: '{{fields.label}}'
         fields:
-        - label: ファイル名・説明（任意）
+        - label: ファイル名・説明
           name: label
           widget: string
           required: false
@@ -252,7 +246,7 @@ collections:
     - シティ
     - 半クローズド
     - その他
-  - label: 形式の補足（任意）
+  - label: 形式の補足
     name: scenario_type_note
     widget: string
     required: false
@@ -273,7 +267,7 @@ collections:
     name: loss_rate_custom
     widget: string
     required: false
-  - label: ロスト率の補足（任意）
+  - label: ロスト率の補足
     name: loss_rate_note
     widget: string
     required: false
@@ -292,7 +286,7 @@ collections:
     name: aftereffects_custom
     widget: string
     required: false
-  - label: 後遺症の補足（任意）
+  - label: 後遺症の補足
     name: aftereffects_note
     widget: string
     required: false
