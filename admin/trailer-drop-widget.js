@@ -32,13 +32,17 @@
         const publicPath = '/assets/images/' + filename;
         const url = URL.createObjectURL(file);
         this.objectURLs.push(url);
-        const asset = { path, file, url, toString(){return url;}, toJSON(){return path;}, valueOf(){return url;} };
+        const reader = new FileReader();
+        reader.onload = () => this.setState(state => ({previews:{...state.previews,[publicPath]:reader.result}}));
+        reader.onerror = () => this.setState({error:'画像のプレビュー読み込みに失敗しました: '+file.name});
+        reader.readAsDataURL(file);
+        const asset = { path, public_path: publicPath, file, url, toString(){return url;}, toJSON(){return path;}, valueOf(){return url;} };
         this.props.onAddAsset(asset);
         next.push(publicPath);
         previews[publicPath] = url;
       });
       this.props.onChange(next);
-      this.setState({error:'',previews});
+      this.setState(state=>({error:'',previews:{...previews,...state.previews}}));
     }
     move(i,delta) {const a=asArray(this.props.value);const j=i+delta;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];this.props.onChange(a);}
     remove(i) {const a=asArray(this.props.value);this.props.onChange(a.filter((_,j)=>j!==i));}
@@ -60,7 +64,7 @@
           let preview=this.state.previews[src] || src;
           if (!this.state.previews[src] && this.props.getAsset) {try {const a=this.props.getAsset(src);if(a)preview=String(a);}catch(_){}}
           return h('div',{className:'vanilla-trailer-item',key:src+i},
-            h('img',{src:preview,alt:'トレーラー '+(i+1)}),
+            h('img',{src:preview,alt:'トレーラー '+(i+1),onError:e=>{e.currentTarget.style.opacity='0.25';e.currentTarget.title='プレビューを読み込めません';}}),
             h('div',null,h('span',null,i===0?'表紙':'画像 '+(i+1)),
               h('button',{type:'button',disabled:i===0,onClick:()=>this.move(i,-1)},'↑'),
               h('button',{type:'button',disabled:i===items.length-1,onClick:()=>this.move(i,1)},'↓'),
