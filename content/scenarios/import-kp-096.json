@@ -1,9 +1,38 @@
 {
-  "title": "繭の胎内",
-  "players": "タイマン",
-  "published": true,
-  "age_rating": "R-18",
-  "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版"
+  "trailers": [
+    [
+      "/assets/images/まゆなか01.png"
+    ],
+    [
+      "/assets/images/まゆなか02.png"
+    ],
+    [
+      "/assets/images/まゆなか03.png"
+    ]
+  ],
+  "recommended_skills": "目星、アイデア",
+  "summary": "幼い頃に親を亡くしたあなたは弟（妹）と励まし合い生きてきた。\nあなたには結婚を前提に付き合っている恋人がいる。\n今日、恋人をきょうだいに紹介する予定だ。\n",
+  "cautions": "- 本シナリオは神話生物等のオリジナル要素、自己解釈を含みます。\n- R-18要素を含むシナリオです、未成年は通過できません。\n- かなり気持ちが悪いシナリオです、苦手な要素がある方の通過はお勧めできません。\n- 人を選ぶ要素を多々含みます。\n- 探索者が確定で酷い目に合います、えっちな目に合います。\n- シナリオ本文は弟×兄で記載しています、自由に合ったものに改変してください\n\n如何なる出来事もシナリオ（フィクション）だからで片付けられる方のみ通過してください。\n上記が大丈夫な方のみ通過をお願い致します",
+  "character_policy": "新規限定",
+  "scenario_type": "クローズド",
+  "author": "333屋 / ろろろ",
+  "reading": "まゆのなか",
+  "published": true,
+  "system": "CoC6版",
+  "setting": "現代日本",
+  "players": "タイマン",
+  "duration": "短編",
+  "duration_display": "3時間",
+  "title": "繭の胎内",
+  "tags": [
+    "RP中心",
+    "NPC交流多め",
+    "近親相姦",
+    "NTR",
+    "うちよそ"
+  ],
+  "overview": "■■は 狙った獲物を 逃がしません",
+  "preparation_status": "準備完了",
+  "age_rating": "R-18"
 }
