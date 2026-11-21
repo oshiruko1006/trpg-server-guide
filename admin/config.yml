@@ -259,6 +259,25 @@ collections:
     name: loss_rate_note
     widget: string
     required: false
+  - label: 後遺症
+    name: aftereffects
+    widget: select
+    required: false
+    options:
+    - なし
+    - 可能性あり
+    - あり
+    - 不明
+    - その他
+    hint: シナリオ概要にのみ表示します。検索タグには反映されません。
+  - label: 後遺症の自由表記（その他の場合）
+    name: aftereffects_custom
+    widget: string
+    required: false
+  - label: 後遺症の補足（任意）
+    name: aftereffects_note
+    widget: string
+    required: false
   - label: 新規・継続
     name: character_policy
     widget: select
