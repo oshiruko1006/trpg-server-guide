@@ -522,3 +522,18 @@ body[data-page="detail"] .scenario-gallery-thumbs button{width:66px;height:48px}
   .switcher{gap:8px;margin:12px 0 16px;}
   .switcher .system-tab{min-width:88px;min-height:40px;padding:8px 13px;font-size:12px;}
 }
+
+/* 2026-11-21: Keep CoC system tabs typographically consistent. */
+.switcher .system-tab,
+.switcher .system-tab[aria-pressed="true"] {
+  font-family:"Noto Sans JP",sans-serif;
+  font-size:13px;
+  font-weight:600;
+  line-height:1.5;
+  letter-spacing:0;
+  font-variant-numeric:lining-nums;
+}
+@media(max-width:650px){
+  .switcher .system-tab,
+  .switcher .system-tab[aria-pressed="true"]{font-size:12px;}
+}
