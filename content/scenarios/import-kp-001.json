@@ -1,5 +1,5 @@
 {
-  "kp_experienced": true,
+  "kp_experienced": false,
   "trailers": [
     "/assets/images/トレーラー_虚校の餞.png",
     "/assets/images/トレーラー_虚校の餞2.png"
@@ -27,7 +27,7 @@
   "tags": [
     "協力型"
   ],
-  "preparation_status": "準備完了",
+  "preparation_status": "所持・未読",
   "loss_rate": "その他",
   "age_rating": "全年齢",
   "extra_sections": [
