@@ -36,8 +36,18 @@
         reader.onload = () => this.setState(state => ({previews:{...state.previews,[publicPath]:reader.result}}));
         reader.onerror = () => this.setState({error:'画像のプレビュー読み込みに失敗しました: '+file.name});
         reader.readAsDataURL(file);
-        const asset = { path, public_path: publicPath, file, url, toString(){return url;}, toJSON(){return path;}, valueOf(){return url;} };
-        this.props.onAddAsset(asset);
+        // Decap's media pipeline expects an AssetProxy-like object, not a plain URL wrapper.
+        // Keep the original File available to the backend as well as a preview URL.
+        const asset = {
+          path, file, url, public_path: publicPath,
+          getFile: () => Promise.resolve(file),
+          getFileObj: () => Promise.resolve(file),
+          toString: () => url,
+          valueOf: () => url,
+          toJSON: () => path
+        };
+        try { this.props.onAddAsset(asset); }
+        catch (err) { this.setState({error:'CMSへの画像登録に失敗: '+String(err)}); return; }
         next.push(publicPath);
         previews[publicPath] = url;
       });
