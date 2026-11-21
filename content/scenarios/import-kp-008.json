@@ -1,15 +1,12 @@
 {
   "kp_experienced": true,
-  "trailers": [],
+  "trailers": [
+    "/assets/images/1.jpeg"
+  ],
   "scenario_type": "シティ",
   "author": "はっぱやで",
   "reading": "びーあっしゅ",
-  "trailer_batch": [
-    "/assets/images/mwqicwt3-q7t2b8k-4.png",
-    "/assets/images/mwqicwtb-3rauwdn-1.jpeg",
-    "/assets/images/mwqicwtd-hp9v2f0-2.png",
-    "/assets/images/mwqicwtf-rcu4v6q-3.png"
-  ],
+  "trailer_batch": [],
   "published": true,
   "system": "CoC6版",
   "setting": "近未来シティ",
