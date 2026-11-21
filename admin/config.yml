@@ -223,6 +223,7 @@ collections:
   - label: 所要時間
     name: duration
     widget: select
+    required: false
     options:
     - 短編
     - 中編
