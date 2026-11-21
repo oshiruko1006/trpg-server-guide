@@ -484,3 +484,41 @@ body[data-page="detail"] .scenario-gallery-thumbs{gap:7px}
 body[data-page="detail"] .scenario-gallery-thumbs button{width:66px;height:48px}
 @media(max-width:900px){body[data-page="detail"] .scenario-gallery-viewer{width:80%}}
 @media(max-width:600px){body[data-page="detail"] .scenario-gallery-viewer{width:100%;margin:12px auto 17px}body[data-page="detail"] .scenario-main-trailer img{max-height:none}body[data-page="detail"] .scenario-gallery-thumbs button{width:62px;height:45px}}
+
+
+/* 2026-11-21: unified visual rhythm across site navigation and system tabs. */
+.switcher {
+  display:flex;
+  align-items:stretch;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:16px 0 20px;
+}
+.switcher .system-tab {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:100px;
+  min-height:43px;
+  padding:9px 17px;
+  border:1px solid #d7e5da;
+  border-radius:13px;
+  background:#fffdfa;
+  color:#62584f;
+  font:600 13px/1.5 Georgia,"Noto Serif JP",serif;
+  letter-spacing:.025em;
+  white-space:nowrap;
+  box-shadow:none;
+}
+.switcher .system-tab:hover,
+.switcher .system-tab:focus-visible {background:#eef7f1;border-color:#b6dacb;}
+.switcher .system-tab[aria-pressed="true"] {
+  background:#d6efe3;
+  color:#426d60;
+  border-color:#b6dacb;
+  font-weight:700;
+}
+@media(max-width:650px){
+  .switcher{gap:8px;margin:12px 0 16px;}
+  .switcher .system-tab{min-width:88px;min-height:40px;padding:8px 13px;font-size:12px;}
+}
