@@ -165,7 +165,16 @@ collections:
   - label: タイトル
     name: title
     widget: string
-  - label: 🖼️ トレーラー画像（メイン画像）
+  - label: 🖼️ トレーラー画像をまとめて追加（複数選択）
+    name: trailer_batch
+    widget: image
+    required: false
+    hint: 画像選択画面で複数枚を選択できます。従来の個別登録画像がある場合は、そちらが先に表示されます。
+    media_library:
+      allow_multiple: true
+      config:
+        multiple: true
+  - label: 🖼️ トレーラー画像（個別追加・既存画像）
     name: trailers
     widget: list
     required: false
