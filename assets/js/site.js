@@ -13,6 +13,7 @@ function inlineMd(value) {
     links.push(`<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`);
     return key;
   });
+  s = s.replace(/\+\+([^+\n]+)\+\+/g,'<u>$1</u>');
   s = s.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>')
        .replace(/__([^_\n]+)__/g,'<strong>$1</strong>')
        .replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g,'<em>$1</em>')
