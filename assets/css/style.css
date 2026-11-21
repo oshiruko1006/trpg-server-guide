@@ -553,3 +553,8 @@ body[data-page="detail"] .scenario-gallery-thumbs button{width:66px;height:48px}
   .rule-card-always .rule-static-heading::before {width:20px;}
   .rule-card-always .rule-static-body {padding:10px 15px 17px;}
 }
+
+/* REQUEST: keep reception status permanently visible with matching decorative heading. */
+body[data-page="request"] .request-status-card .rule-static-body { padding-top:12px; }
+body[data-page="request"] .request-status-card .preserve-lines { margin:4px 0 0; }
+@media(max-width:650px){body[data-page="request"] .request-status-card .rule-static-body { padding-top:10px; }}
