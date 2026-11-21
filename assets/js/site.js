@@ -108,8 +108,10 @@ const imageUrl = value => {
   return '';
 };
 const trailerUrls = s => {
-  const raw = Array.isArray(s.trailers) ? s.trailers : (s.trailer ? [s.trailer] : []);
-  return raw.map(x => imageUrl(typeof x === 'string' ? x : x?.image)).filter(Boolean);
+  const existing = Array.isArray(s.trailers) ? s.trailers : (s.trailer ? [s.trailer] : []);
+  const batch = Array.isArray(s.trailer_batch) ? s.trailer_batch : (s.trailer_batch ? [s.trailer_batch] : []);
+  const flatten = values => values.flatMap(x => Array.isArray(x) ? flatten(x) : [x]);
+  return [...new Set(flatten([...existing, ...batch]).map(x => imageUrl(typeof x === 'string' ? x : x?.image)).filter(Boolean))];
 };
 const trailerThumb = (s, cls='') => {
   const src = trailerUrls(s)[0];
