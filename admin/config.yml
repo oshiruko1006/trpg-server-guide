@@ -328,14 +328,6 @@ collections:
     - SAN値回復
     - ロスト救済
     hint: 特徴タグを登録します。ロスト率・形式・秘匿HOなどは上の専用項目で管理します。
-  - label: 自由追加タグ（任意）
-    name: custom_tags
-    widget: list
-    required: false
-    field:
-      label: タグ
-      name: tag
-      widget: string
   - label: シナリオトレーラー画像
     name: trailers
     widget: list
