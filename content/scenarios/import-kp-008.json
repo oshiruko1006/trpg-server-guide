@@ -4,13 +4,7 @@
   "scenario_type": "シティ",
   "author": "はっぱやで",
   "reading": "びーあっしゅ",
-  "trailer_batch": [
-    "/assets/images/mwqi2bb2-mqgwto1-1.jpeg",
-    "/assets/images/mwqi2bb6-e4ucimg-2.png",
-    "/assets/images/mwqi2bb7-jk3uqpa-3.png",
-    "/assets/images/mwqi2bb8-kahardu-4.png",
-    "/assets/images/mwqi2bb9-doiwm33-npc.jpeg"
-  ],
+  "trailer_batch": [],
   "published": true,
   "system": "CoC6版",
   "setting": "近未来シティ",
