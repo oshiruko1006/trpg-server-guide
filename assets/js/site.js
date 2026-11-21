@@ -50,7 +50,12 @@ const textBlock = value => `<p class="preserve-lines">${esc(value)}</p>`;
 const accordionEnglish = {'ダイスルール':'DICE RULES','成長ルール':'GROWTH RULES','KP依頼について':'KP REQUEST','注意事項':'IMPORTANT NOTES','依頼テンプレート':'REQUEST TEMPLATE','CS作成について':'CHARACTER CREATION','キャラクターシート作成':'CHARACTER CREATION'};
 const accordionHeading = (title, english) => { const en = String(english || '').trim() || accordionEnglish[String(title || '').trim()] || ''; return `<span class="accordion-title-group">${en ? `<span class="accordion-title-en">${esc(en)}</span>` : ''}<span class="accordion-title-ja">${esc(title)}</span></span>`; };
 const accordion = (title, body, extra='', english='') => `<section class="rule-card site-accordion ${extra}"><h2><button type="button" class="accordion-trigger" aria-expanded="false"><span class="accordion-mark" aria-hidden="true"></span>${accordionHeading(title, english)}<span class="accordion-chevron" aria-hidden="true">⌄</span></button></h2><div class="accordion-panel"><div class="accordion-panel-inner"><div class="rich-text">${markdown(body)}</div></div></div></section>`;
-const sectionCard = section => accordion(section.heading, section.body, '', section.heading_en);
+const sectionCard = section => {
+  if (section.display_mode === 'always') {
+    return `<section class="rule-card site-accordion rule-card-always"><h2 class="rule-static-heading"><span class="accordion-mark" aria-hidden="true"></span>${accordionHeading(section.heading, section.heading_en)}</h2><div class="rule-static-body"><div class="rich-text">${markdown(section.body)}</div></div></section>`;
+  }
+  return accordion(section.heading, section.body, '', section.heading_en);
+};
 document.addEventListener('click', event => {
   const button = event.target.closest('.accordion-trigger');
   if(!button) return;
