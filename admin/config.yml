@@ -179,6 +179,11 @@ collections:
     - 3PL
     - 4PL
     - 5PL以上
+  - label: プレイ人数（概要表示用）
+    name: players_display
+    widget: string
+    required: false
+    hint: 例：2〜4PL、10PL固定。未入力時は検索用の人数を表示します
   - label: 所要時間
     name: duration
     widget: select
@@ -187,6 +192,11 @@ collections:
     - 中編
     - 長編
     - 超長編
+  - label: プレイ時間（概要表示用）
+    name: duration_display
+    widget: string
+    required: false
+    hint: 例：約6〜8時間（ボイセ想定）。未入力時は短編・中編などを表示します
   - label: 準備状況
     name: preparation_status
     widget: select
@@ -211,14 +221,95 @@ collections:
     - R-15
     - R-18
     hint: 公開ページの基本情報と絞り込みに反映します
+  - label: 舞台
+    name: setting
+    widget: string
+    required: false
+  - label: シナリオ形式
+    name: scenario_type
+    widget: select
+    required: false
+    options:
+    - クローズド
+    - シティ
+    - 半クローズド
+    - その他
+  - label: 形式の補足（任意）
+    name: scenario_type_note
+    widget: string
+    required: false
+  - label: ロスト率
+    name: loss_rate
+    widget: select
+    required: false
+    options:
+    - 低
+    - 低〜中
+    - 中
+    - 中〜高
+    - 高
+    - 不明
+    - 特殊
+    - その他
+  - label: ロスト率の自由表記（その他の場合）
+    name: loss_rate_custom
+    widget: string
+    required: false
+  - label: ロスト率の補足（任意）
+    name: loss_rate_note
+    widget: string
+    required: false
+  - label: 新規・継続
+    name: character_policy
+    widget: select
+    required: false
+    options:
+    - 新規限定
+    - 継続限定
+    - どちらも可
+    - 指定なし
+  - label: 秘匿HO
+    name: secret_ho
+    widget: select
+    required: false
+    options:
+    - あり
+    - なし
+    - 一部あり
+  - label: PvP
+    name: pvp
+    widget: select
+    required: false
+    options:
+    - なし
+    - 可能性あり
+    - あり
+  - label: 推奨技能
+    name: recommended_skills
+    widget: vanilla_markdown
+    required: false
+  - label: 準推奨技能
+    name: optional_skills
+    widget: vanilla_markdown
+    required: false
+  - label: ハンドアウト（HOを追加）
+    name: handouts
+    widget: list
+    required: false
+    summary: '{{fields.title}}'
+    fields:
+    - label: HOタイトル
+      name: title
+      widget: string
+    - label: HO本文
+      name: body
+      widget: vanilla_markdown
+      required: false
   - label: タグ
     name: tags
     widget: vanilla_tags
     required: false
     options:
-    - 低ロス
-    - 中ロス
-    - 高ロス
     - 描写多め
     - 描写少なめ
     - RP中心
@@ -229,14 +320,6 @@ collections:
     - ホラー
     - エモ
     - ギャグ
-    - クローズド
-    - シティ
-    - 秘匿HO
-    - 公開HO
-    - HOなし
-    - 新規限定
-    - 継続可
-    - PvP有
     - エロ
     - エログロ
     - インモラル
@@ -244,7 +327,7 @@ collections:
     - バディ
     - SAN値回復
     - ロスト救済
-    hint: ボタンで複数選択できます。下の入力欄から自由タグも追加できます。
+    hint: 特徴タグを登録します。ロスト率・形式・秘匿HOなどは上の専用項目で管理します。
   - label: 自由追加タグ（任意）
     name: custom_tags
     widget: list
