@@ -165,6 +165,17 @@ collections:
   - label: タイトル
     name: title
     widget: string
+  - label: 🖼️ トレーラー画像（メイン画像）
+    name: trailers
+    widget: list
+    required: false
+    summary: '{{fields.image}}'
+    hint: ここで画像を登録します。複数枚追加でき、1枚目が一覧の表紙になります。
+    field:
+      label: トレーラー画像
+      name: image
+      widget: image
+      allow_multiple: false
   - label: 読み仮名（ひらがな）
     name: reading
     widget: string
@@ -377,17 +388,6 @@ collections:
     - NPC交流多め
     - コメディ
     hint: 特徴タグを登録します。ロスト率・形式・秘匿HOなどは上の専用項目で管理します。
-  - label: シナリオトレーラー画像
-    name: trailers
-    widget: list
-    required: false
-    summary: '{{fields.image}}'
-    hint: 画像を追加するとカード表示と詳細ページに表示されます。複数枚登録可能で、1枚目が一覧の表紙になります。
-    field:
-      label: トレーラー画像
-      name: image
-      widget: image
-      allow_multiple: false
   - label: あらすじ
     name: summary
     widget: vanilla_markdown
