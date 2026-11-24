@@ -1,9 +1,12 @@
 {
-  "title": "イドラの約束",
-  "players": "5PL以上",
-  "published": true,
-  "age_rating": "R-18",
-  "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版"
+  "scenario_type": "半クローズド",
+  "reading": "いどらのやくそく",
+  "published": true,
+  "system": "CoC6版",
+  "players": "5PL以上",
+  "duration": "長編",
+  "title": "イドラの約束",
+  "preparation_status": "準備完了",
+  "age_rating": "R-18"
 }
