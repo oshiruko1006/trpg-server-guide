@@ -1,8 +1,28 @@
 {
-  "title": "空蝉の如く",
-  "players": "3PL",
-  "published": true,
-  "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版"
+  "character_policy": "新規限定",
+  "scenario_type": "半クローズド",
+  "pvp": "なし",
+  "reading": "うつせみのごとく",
+  "published": true,
+  "system": "CoC6版",
+  "setting": "現代日本",
+  "players": "3PL",
+  "duration": "中編",
+  "secret_ho": "あり",
+  "duration_display": "15時間以上",
+  "title": "空蝉の如く",
+  "tags": [
+    "かっこいい",
+    "熱い",
+    "戦闘有",
+    "協力型",
+    "NPC交流多め",
+    "和風",
+    "ファンタジー",
+    "王道バトル"
+  ],
+  "preparation_status": "準備完了",
+  "loss_rate": "特殊",
+  "age_rating": "全年齢"
 }
