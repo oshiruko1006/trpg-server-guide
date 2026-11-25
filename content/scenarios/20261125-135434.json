@@ -1,0 +1,66 @@
+{
+  "kp_experienced": false,
+  "kpc_allowed": false,
+  "cautions": "このシナリオは全ての方が楽しめるように作られていません。\n以下の要素が含まれます。少しでも苦手要素がある方は通過をお控えください。\n\n- 探索者が犯罪者になる\n- 探索者同士の口論\n- 細かい設定が付与される秘匿HO\n- エンドにより、後遺症の付与\n\nRPで言い合いをします。\nRPが苦手な方の参加は一切想定しておりません。",
+  "character_policy": "新規限定",
+  "scenario_type": "クローズド",
+  "pvp": "あり",
+  "author": "稀彦ハウジング",
+  "reading": "さるヴぁとーるであ",
+  "trailer_batch": [
+    "/assets/images/%E3%82%B5%E3%83%AB%E3%83%87%E3%82%A2-1.jpg",
+    "/assets/images/%E3%82%B5%E3%83%AB%E3%83%87%E3%82%A2-2.jpg",
+    "/assets/images/%E3%82%B5%E3%83%AB%E3%83%87%E3%82%A2-3.jpg",
+    "/assets/images/%E3%82%B5%E3%83%AB%E3%83%87%E3%82%A2-4.jpg"
+  ],
+  "published": true,
+  "system": "CoC6版",
+  "setting": "時代指定無 イギリス",
+  "players": "5PL以上",
+  "loss_rate_custom": "なし",
+  "duration": "短編",
+  "handouts": [
+    {
+      "title": "HO1：謙譲",
+      "body": "あなたは相手を高める。\n\n職業：医療関係"
+    },
+    {
+      "title": "HO2：寛容",
+      "body": "あなたは優しさを持つ。\n\n職業：弁護士"
+    },
+    {
+      "title": "HO3：忍耐",
+      "body": "あなたは耐え忍ぶ。\n\n職業：芸能関係"
+    },
+    {
+      "title": "HO4：勤勉",
+      "body": "あなたはよく学びよく働く。\n\n職業：学生または教職"
+    },
+    {
+      "title": "HO5：救恤",
+      "body": "あなたは人を助ける。\n\n職業：警察官"
+    },
+    {
+      "title": "HO6：節制",
+      "body": "あなたは自分を律する。\n\n職業：ディレッタント"
+    },
+    {
+      "title": "HO7：純潔",
+      "body": "あなたは清らかさを持つ。\n\n職業：エンターテイナー"
+    }
+  ],
+  "players_display": "7PL",
+  "secret_ho": "あり",
+  "duration_display": "4〜6時間",
+  "title": "サルヴァトール・デア",
+  "overview": "あるところに7人の善人がいた。\n過去、過ちを犯したことはあったかもしれないが、正しく償いながら生きてきた。\n7人はそれぞれの理由から、一週間に一度しか列車の通らない、イギリスの田舎村へ行くことになった。\n7人は同じ列車に乗り込み、村へと旅立った。\n\nそこで奇妙な事件に巻き込まれることになる。",
+  "preparation_status": "所持・未読",
+  "loss_rate": "その他",
+  "age_rating": "全年齢",
+  "extra_sections": [
+    {
+      "heading": "その他",
+      "body": "**▼シナリオの目的**\n秘匿HOで配布される目的の達成\n\n**▼出来ること**\n良い人のRP\n口論や言い合いRP\n\n**▼向いているKP**\nRPを見ていることが好き\n\n**▼向いているPL**\n口論や言い合いRPが好き"
+    }
+  ]
+}
