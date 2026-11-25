@@ -1,0 +1,43 @@
+{
+  "kp_experienced": false,
+  "summary": "探索者達は自ら希望し宇宙へ向かう事になった。\n3年前ミスカトニック宇宙局は全世界から宇宙へ向かいたいと願う候補者の募集を行い、各々の夢や目的を持ち応募し見事当選したのだ。\n宇宙船「VIVA号」へ乗り3日間かけて月へと向かい、11時間かけて地球へ帰還するプランだ。\n残り5時間で月へ到着だ。\n楽しい体験が探索者達を待っている。",
+  "kpc_allowed": false,
+  "character_policy": "どちらも可",
+  "scenario_type": "クローズド",
+  "reading": "ヴぃヴぁ",
+  "trailer_batch": [
+    "/assets/images/viva-1.png",
+    "/assets/images/viva-2.png",
+    "/assets/images/viva-3.png",
+    "/assets/images/viva-4.png"
+  ],
+  "published": false,
+  "system": "CoC6版",
+  "setting": "現代〜近未来",
+  "players": "5PL以上",
+  "duration": "短編",
+  "handouts": [
+    {
+      "title": "HO1：貴方は叶えた"
+    },
+    {
+      "title": "HO2：貴方は拾った"
+    },
+    {
+      "title": "HO3：貴方は捨てた"
+    },
+    {
+      "title": "HO4：貴方は間違えた"
+    },
+    {
+      "title": "HO5：貴方は？"
+    }
+  ],
+  "players_display": "5PL",
+  "secret_ho": "あり",
+  "duration_display": "5時間",
+  "title": "VIVA",
+  "overview": "地球の薄い大気を抜けた先。\nそこには死の世界があった。\n宇宙の闇はあまりに深く、\nまるで死の世界に浮かんでいるようである。\n\n**【PL情報】**\n:::mint\n協力性。秘匿有りHO制シナリオ。\nHO制ではあるがそれぞれのHO内容の条件に合う現代〜近未来の時代に生きる探索者であれば、継続新規問わず参加可能。\n継続を使用する場合、既に通過済みのシナリオ経歴によって生きる時代が確定している場合、使用するPCについてKP、PL間で相談する事。\n:::\n\n**【PCについて】**\n:::mint\n宇宙船に乗るため特別訓練を約1年間受けており、このシナリオ中のみ職業ポイント、趣味ポイントとは別に宇宙飛行士として必要だと考える任意の技能3種類に、それぞれ30ポイントを振り分けることが出来る。\nまたこれらの技能は宇宙へ向かう者たちが生き延びるためにも必要となる技能とも、考えられるだろう。\n:::",
+  "preparation_status": "所持・未読",
+  "age_rating": "全年齢"
+}
