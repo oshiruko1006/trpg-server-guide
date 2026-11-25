@@ -1,0 +1,17 @@
+{
+  "kp_experienced": false,
+  "kpc_allowed": true,
+  "reading": "もろはのほまれ",
+  "trailer_batch": [
+    "/assets/images/%E3%82%82%E3%82%8D%E3%81%BE%E3%82%8C-1.webp",
+    "/assets/images/%E3%82%82%E3%82%8D%E3%81%BE%E3%82%8C-2.webp",
+    "/assets/images/%E3%82%82%E3%82%8D%E3%81%BE%E3%82%8C-3.webp",
+    "/assets/images/%E3%82%82%E3%82%8D%E3%81%BE%E3%82%8C-4.webp"
+  ],
+  "published": true,
+  "system": "CoC6版",
+  "players": "5PL以上",
+  "players_display": "16PL",
+  "title": "諸刃の誉",
+  "age_rating": "全年齢"
+}
