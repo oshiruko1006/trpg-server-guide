@@ -568,3 +568,9 @@ body[data-page="request"] .request-status-card .preserve-lines { margin:4px 0 0;
 .scenario-player-quick .player-quick-button:hover{background:#edf6f0;border-color:#b9dac9}
 .scenario-player-quick .player-quick-button[aria-pressed="true"]{background:#d7f1e5;color:#35695c;border-color:#a8d3be;font-weight:700}
 @media(max-width:650px){.scenario-player-quick{gap:5px}.scenario-player-quick .player-quick-button{min-height:34px;padding:5px 10px;font-size:11px}}
+
+/* Compact tag selector close control, separate from clearing selected tags. */
+.tag-panel-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.tag-panel-heading .tag-panel-actions button{white-space:nowrap;padding:5px 8px;min-height:32px}
+.tag-panel-heading .tag-panel-close{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:32px;height:32px;padding:0;border-radius:7px;font:500 22px/1 system-ui,sans-serif;color:#52685f}
+.tag-panel-heading .tag-panel-close:hover{background:#d7f1e5}
