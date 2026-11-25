@@ -1,0 +1,81 @@
+{
+  "kp_experienced": false,
+  "recommended_skills": "戦闘技能/目星/聞き耳/図書館/HO推奨技能に準じたもの",
+  "summary": "特務機関『ALPHA－MACHINA（アルファ－マキナ）』。\n全世界の各地にて諜報活動を行う、彼らの行動理念はたった一つ。\n\n『何があろうとも、常に紳士でいなければならないこと』だ。",
+  "kpc_allowed": true,
+  "cautions": "- RP推奨\n- PvP可能性有\n- 秘匿HOや過去設定の付与が存在する\n- HOにより、PC/NPCとの関係性が付与される\n- 不可避の人為的災害、自然災害などの描写が存在する\n- 実際の地名や用語、それらを用いた独自解釈が多数登場するが、全てフィクションである\n- 描写に一部パロディ要素が含まれるが、本筋に大きく関係するものではない",
+  "character_policy": "新規限定",
+  "pvp": "可能性あり",
+  "author": "Taresokare/きねつき",
+  "reading": "ぜあふぉあ",
+  "trailer_batch": [
+    "/assets/images/THEREFOR_1.webp",
+    "/assets/images/THEREFOR_2.webp",
+    "/assets/images/THEREFOR_3.webp",
+    "/assets/images/THEREFOR_4.webp"
+  ],
+  "published": true,
+  "system": "CoC6版",
+  "setting": "現代ブリタニア・架空人工島『EDEN』",
+  "players": "5PL以上",
+  "duration": "長編",
+  "handouts": [
+    {
+      "title": "共通HO",
+      "body": "特務機関『ALPHA－MACHINA（アルファ－マキナ）』。\n貴方達は各々表の顔を持ちながら、裏の顔は本機関のエージェントとして活動を行っている。"
+    },
+    {
+      "title": "HO1：Arthur -アーサー-",
+      "body": "故に、貴方は剣を振るった"
+    },
+    {
+      "title": "HO2：Lancelot -ランスロット-",
+      "body": "故に、貴方はその泉に沈んだ"
+    },
+    {
+      "title": "HO3：Gawain -ガウェイン-",
+      "body": "故に、貴方は太陽である"
+    },
+    {
+      "title": "HO4：Percival -パーシヴァル-",
+      "body": "故に、貴方は駆け抜ける"
+    },
+    {
+      "title": "HO5：Galahad -ガラハッド-",
+      "body": "故に、貴方は純真である"
+    },
+    {
+      "title": "HO6：Bedivere -ベディヴィア-",
+      "body": "故に、貴方は欠如している\n"
+    },
+    {
+      "title": "HO7：Tristram -トリスタン-",
+      "body": "故に、貴方は欺いた"
+    },
+    {
+      "title": "HO8：Gareth -ガレス-",
+      "body": "故に、貴方は手を伸ばした"
+    },
+    {
+      "title": "HO9：Agravain -アグラヴェイン-",
+      "body": "故に、貴方は狭間に立った"
+    },
+    {
+      "title": "KPC：???",
+      "body": "故に、貴方は■■であった"
+    }
+  ],
+  "players_display": "9PL＋KPC",
+  "secret_ho": "あり",
+  "duration_display": "25〜30時間",
+  "title": "THERE:FOR",
+  "tags": [
+    "RP中心",
+    "ファンタジー",
+    "シリアス"
+  ],
+  "overview": "故に我らは。",
+  "preparation_status": "所持・未読",
+  "loss_rate": "高",
+  "age_rating": "全年齢"
+}
