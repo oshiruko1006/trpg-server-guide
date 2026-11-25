@@ -401,12 +401,12 @@ collections:
     - ファンタジー
     - SF
     hint: 特徴タグを登録します。ロスト率・形式・秘匿HOなどは上の専用項目で管理します。
-  - label: あらすじ
-    name: summary
-    widget: vanilla_markdown
-    required: false
   - label: 概要
     name: overview
+    widget: vanilla_markdown
+    required: false
+  - label: あらすじ
+    name: summary
     widget: vanilla_markdown
     required: false
   - label: ハンドアウト（HOを追加）
