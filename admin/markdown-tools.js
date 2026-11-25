@@ -4,6 +4,25 @@
   if (!window.CMS || !window.React) return;
   const React = window.React;
   const h = React.createElement;
+  // Compact, accessible icons; the original Markdown actions stay unchanged.
+  function toolbarIcon(kind) {
+    const svg = (...children) => h('svg', {width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.8,strokeLinecap:'round',strokeLinejoin:'round','aria-hidden':true,focusable:'false'}, ...children);
+    const path = d => h('path',{d});
+    const glyph = (text,extra='') => h('span',{className:'vanilla-md-glyph '+extra,'aria-hidden':true},text);
+    switch(kind) {
+      case 'bold': return glyph('B','is-bold');
+      case 'italic': return glyph('I','is-italic');
+      case 'underline': return glyph('U','is-underline');
+      case 'h2': return glyph('H1','is-heading');
+      case 'h3': return glyph('H2','is-heading');
+      case 'smallMuted': return glyph('Aa','is-small-muted');
+      case 'ul': return svg(path('M9 6h11M9 12h11M9 18h11'),h('circle',{cx:4,cy:6,r:1,fill:'currentColor'}),h('circle',{cx:4,cy:12,r:1,fill:'currentColor'}),h('circle',{cx:4,cy:18,r:1,fill:'currentColor'}));
+      case 'ol': return svg(path('M10 6h10M10 12h10M10 18h10M3 4l2-1v6M3 9h4M3 13c0-3 5-3 4 0l-4 4h4'));
+      case 'link': return svg(path('M10 13a4 4 0 0 0 6 .4l4-4a4 4 0 0 0-5.7-5.7l-2 2M14 11a4 4 0 0 0-6-.4l-4 4a4 4 0 0 0 5.7 5.7l2-2'));
+      case 'mint': case 'sand': return h('span',{className:'vanilla-md-swatch is-'+kind,'aria-hidden':true});
+      default: return glyph('?');
+    }
+  }
   class MarkdownTools extends React.Component {
     constructor(props) {
       super(props);
@@ -66,11 +85,11 @@
       return h('div', { className: 'vanilla-md-editor' },
         h('div', { className: 'vanilla-md-toolbar', role: 'toolbar', 'aria-label': 'Markdown装飾' },
           ...actions.map(([kind, label]) => h('button', {
-            key: kind, type: 'button',
+            key: kind, type: 'button', title: label, 'aria-label': label,
             onPointerDown: () => this.rememberSelection(),
             onMouseDown: e => e.preventDefault(),
             onClick: () => this.format(kind)
-          }, label))),
+          }, toolbarIcon(kind)))),
         h('textarea', {
           ref: this.area, value, rows: 9, spellCheck: false,
           onSelect: () => this.rememberSelection(),

@@ -1,8 +1,19 @@
 /* Safe editor styling: no selectors targeting Decap CMS layout. */
 .vanilla-md-editor{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
-.vanilla-md-toolbar{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}
-.vanilla-md-toolbar button{appearance:none;background:#f3faf6;border:1px solid #c6dfd2;border-radius:7px;padding:8px 10px;color:#326455;font:600 13px/1.3 system-ui,sans-serif;cursor:pointer}
+.vanilla-md-toolbar{display:flex;gap:3px;flex-wrap:wrap;align-items:center;margin:0 0 8px}
+.vanilla-md-toolbar button{appearance:none;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:0 0 30px;width:30px;height:32px;min-width:0;padding:0;background:#f3faf6;border:1px solid #c6dfd2;border-radius:5px;color:#326455;font:600 15px/1 system-ui,sans-serif;cursor:pointer}
+.vanilla-md-toolbar button:hover{background:#dcefe5}
+.vanilla-md-toolbar svg{display:block;flex-shrink:0}
+.vanilla-md-glyph{display:inline-block;line-height:1}
+.vanilla-md-glyph.is-bold{font-weight:800}
+.vanilla-md-glyph.is-italic{font-family:Georgia,serif;font-weight:700;font-style:italic}
+.vanilla-md-glyph.is-underline{text-decoration:underline;text-underline-offset:3px}
+.vanilla-md-glyph.is-heading{font-size:12px;font-weight:700}
+.vanilla-md-glyph.is-small-muted{font-size:12px;color:#77766b}
+.vanilla-md-swatch{box-sizing:border-box;display:block;width:16px;height:13px;border-radius:3px;border:1px solid}
+.vanilla-md-swatch.is-mint{background:#ddeee5;border-color:#8ab9a3}
+.vanilla-md-swatch.is-sand{background:#f2e9d8;border-color:#c3ad8e}
 .vanilla-md-toolbar button:focus-visible{outline:2px solid #398b73;outline-offset:2px}
 .vanilla-md-editor textarea{box-sizing:border-box;display:block;width:100%;min-width:0;max-width:100%;min-height:190px;padding:12px;border:1px solid #c9d0ce;border-radius:7px;resize:vertical;font:15px/1.75 system-ui,sans-serif;white-space:pre-wrap;overflow-wrap:anywhere}
 .vanilla-md-help{font:12px/1.5 system-ui,sans-serif;color:#697a75;margin:6px 0 0}
-@media(max-width:767px){.vanilla-md-toolbar{gap:5px}.vanilla-md-toolbar button{padding:9px 10px;min-height:38px}}
+@media(max-width:767px){.vanilla-md-toolbar{gap:4px}.vanilla-md-toolbar button{flex-basis:34px;width:34px;height:36px}}
