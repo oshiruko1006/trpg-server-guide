@@ -567,7 +567,7 @@ body[data-page="request"] .request-status-card .preserve-lines { margin:4px 0 0;
 .scenario-player-quick .player-quick-button{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;min-height:33px;padding:5px 14px;border:1px solid #d7e4da;border-radius:8px;background:#fffdfa;color:#52685f;font:500 12px/1.5 "Noto Sans JP",sans-serif;letter-spacing:0}
 .scenario-player-quick .player-quick-button:hover{background:#edf6f0;border-color:#b9dac9}
 .scenario-player-quick .player-quick-button[aria-pressed="true"]{background:#d7f1e5;color:#35695c;border-color:#a8d3be;font-weight:700}
-@media(max-width:650px){.scenario-player-quick{gap:5px}.scenario-player-quick .player-quick-button{min-height:34px;padding:5px 10px;font-size:11px}}
+@media(max-width:650px){.scenario-player-quick{gap:3px;flex-wrap:nowrap;overflow-x:auto;padding:2px 1px;scrollbar-width:thin}.scenario-player-quick .player-quick-button{flex:1 0 auto;min-height:34px;padding:5px 4px;font-size:11px;border-radius:6px}}
 
 /* Compact tag selector close control, separate from clearing selected tags. */
 .tag-panel-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
