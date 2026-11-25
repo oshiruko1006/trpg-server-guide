@@ -19,6 +19,7 @@ function inlineMd(value) {
        .replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g,'<em>$1</em>')
        .replace(/~~([^~\n]+)~~/g,'<del>$1</del>')
        .replace(/`([^`\n]+)`/g,'<code>$1</code>');
+  s = s.replace(/\{\{small:(.+?)\}\}/g,'<span class="md-small-muted">$1</span>');
   links.forEach((link,i) => { s = s.replace(`@@LINK${i}@@`,link); });
   return s;
 }

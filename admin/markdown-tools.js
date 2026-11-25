@@ -33,6 +33,9 @@
         };
         const [left, right, placeholder] = wrappers[kind];
         replacement = left + (selected || placeholder) + right;
+      } else if (kind === 'smallMuted') {
+        // Keep each line separate so the public Markdown renderer preserves line breaks.
+        replacement = (selected || '補足テキスト').split('\n').map(line => line.trim() ? `{{small:${line}}}` : line).join('\n');
       } else if (['mint','sand','rose'].includes(kind)) {
         from = value.lastIndexOf('\n', Math.max(0, start - 1)) + 1;
         to = value.indexOf('\n', end);
@@ -59,7 +62,7 @@
     }
     render() {
       const value = typeof this.props.value === 'string' ? this.props.value : String(this.props.value || '');
-      const actions = [['bold', '太字'], ['italic', '斜体'], ['h2', '見出し'], ['h3', '小見出し'], ['ul', '箇条書き'], ['ol', '番号'], ['link', 'リンク'], ['mint','囲み・ミント'], ['sand','囲み・ベージュ'], ['underline','下線']];
+      const actions = [['bold', '太字'], ['italic', '斜体'], ['h2', '見出し'], ['h3', '小見出し'], ['ul', '箇条書き'], ['ol', '番号'], ['link', 'リンク'], ['mint','囲み・ミント'], ['sand','囲み・ベージュ'], ['underline','下線'], ['smallMuted','小文字＋薄文字']];
       return h('div', { className: 'vanilla-md-editor' },
         h('div', { className: 'vanilla-md-toolbar', role: 'toolbar', 'aria-label': 'Markdown装飾' },
           ...actions.map(([kind, label]) => h('button', {

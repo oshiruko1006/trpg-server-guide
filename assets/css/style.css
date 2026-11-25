@@ -558,3 +558,6 @@ body[data-page="detail"] .scenario-gallery-thumbs button{width:66px;height:48px}
 body[data-page="request"] .request-status-card .rule-static-body { padding-top:12px; }
 body[data-page="request"] .request-status-card .preserve-lines { margin:4px 0 0; }
 @media(max-width:650px){body[data-page="request"] .request-status-card .rule-static-body { padding-top:10px; }}
+
+/* Inline supplementary text: smaller and quieter, without changing surrounding layout. */
+.rich-text .md-small-muted{font-size:.85em;color:#77766b;}
