@@ -4,5 +4,13 @@
   "published": true,
   "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版"
+  "system": "CoC6版",
+  "reading": "どろっぷあうとでぃすぱいあ",
+  "kpc_allowed": true,
+  "duration": "短編",
+  "duration_display": "4～6時間",
+  "age_rating": "全年齢",
+  "character_policy": "新規限定",
+  "secret_ho": "あり",
+  "pvp": "なし"
 }

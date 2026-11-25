@@ -1,9 +1,12 @@
 {
-  "title": "いってよおとうさん/R18版",
+  "title": "いってよおとうさん",
   "players": "タイマン",
   "published": true,
   "age_rating": "R-18",
   "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版"
+  "system": "CoC6版",
+  "reading": "いってよおとうさん",
+  "duration": "短編",
+  "character_policy": "新規限定"
 }

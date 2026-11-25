@@ -4,5 +4,12 @@
   "published": true,
   "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版"
+  "system": "CoC6版",
+  "reading": "らでぃあんとあびす",
+  "duration": "長編",
+  "duration_display": "25～30時間",
+  "age_rating": "全年齢",
+  "character_policy": "どちらも可",
+  "secret_ho": "なし",
+  "pvp": "可能性あり"
 }

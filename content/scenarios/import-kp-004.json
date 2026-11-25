@@ -8,5 +8,11 @@
   "duration": "長編",
   "title": "イドラの約束",
   "preparation_status": "準備完了",
-  "age_rating": "R-18"
+  "age_rating": "R-18",
+  "players_display": "5PL+KPC",
+  "kpc_allowed": true,
+  "duration_display": "20時間～",
+  "character_policy": "新規限定",
+  "secret_ho": "あり",
+  "pvp": "可能性あり"
 }

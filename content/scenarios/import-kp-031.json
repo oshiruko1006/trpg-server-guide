@@ -5,5 +5,12 @@
   "age_rating": "R-18",
   "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版"
+  "system": "CoC6版",
+  "reading": "ようこそめいめいしやくしょとしでんせつかへ",
+  "kpc_allowed": true,
+  "duration": "中編",
+  "duration_display": "7～9時間",
+  "character_policy": "新規限定",
+  "secret_ho": "あり",
+  "pvp": "なし"
 }

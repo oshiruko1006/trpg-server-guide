@@ -4,5 +4,12 @@
   "published": true,
   "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版"
+  "system": "CoC6版",
+  "reading": "あくじょうかじんがい",
+  "kpc_allowed": true,
+  "duration": "短編",
+  "duration_display": "3～4時間",
+  "age_rating": "R-15",
+  "character_policy": "どちらも可",
+  "pvp": "なし"
 }

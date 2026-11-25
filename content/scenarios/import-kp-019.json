@@ -1,8 +1,15 @@
 {
-  "title": "快刀乱魔弐",
+  "title": "快刀乱魔・弐",
   "players": "4PL",
   "published": true,
   "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版"
+  "system": "CoC6版",
+  "reading": "かいとうらんまに",
+  "duration": "中編",
+  "duration_display": "14時間",
+  "age_rating": "全年齢",
+  "character_policy": "継続限定",
+  "secret_ho": "なし",
+  "pvp": "なし"
 }
