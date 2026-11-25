@@ -1,18 +1,36 @@
 {
   "kp_experienced": true,
+  "trailers": [],
+  "recommended_skills": "日本刀、探索技能、回避、心理学",
+  "summary": "貴方達の所属する無銘で「影送り事件」の被害者が上がった。\n被害者はユウリと言う名の女性で、貴方達と同じく6年前に無銘に配属された別チームのメンバーである。\n無銘としては同期の彼女が死亡したとみられる事件現場には血の水たまりと下顎のみが残されていた。\n\n貴方達はこの事件で初めて上がった被害者の遺体を元に事件解決を急がねばならない。\n\n※本作では日本刀を貫通武器として扱わない。\n\n「この物語は正義を問う事をシナリオクリアに掲げてはいない」\n「ただそこに存在する神話的事象を貴方は対処しなければ人々はいとも簡単に人間社会を手放すだろう」",
+  "kpc_allowed": true,
+  "character_policy": "新規限定",
   "scenario_type": "半クローズド",
+  "pvp": "可能性あり",
+  "author": "あんどう本舗",
   "reading": "いどらのやくそく",
+  "trailer_batch": [
+    "/assets/images/%E3%82%A4%E3%83%89%E7%B4%84-1.png",
+    "/assets/images/%E3%82%A4%E3%83%89%E7%B4%84-2.png",
+    "/assets/images/%E3%82%A4%E3%83%89%E7%B4%84-3.png",
+    "/assets/images/%E3%82%A4%E3%83%89%E7%B4%84-4.png"
+  ],
   "published": true,
   "system": "CoC6版",
+  "setting": "現代日本",
   "players": "5PL以上",
   "duration": "長編",
-  "title": "イドラの約束",
-  "preparation_status": "準備完了",
-  "age_rating": "R-18",
   "players_display": "5PL+KPC",
-  "kpc_allowed": true,
-  "duration_display": "20時間～",
-  "character_policy": "新規限定",
   "secret_ho": "あり",
-  "pvp": "可能性あり"
+  "duration_display": "20時間～",
+  "title": "イドラの約束",
+  "tags": [
+    "NPC交流多め",
+    "協力型",
+    "戦闘有",
+    "探索中心"
+  ],
+  "preparation_status": "準備完了",
+  "loss_rate": "中",
+  "age_rating": "R-18"
 }
