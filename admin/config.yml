@@ -351,6 +351,10 @@ collections:
     - なし
     - 可能性あり
     - あり
+  - label: 必須技能
+    name: required_skills
+    widget: vanilla_markdown
+    required: false
   - label: 推奨技能
     name: recommended_skills
     widget: vanilla_markdown

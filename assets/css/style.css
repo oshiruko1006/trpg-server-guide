@@ -574,3 +574,9 @@ body[data-page="request"] .request-status-card .preserve-lines { margin:4px 0 0;
 .tag-panel-heading .tag-panel-actions button{white-space:nowrap;padding:5px 8px;min-height:32px}
 .tag-panel-heading .tag-panel-close{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:32px;height:32px;padding:0;border-radius:7px;font:500 22px/1 system-ui,sans-serif;color:#52685f}
 .tag-panel-heading .tag-panel-close:hover{background:#d7f1e5}
+
+/* Skills share the scenario information card, with room for long Markdown text. */
+body[data-page="detail"] .scenario-facts>.scenario-fact-skills{grid-column:1/-1}
+body[data-page="detail"] .scenario-fact-skills dd{font-weight:500;line-height:1.65}
+body[data-page="detail"] .scenario-fact-skills dd>:first-child{margin-top:0}
+body[data-page="detail"] .scenario-fact-skills dd>:last-child{margin-bottom:0}
