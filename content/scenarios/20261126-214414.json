@@ -1,0 +1,55 @@
+{
+  "title": "彼方からの君に捧ぐ",
+  "reading": "かなたからのきみにささぐ",
+  "trailer_batch": [
+    "/assets/images/%E3%81%8B%E3%81%AA%E3%81%8D%E3%81%BF_1.jpg",
+    "/assets/images/%E3%81%8B%E3%81%AA%E3%81%8D%E3%81%BF_2.jpg"
+  ],
+  "system": "CoC6版",
+  "age_rating": "全年齢",
+  "character_policy": "どちらも可",
+  "secret_ho": "なし",
+  "pvp": "可能性あり",
+  "players": "4PL",
+  "kpc_allowed": false,
+  "duration": "中編",
+  "duration_display": "7～9時間",
+  "preparation_status": "読了済",
+  "kp_experienced": false,
+  "scenario_type": "クローズド",
+  "required_skills": "",
+  "recommended_skills": "目星、図書館、聞き耳、拳銃、日本刀、回避、応急手当",
+  "optional_skills": "医学、人類学、歴史、博物学、その他知識系技能",
+  "tags": [
+    "RP中心",
+    "クラシック",
+    "SF",
+    "NPC交流多め",
+    "協力型",
+    "選択重視"
+  ],
+  "overview": "耳を澄ませば聞こえてくるだろう。\n大地を闊歩する「旧支配者」達の歌声が。\n君とよく似た顔で泣いて、\n君とよく似た顔で怒って、\n君とよく似た顔で笑う。\n君たちは「旧支配者」の為の生贄なのだ。\nほら、その顔をよく見せてくれ。",
+  "handouts": [
+    {
+      "title": "PC1",
+      "body": "あなたは20代前半の男性だ。"
+    },
+    {
+      "title": "PC2",
+      "body": "あなたは20代前半の女性だ。"
+    },
+    {
+      "title": "PC3",
+      "body": "あなたは20代前半の女性だ。"
+    },
+    {
+      "title": "PC4",
+      "body": "あなたは10代後半の女性だ。"
+    },
+    {
+      "title": "その他",
+      "body": "PC1 or 2の内、どちらか一人には6歳年下の妹がいる。"
+    }
+  ],
+  "published": true
+}
