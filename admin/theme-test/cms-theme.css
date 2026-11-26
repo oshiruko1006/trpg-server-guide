@@ -1,0 +1,35 @@
+
+/* CMS-only theme; light mode retains every existing Decap and custom-widget rule. */
+:root[data-theme="dark"]{color-scheme:dark;--cms-bg:#22211f;--cms-card:#2e2c28;--cms-input:#282722;--cms-line:#47483f;--cms-ink:#e5dfd4;--cms-muted:#bcb9aa;--cms-accent:#b3dfca;--cms-active:#405448}
+html[data-theme="dark"],html[data-theme="dark"] body{background:#22211f!important;color:#e5dfd4}
+html[data-theme="dark"] input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]):not([type=hidden]),html[data-theme="dark"] textarea,html[data-theme="dark"] select{background-color:#282722!important;color:#e5dfd4!important;border-color:#47483f!important}
+html[data-theme="dark"] input::placeholder,html[data-theme="dark"] textarea::placeholder{color:#bcb9aa!important;opacity:.85}
+html[data-theme="dark"] input,html[data-theme="dark"] textarea,html[data-theme="dark"] select{accent-color:#88bba3}
+html[data-theme="dark"] a{color:#b3dfca}
+html[data-theme="dark"] :focus-visible{outline-color:#a9d6bf}
+html[data-theme="dark"] .vanilla-tags-widget,html[data-theme="dark"] .vanilla-batch-paths,html[data-theme="dark"] .vanilla-batch-item,html[data-theme="dark"] .pl-admin,html[data-theme="dark"] .pl-admin-tab-editor,html[data-theme="dark"] .pl-admin-link,html[data-theme="dark"] .pl-admin-block,html[data-theme="dark"] .pl-admin-scenario-picker,html[data-theme="dark"] #nc-root .vanilla-field-group-lead,html[data-theme="dark"] #nc-root .vanilla-field-group-member{background:#2e2c28!important;color:#e5dfd4!important;border-color:#47483f!important}
+html[data-theme="dark"] .vanilla-md-floating-toolbar{background:#2e2c28!important;border-color:#47483f!important;box-shadow:0 3px 12px #0005}
+html[data-theme="dark"] .vanilla-md-help,html[data-theme="dark"] .vanilla-md-glyph.is-small-muted,html[data-theme="dark"] .vanilla-tags-empty,html[data-theme="dark"] .pl-admin-status,html[data-theme="dark"] .pl-admin-scenario-results-head,html[data-theme="dark"] #nc-root .vanilla-field-group-summary{color:#bcb9aa!important}
+html[data-theme="dark"] .vanilla-md-toolbar button,html[data-theme="dark"] .vanilla-tag-button,html[data-theme="dark"] .vanilla-batch-actions button,html[data-theme="dark"] .vanilla-batch-file,html[data-theme="dark"] .pl-admin button,html[data-theme="dark"] #nc-root .vanilla-trailer-tabs button{background:#35342e!important;color:#e5dfd4!important;border-color:#648572!important}
+html[data-theme="dark"] .vanilla-tag-button.is-selected,html[data-theme="dark"] .vanilla-tags-custom button,html[data-theme="dark"] .pl-admin button[aria-pressed=true],html[data-theme="dark"] #nc-root .vanilla-trailer-tabs button[aria-pressed=true],html[data-theme="dark"] #nc-root .vanilla-field-group-toggle,html[data-theme="dark"] .pl-admin-scenario-selected{background:#405448!important;color:#b3dfca!important;border-color:#648572!important}
+html[data-theme="dark"] #nc-root .vanilla-field-group-toggle[aria-expanded=true],html[data-theme="dark"] .vanilla-md-toolbar button:hover{background:#4a5e51!important}
+html[data-theme="dark"] .vanilla-md-swatch.is-mint{background:#405448!important;border-color:#8ab9a3!important}
+html[data-theme="dark"] .vanilla-md-swatch.is-sand{background:#493d24!important;border-color:#c3ad8e!important}
+html[data-theme="dark"] .vanilla-batch-paths .vanilla-batch-warning{color:#efd49b!important}
+html[data-theme="dark"] .vanilla-batch-paths .vanilla-batch-error{color:#f1a2ae!important}
+html[data-theme="dark"] .vanilla-batch-paths .vanilla-batch-success{color:#b3dfca!important}
+html[data-theme="dark"] .vanilla-batch-item img{background:#282722!important}
+/* Floating control outside the React root, so switching never remounts the editor. */
+.cms-theme-host{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));z-index:2147483000;color:#426d60;--switch-paper:#fffefa;--switch-line:#c6dfd2;--switch-ink:#4b4038;--switch-active:#e6f1eb;font:500 12px/1.5 system-ui,sans-serif}
+html[data-theme="dark"] .cms-theme-host{color:#b3dfca;--switch-paper:#2e2c28;--switch-line:#47483f;--switch-ink:#e5dfd4;--switch-active:#405448}
+.cms-theme-host .theme-control{position:relative}
+.cms-theme-host .theme-toggle{display:grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid var(--switch-line);border-radius:50%;background:var(--switch-paper);color:inherit;box-shadow:0 3px 16px #0003;cursor:pointer}
+.cms-theme-host svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.cms-theme-host .theme-menu{position:absolute;right:0;bottom:calc(100% + 7px);width:168px;padding:5px;background:var(--switch-paper);border:1px solid var(--switch-line);border-radius:10px;box-shadow:0 5px 20px #0003}
+.cms-theme-host .theme-menu[hidden]{display:none!important}
+.cms-theme-host .theme-option{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:9px 8px;border:0;border-radius:6px;background:transparent;color:var(--switch-ink);font:inherit;cursor:pointer}
+.cms-theme-host .theme-option[aria-pressed=true]{background:var(--switch-active);color:inherit;font-weight:700}
+.cms-theme-host .theme-check{margin-left:auto}
+.cms-theme-host .theme-toggle:focus-visible,.cms-theme-host .theme-option:focus-visible{outline:2px solid #88bba3;outline-offset:2px}
+.cms-theme-host.cms-theme-keyboard{display:none}
+@media(max-width:600px){.cms-theme-host .theme-toggle{width:36px;height:36px}}

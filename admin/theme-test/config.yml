@@ -1,0 +1,498 @@
+backend:
+  name: github
+  repo: oshiruko1006/trpg-server-guide
+  branch: cms-theme-test-20261127
+  base_url: https://trpg-server-guide-auth.kocco-and-chiri.workers.dev
+  auth_endpoint: auth
+media_folder: assets/images
+public_folder: /assets/images
+locale: ja
+collections:
+- name: pages
+  label: ページ設定
+  files:
+  - name: home
+    label: HOME（聖規則）
+    file: content/home.json
+    fields:
+    - label: タイトル
+      name: title
+      widget: string
+    - label: 紹介文
+      name: intro
+      widget: text
+      required: false
+    - label: ルールの項目
+      name: sections
+      widget: list
+      summary: '{{fields.heading}}'
+      fields:
+      - label: 題目
+        name: heading
+        widget: string
+      - label: 英語見出し
+        name: heading_en
+        widget: string
+        required: false
+        hint: 例：COMBAT RULES。未入力なら日本語のみ表示（既存の題目は従来の英語を維持）
+      - label: 常に表示する（ONで開いたまま・OFFで折りたたみ式）
+        name: always_open
+        widget: boolean
+        default: false
+        required: false
+        hint: OFFなら従来どおり開閉できます。ONなら本文を常に表示します。
+      - label: 本文
+        name: body
+        widget: vanilla_markdown
+  - name: character
+    label: CS GUIDE（CS作成）
+    file: content/character.json
+    fields:
+    - label: タイトル
+      name: title
+      widget: string
+    - label: 説明
+      name: intro
+      widget: text
+      required: false
+    - label: システム別ルール
+      name: systems
+      widget: list
+      summary: '{{fields.name}}'
+      fields:
+      - label: システム名
+        name: name
+        widget: string
+      - label: ルールのブロック
+        name: sections
+        widget: list
+        summary: '{{fields.heading}}'
+        fields:
+        - label: 題目
+          name: heading
+          widget: string
+        - label: 英語見出し
+          name: heading_en
+          widget: string
+          required: false
+          hint: 例：COMBAT RULES。未入力なら日本語のみ表示（既存の題目は従来の英語を維持）
+        - label: 本文
+          name: body
+          widget: vanilla_markdown
+  - name: request
+    label: REQUEST（KP依頼）
+    file: content/request.json
+    fields:
+    - label: タイトル
+      name: title
+      widget: string
+    - label: 受付状況
+      name: status
+      widget: select
+      options:
+      - label: 受付中
+        value: open
+      - label: 要相談
+        value: consult
+      - label: 受付停止
+        value: closed
+    - label: 受付状況の説明
+      name: status_message
+      widget: text
+    - label: KP依頼について
+      name: kp_about
+      widget: vanilla_markdown
+      required: false
+      hint: 改行を保持し、Markdown記法も公開ページに反映します
+    - label: 注意事項
+      name: notices
+      widget: vanilla_markdown
+      required: false
+    - label: 依頼テンプレート（コピー可能）
+      name: template
+      widget: text
+      required: false
+    - label: 自由追加ブロック
+      name: extra_sections
+      widget: list
+      required: false
+      summary: '{{fields.heading}}'
+      fields:
+      - label: 題目
+        name: heading
+        widget: string
+      - label: 英語見出し
+        name: heading_en
+        widget: string
+        required: false
+        hint: 例：COMBAT RULES。未入力なら日本語のみ表示（既存の題目は従来の英語を維持）
+      - label: 常に表示する（ONで開いたまま・OFFで折りたたみ式）
+        name: always_open
+        widget: boolean
+        default: false
+        required: false
+        hint: OFFなら従来どおり開閉できます。ONなら本文を常に表示します。
+      - label: 本文
+        name: body
+        widget: vanilla_markdown
+        required: false
+      - label: 添付ファイル（複数追加可）
+        name: attachments
+        widget: list
+        required: false
+        summary: '{{fields.label}}'
+        fields:
+        - label: ファイル名・説明
+          name: label
+          widget: string
+          required: false
+        - label: ファイルを選択
+          name: file
+          widget: file
+    - label: Discordリンク
+      name: discord_url
+      widget: string
+      required: false
+- name: scenarios
+  label: SCENARIO（回せるシナリオ）
+  folder: content/scenarios
+  create: true
+  extension: json
+  format: json
+  slug: '{{year}}{{month}}{{day}}-{{hour}}{{minute}}{{second}}'
+  identifier_field: title
+  sortable_fields:
+  - field: commit_date
+    default_sort: desc
+  - title
+  - author
+  fields:
+  - label: タイトル
+    name: title
+    widget: string
+  - label: 読み仮名（ひらがな）
+    name: reading
+    widget: string
+    required: false
+    hint: 五十音順・検索に使用
+  - label: URL識別子（既存データ保持用）
+    name: slug
+    widget: hidden
+    required: false
+  - label: 🖼️ トレーラー画像（個別追加・既存画像）
+    name: trailers
+    widget: list
+    required: false
+    summary: '{{fields.image}}'
+    hint: 標準の画像登録欄です。複数選択の可否をテストできますが、保存はまず非公開のテスト用シナリオで確認してください。1枚目が一覧の表紙になります。
+    field:
+      label: トレーラー画像
+      name: image
+      widget: image
+      media_library:
+        allow_multiple: true
+        config:
+          multiple: true
+  - label: 🖼️ トレーラー一括登録（GitHubアップロード後）
+    name: trailer_batch
+    widget: vanilla_trailer_paths
+    required: false
+    hint: GitHubにアップロード済みの画像ファイル名をまとめて登録します。画像本体のアップロードは行いません。
+  - label: 作者名
+    name: author
+    widget: string
+    required: false
+    hint: シナリオ名の右側に小さく表示し、キーワード検索にも使用します
+  - label: システム
+    name: system
+    widget: select
+    options:
+    - CoC6版
+    - CoC7版
+  - label: 対象年齢
+    name: age_rating
+    widget: select
+    default: 全年齢
+    options:
+    - 全年齢
+    - R-15
+    - R-18
+    hint: 公開ページの基本情報と絞り込みに反映します
+  - label: 舞台
+    name: setting
+    widget: string
+    required: false
+  - label: 新規・継続
+    name: character_policy
+    widget: select
+    required: false
+    options:
+    - 新規限定
+    - 継続限定
+    - どちらも可
+    - 指定なし
+  - label: 秘匿HO
+    name: secret_ho
+    widget: select
+    required: false
+    options:
+    - あり
+    - なし
+    - 一部あり
+  - label: PvP
+    name: pvp
+    widget: select
+    required: false
+    options:
+    - なし
+    - 可能性あり
+    - あり
+  - label: プレイ人数
+    name: players
+    widget: select
+    options:
+    - フリー
+    - タイマン
+    - 1PL
+    - 2PL
+    - 3PL
+    - 4PL
+    - 5PL以上
+  - label: プレイ人数（概要表示用）
+    name: players_display
+    widget: string
+    required: false
+    hint: 例：2〜4PL、10PL固定。未入力時は検索用の人数を表示します
+  - label: KPC可
+    name: kpc_allowed
+    widget: boolean
+    default: false
+    required: false
+    hint: ONにすると公開ページに「KPC可」タグを自動表示します
+  - label: 所要時間
+    name: duration
+    widget: select
+    required: false
+    options:
+    - 短編
+    - 中編
+    - 長編
+    - 超長編
+  - label: プレイ時間（概要表示用）
+    name: duration_display
+    widget: string
+    required: false
+    hint: 例：約6〜8時間（ボイセ想定）。未入力時は短編・中編などを表示します
+  - label: 準備状況
+    name: preparation_status
+    widget: select
+    required: false
+    hint: 所持・未読／読了済／準備完了から選択。既存シナリオは必要に応じて設定してください。
+    options:
+    - 所持・未読
+    - 読了済
+    - 準備完了
+  - label: KP経験有
+    name: kp_experienced
+    widget: boolean
+    default: false
+    required: false
+    hint: 一度でもKPを担当したシナリオならオンにしてください。
+  - label: シナリオ形式
+    name: scenario_type
+    widget: select
+    required: false
+    options:
+    - クローズド
+    - シティ
+    - 半クローズド
+    - その他
+  - label: 形式の補足
+    name: scenario_type_note
+    widget: string
+    required: false
+  - label: ロスト率
+    name: loss_rate
+    widget: select
+    required: false
+    options:
+    - 低
+    - 低〜中
+    - 中
+    - 中〜高
+    - 高
+    - 不明
+    - 特殊
+    - その他
+  - label: ロスト率の自由表記（その他の場合）
+    name: loss_rate_custom
+    widget: string
+    required: false
+  - label: ロスト率の補足
+    name: loss_rate_note
+    widget: string
+    required: false
+  - label: 後遺症
+    name: aftereffects
+    widget: select
+    required: false
+    options:
+    - なし
+    - 可能性あり
+    - あり
+    - 不明
+    - その他
+    hint: シナリオ概要にのみ表示します。検索タグには反映されません。
+  - label: 後遺症の自由表記（その他の場合）
+    name: aftereffects_custom
+    widget: string
+    required: false
+  - label: 後遺症の補足
+    name: aftereffects_note
+    widget: string
+    required: false
+  - label: 必須技能
+    name: required_skills
+    widget: vanilla_markdown
+    required: false
+  - label: 推奨技能
+    name: recommended_skills
+    widget: vanilla_markdown
+    required: false
+  - label: 準推奨技能
+    name: optional_skills
+    widget: vanilla_markdown
+    required: false
+  - label: タグ
+    name: tags
+    widget: vanilla_tags
+    required: false
+    options:
+    - 描写多め
+    - RP中心
+    - クラシック
+    - 探索中心
+    - 戦闘有
+    - 謎解き有
+    - 選択重視
+    - ダイス勝負有
+    - ホラー
+    - エモ
+    - エロ
+    - エログロ
+    - グロ
+    - インモラル
+    - 近親相姦
+    - バディ
+    - うちよそ
+    - NTR
+    - SAN値回復
+    - ロスト救済
+    - シリアス
+    - 日常
+    - 青春
+    - 恋愛
+    - サスペンス
+    - ミステリー
+    - サイコホラー
+    - 因習村
+    - 協力型
+    - NPC交流多め
+    - コメディ
+    - 和風
+    - 可愛い
+    - かっこいい
+    - 熱い
+    - 王道バトル
+    - スタイリッシュ
+    - 異能バトル
+    - ヒロイック
+    - ファンタジー
+    - SF
+    hint: 特徴タグを登録します。ロスト率・形式・秘匿HOなどは上の専用項目で管理します。
+  - label: 概要
+    name: overview
+    widget: vanilla_markdown
+    required: false
+  - label: あらすじ
+    name: summary
+    widget: vanilla_markdown
+    required: false
+  - label: ハンドアウト（HOを追加）
+    name: handouts
+    widget: list
+    required: false
+    summary: '{{fields.title}}'
+    fields:
+    - label: HOタイトル
+      name: title
+      widget: string
+    - label: HO本文
+      name: body
+      widget: vanilla_markdown
+      required: false
+  - label: 注意事項
+    name: cautions
+    widget: vanilla_markdown
+    required: false
+  - label: 自由追加ブロック
+    name: extra_sections
+    widget: list
+    required: false
+    summary: '{{fields.heading}}'
+    fields:
+    - label: 題目
+      name: heading
+      widget: string
+    - label: 本文
+      name: body
+      widget: vanilla_markdown
+      required: false
+  - label: 配布・販売ページのリンク（BOOTHなど）
+    name: external_links
+    widget: list
+    required: false
+    summary: '{{fields.label}}'
+    fields:
+    - label: リンク名（例：BOOTH）
+      name: label
+      widget: string
+    - label: URL
+      name: url
+      widget: string
+      pattern:
+      - ^https://.+
+      - https://から始まるURLを入力してください
+  - label: 公開する
+    name: published
+    widget: boolean
+    default: false
+
+- name: pl_guides
+  label: PL GUIDE（PL限定ページ）
+  folder: content/pl-guides
+  create: true
+  extension: json
+  format: json
+  slug: '{{year}}{{month}}{{day}}-{{hour}}{{minute}}{{second}}'
+  identifier_field: title
+  sortable_fields:
+  - field: commit_date
+    default_sort: desc
+  - title
+  editor:
+    preview: false
+  fields:
+  - label: 管理用の名前（公開GitHubに残ります）
+    name: title
+    widget: string
+    hint: 個人名・秘匿情報・共有URLは入力しないでください。ページのタイトルは下の暗号化された編集欄で設定します。
+  - label: PL限定ページの内容・共有URL
+    name: encrypted_guide
+    widget: vanilla_pl_guide
+    hint: 内容は暗号化して保存。共有URLはGitHubに保存されません。必ず控えてください。複製した場合はURLを再発行してください。
+  - label: 限定ページを公開する
+    name: published
+    widget: boolean
+    default: false
+    hint: OFFにして保存・デプロイすると現在の限定ページが非公開になります。
