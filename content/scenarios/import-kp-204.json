@@ -1,12 +1,37 @@
 {
   "title": "うえからでられない",
-  "players": "タイマン",
-  "published": true,
+  "reading": "うえからでられない",
+  "trailers": [
+    [
+      "/assets/images/uederar_1_spll付.png"
+    ]
+  ],
+  "system": "CoC6版",
   "age_rating": "R-18",
+  "setting": "現代日本",
+  "character_policy": "どちらも可",
+  "players": "タイマン",
+  "duration": "短編",
+  "duration_display": "3時間～",
   "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版",
-  "reading": "うえからでられない",
-  "duration": "短編",
-  "character_policy": "どちらも可"
+  "scenario_type": "クローズド",
+  "aftereffects": "可能性あり",
+  "tags": [
+    "RP中心",
+    "描写多め",
+    "エログロ",
+    "インモラル",
+    "うちよそ"
+  ],
+  "overview": "KPCの家にある水槽を取ってきてほしい\n気づかれないように取ってきてね\nでないと2人一緒に溶けちゃうよ",
+  "summary": "",
+  "cautions": "- 「うえからでられない」はR18シナリオです。以下の行為を硬く禁止しております。\n　- 18歳未満の方が本シナリオを読む行為\n　- 18歳未満の方にシナリオを回す行為\n- インモラル、エログロ要素があります。シナリオの展開上、不快になる可能性が多分にあります。\n- 当シナリオの人物、団体、組織、事件等はすべてフィクションであり実在の物とは関係ありません。\n- シナリオ内、オリジナルの呪文や解釈が多分に含まれます。十分にご注意ください。\n- シナリオのネタバレはふせったー等を利用し、未通過者の目に触れないようお気を付けください。\n- シナリオやエンドは改変していただいて構いませんが、KPはPLに事前にお伝えください。",
+  "extra_sections": [
+    {
+      "body": "- KPCの家の深掘り\n- 普段と様子の違うKPCとPC\n- ???\n\n夜のうちにKPCの家に忍び込むシナリオ\n確定で事故ります",
+      "heading": "できるかもしれないこと"
+    }
+  ],
+  "published": true
 }
