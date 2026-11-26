@@ -1,0 +1,10 @@
+.pl-admin{box-sizing:border-box;min-width:0;max-width:100%;padding:12px;border:1px solid #c6dfd2;border-radius:9px;background:#fffdfa;overflow-wrap:anywhere;font-size:13px}
+.pl-admin-field{display:grid;gap:6px;margin:16px 0;min-width:0}
+.pl-admin input:not([type=checkbox]),.pl-admin select{box-sizing:border-box;width:100%;max-width:100%;min-width:0;padding:8px;border:1px solid #a9c4b8;border-radius:6px;background:white;font:inherit}
+.pl-admin-check{display:flex;align-items:center;gap:6px;font-weight:400}
+.pl-admin-actions{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pl-admin button{border:1px solid #a8cbbb;background:#f0f8f4;color:#326455;padding:7px 10px;border-radius:6px;font:inherit;cursor:pointer}
+.pl-admin button:disabled{opacity:.45;cursor:default}
+.pl-admin-link,.pl-admin-block{border:1px solid #c6dfd2;padding:10px;border-radius:7px;margin:6px 0;min-width:0}
+.pl-admin-status{color:#426d60;font-size:12px;overflow-wrap:anywhere}
+.pl-admin-link p{font-size:11px;margin:4px 0}
