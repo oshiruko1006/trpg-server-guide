@@ -1,8 +1,8 @@
 body[data-page="pl-guide"] main{max-width:920px;margin:0 auto;padding:24px 16px 30px}
 .pl-guide-title{text-align:center;padding:16px 4px 20px}
-.pl-guide-title small,.pl-guide-heading small{display:block;color:#83a998;font-size:.7rem;letter-spacing:.15em}
+.pl-guide-title small,.pl-guide-heading small{display:block;color:var(--theme-fg-83a998,#83a998);font-size:.7rem;letter-spacing:.15em}
 .pl-guide-title h1{margin:8px 0;overflow-wrap:anywhere}
-.pl-guide-title p{color:#857467;margin:0}
+.pl-guide-title p{color:var(--theme-fg-857467,#857467);margin:0}
 body[data-page="pl-guide"] .scenario-gallery-viewer{width:70%;max-width:680px;margin:14px auto 20px}
 body[data-page="pl-guide"] .scenario-main-trailer{max-width:none}
 body[data-page="pl-guide"] .scenario-main-trailer img{max-height:520px}
@@ -27,12 +27,12 @@ body[data-page="pl-guide"] .rule-card{margin-bottom:14px}
 
 /* Tab navigation: retain each panel's expanded state, animate only on switch. */
 .pl-guide-tablist{display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin;overscroll-behavior-x:contain;margin:0 0 16px;padding:3px 1px 8px;align-items:stretch}
-.pl-guide-tablist button{flex:1 0 auto;min-width:90px;max-width:100%;white-space:normal;overflow-wrap:anywhere;border:1px solid #d5e2d8;background:#fffdfa;color:#587a6b;border-radius:9px;padding:10px 17px;font:600 13px/1.5 "Noto Sans JP",sans-serif;transition:background .18s,border-color .18s,color .18s}
-.pl-guide-tablist button[aria-selected=true]{background:#d6ece0;color:#3b6b58;border-color:#90bca6}
+.pl-guide-tablist button{flex:1 0 auto;min-width:90px;max-width:100%;white-space:normal;overflow-wrap:anywhere;border:1px solid var(--theme-line-d5e2d8,#d5e2d8);background:var(--theme-bg-fffdfa,#fffdfa);color:var(--theme-fg-587a6b,#587a6b);border-radius:9px;padding:10px 17px;font:600 13px/1.5 "Noto Sans JP",sans-serif;transition:background .18s,border-color .18s,color .18s}
+.pl-guide-tablist button[aria-selected=true]{background:var(--theme-bg-d6ece0,#d6ece0);color:var(--theme-fg-3b6b58,#3b6b58);border-color:var(--theme-line-90bca6,#90bca6)}
 .pl-guide-tabpanel[hidden]{display:none!important}
 .pl-guide-tab-enter{animation:plGuideTabIn .22s ease-out both}
 @keyframes plGuideTabIn{from{opacity:0;transform:translateX(7px)}to{opacity:1;transform:translateX(0)}}
-.pl-guide-empty{color:#857467;text-align:center;padding:18px}
+.pl-guide-empty{color:var(--theme-fg-857467,#857467);text-align:center;padding:18px}
 .pl-guide-tabpanel .pl-guide-files{margin-top:8px}
 @media(max-width:600px){.pl-guide-tablist{gap:5px;margin-bottom:12px}.pl-guide-tablist button{min-width:74px;font-size:12px;padding:8px 10px}}
 @media(prefers-reduced-motion:reduce){.pl-guide-tab-enter{animation:none}.pl-guide-tablist button{transition:none}}
@@ -40,9 +40,9 @@ body[data-page="pl-guide"] .rule-card{margin-bottom:14px}
 /* Compact inline attachments; original raster image opens in an in-page modal. */
 .pl-guide-files{align-items:flex-start}
 .pl-guide-attachment-image{margin:0;min-width:0;max-width:min(100%,240px);flex:0 1 auto}
-.pl-guide-files .pl-guide-attachment-image button{position:relative;display:block;padding:0;border:1px solid #d8e4da;border-radius:8px;overflow:hidden;background:#f4f3ee;cursor:zoom-in;max-width:100%;line-height:0}
+.pl-guide-files .pl-guide-attachment-image button{position:relative;display:block;padding:0;border:1px solid var(--theme-line-d8e4da,#d8e4da);border-radius:8px;overflow:hidden;background:var(--theme-bg-f4f3ee,#f4f3ee);cursor:zoom-in;max-width:100%;line-height:0}
 .pl-guide-attachment-image img{display:block;width:auto;height:auto;max-width:100%;max-height:180px;object-fit:contain}
-.pl-guide-attachment-image figcaption{font-size:11px;line-height:1.4;color:#857467;overflow-wrap:anywhere;margin-top:4px}
+.pl-guide-attachment-image figcaption{font-size:11px;line-height:1.4;color:var(--theme-fg-857467,#857467);overflow-wrap:anywhere;margin-top:4px}
 .pl-guide-image-zoom{position:absolute;right:5px;bottom:5px;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(30,40,35,.65);color:white;font:16px/1 sans-serif}
 body.pl-guide-image-open{overflow:hidden}
 .pl-guide-image-dialog{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;box-sizing:border-box;background:rgba(15,16,16,.95);color:white}
@@ -64,7 +64,7 @@ body.pl-guide-image-open{overflow:hidden}
 /* Linked guide title: preserve the heading typography and add a discreet external-tab hint. */
 .pl-guide-title .pl-guide-scenario-link{color:inherit;text-decoration:none;overflow-wrap:anywhere}
 .pl-guide-title .pl-guide-scenario-link:hover,.pl-guide-title .pl-guide-scenario-link:focus-visible{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
-.pl-guide-scenario-link-icon{display:inline-block;margin-left:.4em;font:500 .48em/1 sans-serif;vertical-align:super;color:#83a998}
+.pl-guide-scenario-link-icon{display:inline-block;margin-left:.4em;font:500 .48em/1 sans-serif;vertical-align:super;color:var(--theme-fg-83a998,#83a998)}
 
 /* In-text encrypted images share attachment sizing and zoom. */
 .pl-guide-inline-image{margin:12px 0}

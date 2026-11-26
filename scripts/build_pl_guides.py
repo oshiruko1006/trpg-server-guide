@@ -10,9 +10,10 @@ PAGE = """<!doctype html>
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="referrer" content="no-referrer">
 <title>PL GUIDE｜聖バニラ教会</title>
-<link rel="stylesheet" href="/assets/css/style.css?v=scenario-images-1">
-<link rel="stylesheet" href="/assets/css/pl-guide.css?v=7">
-</head><body data-page="pl-guide"><main id="content"><p>読み込み中…</p></main>
+<script src="/assets/js/theme.js?v=1"></script>
+<link rel="stylesheet" href="/assets/css/style.css?v=theme-1">
+<link rel="stylesheet" href="/assets/css/pl-guide.css?v=theme-1">
+<link rel="stylesheet" href="/assets/css/theme.css?v=1"></head><body data-page="pl-guide"><main id="content"><p>読み込み中…</p></main>
 <footer>聖バニラ教会</footer>
 <script src="/assets/js/pl-guide-crypto.js" defer></script>
 <script src="/assets/js/pl-guide-layout.js?v=2" defer></script>

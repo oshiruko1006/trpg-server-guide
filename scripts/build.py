@@ -75,7 +75,8 @@ for f in sorted((root / 'content/scenarios').glob('*.json')):
 <meta property="og:url" content="{og_url}"><meta property="og:image" content="{og_image}">
 <meta name="twitter:card" content="{twitter_card}"><meta name="twitter:title" content="{og_title}">
 <meta name="twitter:description" content="{og_description}"><meta name="twitter:image" content="{og_image}">
-<link rel="stylesheet" href="/assets/css/style.css?v=scenario-images-1"><link rel="stylesheet" href="/assets/css/header.css"></head><body data-page="detail" data-slug="{slug}"><header>
+<script src="/assets/js/theme.js?v=1"></script>
+<link rel="stylesheet" href="/assets/css/style.css?v=theme-1"><link rel="stylesheet" href="/assets/css/header.css?v=theme-1"><link rel="stylesheet" href="/assets/css/theme.css?v=1"></head><body data-page="detail" data-slug="{slug}"><header>
   <a class="brand" href="/"><span>聖バニラ教会</span><img src="https://my-trpg-room.pages.dev/images/vanilla.webp" alt="猫のアイコン"></a>
   <nav aria-label="メインメニュー">
   <a href="/"><span>HOME</span><small>聖規則</small></a>
