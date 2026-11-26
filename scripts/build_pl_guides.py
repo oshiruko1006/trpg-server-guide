@@ -15,7 +15,7 @@ PAGE = """<!doctype html>
 </head><body data-page="pl-guide"><main id="content"><p>読み込み中…</p></main>
 <footer>聖バニラ教会</footer>
 <script src="/assets/js/pl-guide-crypto.js" defer></script>
-<script src="/assets/js/pl-guide.js?v=2" defer></script>
+<script src="/assets/js/pl-guide.js?v=3" defer></script>
 <script src="/assets/js/site.js?v=pl-guide-2" defer></script>
 </body></html>"""
 def build_pl_guides(root, out):

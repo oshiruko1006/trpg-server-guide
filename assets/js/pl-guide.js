@@ -1,4 +1,37 @@
 /* Read only one encrypted guide; existing public scenario data is quoted on request. */
+// Old encrypted attachments have no MIME metadata. Inspect bytes, not filenames.
+function plGuideImageType(bytes){
+  const has=(offset,values)=>values.every((v,i)=>bytes[offset+i]===v);
+  const ascii=(offset,s)=>has(offset,Array.from(s,c=>c.charCodeAt(0)));
+  if(has(0,[137,80,78,71,13,10,26,10]))return 'image/png';
+  if(has(0,[255,216,255]))return 'image/jpeg';
+  if(ascii(0,'GIF87a')||ascii(0,'GIF89a'))return 'image/gif';
+  if(ascii(0,'RIFF')&&ascii(8,'WEBP'))return 'image/webp';
+  if(ascii(4,'ftyp')&&(ascii(8,'avif')||ascii(8,'avis')))return 'image/avif';
+  if(ascii(0,'BM')&&bytes.length>=14)return 'image/bmp';
+  if(has(0,[0,0,1,0])&&bytes.length>=6)return 'image/x-icon';
+  // Never navigate to active formats (SVG, HTML, etc.) under the site's origin.
+  return '';
+}
+function plGuideAttachment(file,C){
+  const bytes=file.data?C.un64(file.data):new Uint8Array(0);
+  return {bytes,type:plGuideImageType(bytes)};
+}
+function plGuideOpenAttachment(file,attachment){
+  const {bytes,type}=attachment;
+  const url=URL.createObjectURL(new Blob([bytes],{type:type||'application/octet-stream'}));
+  const a=document.createElement('a');
+  a.href=url;
+  if(type){
+    a.target='_blank';
+    a.rel='noopener noreferrer';
+  }else{
+    a.download=String(file.name||'資料').replace(/[\/\\]/g,'_');
+  }
+  try{document.body.appendChild(a);a.click();}
+  finally{a.remove();setTimeout(()=>URL.revokeObjectURL(url),300000);}
+}
+
 window.VanillaPLGuideRender=async function(envelope,{el,esc,markdown,sectionCard,trailerUrls,scenarioGalleryHtml,bindScenarioGallery}){
   const C=window.VanillaPLCrypto;
   try{
@@ -16,8 +49,9 @@ window.VanillaPLGuideRender=async function(envelope,{el,esc,markdown,sectionCard
     const infoHtml=[...facts,...skills].some(([,v])=>String(v||'').trim())?'<section class="rule-card pl-guide-info"><h2 class="pl-guide-heading"><small>SCENARIO INFORMATION</small>シナリオ情報</h2><dl class="scenario-facts">'+facts.filter(([,v])=>String(v||'').trim()).map(([k,v])=>'<div><dt>'+esc(k)+'</dt><dd>'+esc(v)+'</dd></div>').join('')+skills.filter(([,v])=>String(v||'').trim()).map(([k,v])=>'<div class="pl-guide-skill"><dt>'+esc(k)+'</dt><dd class="rich-text">'+markdown(v)+'</dd></div>').join('')+'</dl></section>':'';
     const ho=s&&q.ho&&Array.isArray(s.handouts)?s.handouts.map(x=>block(x.title||'HO',x.body,false)).join(''):'';
     const files=Array.isArray(d.files)?d.files:[];
-    el.innerHTML='<div class="pl-guide-title"><small>PLAYER’S GUIDE</small><h1>'+esc(title)+'</h1><p>'+esc(d.subtitle||'')+'</p></div>'+imageHtml+infoHtml+block('概要',s&&q.overview?s.overview:'',false,'OVERVIEW')+block('あらすじ',s&&q.story?s.summary:'',false,'STORY')+block('参加にあたって',d.notice,false,'NOTICE')+block('キャラクター作成',d.character,false,'CHARACTER CREATION')+ho+block('公開HO・事前情報',d.handout,false,'HANDOUT')+(Array.isArray(d.sections)?d.sections.map(x=>block(x.heading||'補足',x.body,!!x.always_open,x.heading_en||'')).join(''):'')+(files.length?'<section class="rule-card pl-guide-info"><h2 class="pl-guide-heading"><small>DOWNLOAD</small>配布資料</h2><div class="pl-guide-files">'+files.map((f,i)=>'<button type="button" data-pl-file="'+i+'">'+esc(f.name||'資料')+'　↓</button>').join('')+'</div></section>':'');
+    const attachments=files.map(f=>{try{return plGuideAttachment(f,C);}catch(_){return null;}});
+    el.innerHTML='<div class="pl-guide-title"><small>PLAYER’S GUIDE</small><h1>'+esc(title)+'</h1><p>'+esc(d.subtitle||'')+'</p></div>'+imageHtml+infoHtml+block('概要',s&&q.overview?s.overview:'',false,'OVERVIEW')+block('あらすじ',s&&q.story?s.summary:'',false,'STORY')+block('参加にあたって',d.notice,false,'NOTICE')+block('キャラクター作成',d.character,false,'CHARACTER CREATION')+ho+block('公開HO・事前情報',d.handout,false,'HANDOUT')+(Array.isArray(d.sections)?d.sections.map(x=>block(x.heading||'補足',x.body,!!x.always_open,x.heading_en||'')).join(''):'')+(files.length?'<section class="rule-card pl-guide-info"><h2 class="pl-guide-heading"><small>FILES</small>配布資料</h2><div class="pl-guide-files">'+files.map((f,i)=>'<button type="button" data-pl-file="'+i+'">'+esc(f.name||'資料')+(attachments[i]?.type?'　↗':'　↓')+'</button>').join('')+'</div></section>':'');
     bindScenarioGallery(el,trailers,s?.title||title);
-    el.querySelectorAll('[data-pl-file]').forEach(btn=>btn.addEventListener('click',()=>{try{const f=files[Number(btn.dataset.plFile)],url=URL.createObjectURL(new Blob([f.data?C.un64(f.data):new Uint8Array(0)],{type:'application/octet-stream'}));const a=document.createElement('a');a.href=url;a.download=String(f.name||'資料').replace(/[\/\\]/g,'_');document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}catch(_){alert('ファイルを開けませんでした。');}}));
+    el.querySelectorAll('[data-pl-file]').forEach(btn=>btn.addEventListener('click',()=>{try{const i=Number(btn.dataset.plFile);if(!attachments[i])throw Error();plGuideOpenAttachment(files[i],attachments[i]);}catch(_){alert('ファイルを開けませんでした。');}}));
   }catch(_){el.textContent='限定ページを表示できません。共有URLの末尾まで正しくコピーされているか、公開状況を確認してください。';}
 };
