@@ -24,3 +24,15 @@ body[data-page="pl-guide"] .scenario-gallery-thumbs button{width:66px;height:48p
 .pl-guide-files{display:flex;flex-wrap:wrap;gap:8px}
 .pl-guide-files button{overflow-wrap:anywhere;max-width:100%}
 body[data-page="pl-guide"] .rule-card{margin-bottom:14px}
+
+/* Tab navigation: retain each panel's expanded state, animate only on switch. */
+.pl-guide-tablist{display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin;overscroll-behavior-x:contain;margin:0 0 16px;padding:3px 1px 8px;align-items:stretch}
+.pl-guide-tablist button{flex:1 0 auto;min-width:90px;max-width:100%;white-space:normal;overflow-wrap:anywhere;border:1px solid #d5e2d8;background:#fffdfa;color:#587a6b;border-radius:9px;padding:10px 17px;font:600 13px/1.5 "Noto Sans JP",sans-serif;transition:background .18s,border-color .18s,color .18s}
+.pl-guide-tablist button[aria-selected=true]{background:#d6ece0;color:#3b6b58;border-color:#90bca6}
+.pl-guide-tabpanel[hidden]{display:none!important}
+.pl-guide-tab-enter{animation:plGuideTabIn .22s ease-out both}
+@keyframes plGuideTabIn{from{opacity:0;transform:translateX(7px)}to{opacity:1;transform:translateX(0)}}
+.pl-guide-empty{color:#857467;text-align:center;padding:18px}
+.pl-guide-tabpanel .pl-guide-files{margin-top:8px}
+@media(max-width:600px){.pl-guide-tablist{gap:5px;margin-bottom:12px}.pl-guide-tablist button{min-width:74px;font-size:12px;padding:8px 10px}}
+@media(prefers-reduced-motion:reduce){.pl-guide-tab-enter{animation:none}.pl-guide-tablist button{transition:none}}

@@ -37,7 +37,7 @@ window.VanillaPLGuideRender=async function(envelope,{el,esc,markdown,sectionCard
   try{
     const e=C.envelope(envelope),key=location.hash.slice(1),id=location.pathname.match(/^\/pl-guide\/([A-Za-z0-9_-]{22})\/?$/)?.[1];
     if(id!==e.id||!C.validKey(key))throw Error();
-    const d=await C.open(e,key);let s=null;
+    const d=window.VanillaPLLayout.normalize(await C.open(e,key));let s=null;
     if(d.scenario){try{const res=await fetch('/data/scenarios.json');if(res.ok)s=(await res.json()).find(x=>x.slug===d.scenario)||null;}catch(_){}}
     const title=d.title||s?.title||'PL向け案内',q=d.quote||{};
     document.title=title+'｜PL GUIDE';
@@ -46,11 +46,56 @@ window.VanillaPLGuideRender=async function(envelope,{el,esc,markdown,sectionCard
     const imageHtml=scenarioGalleryHtml(trailers,s?.title||title);
     const facts=s&&q.info?[['システム',s.system],['人数',s.players_display||s.players],['時間',s.duration_display||s.duration],['対象年齢',s.age_rating],['舞台',s.setting],['シナリオ形式',s.scenario_type],['ロスト率',s.loss_rate==='その他'?s.loss_rate_custom:s.loss_rate],['新規・継続',s.character_policy],['秘匿HO',s.secret_ho],['PvP',s.pvp]]:[];
     const skills=s&&q.skills?[['必須技能',s.required_skills],['推奨技能',s.recommended_skills],['準推奨技能',s.optional_skills]]:[];
-    const infoHtml=[...facts,...skills].some(([,v])=>String(v||'').trim())?'<section class="rule-card pl-guide-info"><h2 class="pl-guide-heading"><small>SCENARIO INFORMATION</small>シナリオ情報</h2><dl class="scenario-facts">'+facts.filter(([,v])=>String(v||'').trim()).map(([k,v])=>'<div><dt>'+esc(k)+'</dt><dd>'+esc(v)+'</dd></div>').join('')+skills.filter(([,v])=>String(v||'').trim()).map(([k,v])=>'<div class="pl-guide-skill"><dt>'+esc(k)+'</dt><dd class="rich-text">'+markdown(v)+'</dd></div>').join('')+'</dl></section>':'';
-    const ho=s&&q.ho&&Array.isArray(s.handouts)?s.handouts.map(x=>block(x.title||'HO',x.body,false)).join(''):'';
-    const files=Array.isArray(d.files)?d.files:[];
+    const files=d.files;
     const attachments=files.map(f=>{try{return plGuideAttachment(f,C);}catch(_){return null;}});
-    el.innerHTML='<div class="pl-guide-title"><small>PLAYER’S GUIDE</small><h1>'+esc(title)+'</h1><p>'+esc(d.subtitle||'')+'</p></div>'+imageHtml+infoHtml+block('概要',s&&q.overview?s.overview:'',false,'OVERVIEW')+block('あらすじ',s&&q.story?s.summary:'',false,'STORY')+block('参加にあたって',d.notice,false,'NOTICE')+block('キャラクター作成',d.character,false,'CHARACTER CREATION')+ho+block('公開HO・事前情報',d.handout,false,'HANDOUT')+(Array.isArray(d.sections)?d.sections.map(x=>block(x.heading||'補足',x.body,!!x.always_open,x.heading_en||'')).join(''):'')+(files.length?'<section class="rule-card pl-guide-info"><h2 class="pl-guide-heading"><small>FILES</small>配布資料</h2><div class="pl-guide-files">'+files.map((f,i)=>'<button type="button" data-pl-file="'+i+'">'+esc(f.name||'資料')+(attachments[i]?.type?'　↗':'　↓')+'</button>').join('')+'</div></section>':'');
+    const fileHtml=(tabId,blockId='')=>{
+      const list=files.map((f,i)=>({f,i})).filter(({f})=>f.tab_id===tabId&&f.block_id===blockId);
+      return list.length?'<div class="pl-guide-files">'+list.map(({f,i})=>'<button type="button" data-pl-file="'+i+'">'+esc(f.name||'資料')+(attachments[i]?.type?'　↗':'　↓')+'</button>').join('')+'</div>':'';
+    };
+    const blockWithFiles=(b,tabId)=>{
+      const media=fileHtml(tabId,b.id),body=String(b.body||'');
+      if(!body.trim()&&!media)return '';
+      if(!media)return block(b.heading||'補足',body,!!b.always_open,b.heading_en||'');
+      const heading='<span class="accordion-title-group">'+(b.heading_en?'<span class="accordion-title-en">'+esc(b.heading_en)+'</span>':'')+'<span class="accordion-title-ja">'+esc(b.heading||'補足資料')+'</span></span>';
+      const inner='<div class="rich-text">'+markdown(body)+'</div>'+media;
+      if(b.always_open)return '<section class="rule-card site-accordion rule-card-always"><h2 class="rule-static-heading"><span class="accordion-mark" aria-hidden="true"></span>'+heading+'</h2><div class="rule-static-body">'+inner+'</div></section>';
+      return '<section class="rule-card site-accordion"><h2><button type="button" class="accordion-trigger" aria-expanded="false"><span class="accordion-mark" aria-hidden="true"></span>'+heading+'<span class="accordion-chevron" aria-hidden="true">⌄</span></button></h2><div class="accordion-panel"><div class="accordion-panel-inner">'+inner+'</div></div></section>';
+    };
+    const infoHtml=(tabId)=>{
+      const rows=d.quote_tabs.info===tabId?facts:[];
+      const skillRows=d.quote_tabs.skills===tabId?skills:[];
+      if(![...rows,...skillRows].some(([,v])=>String(v||'').trim()))return '';
+      return '<section class="rule-card pl-guide-info"><h2 class="pl-guide-heading"><small>SCENARIO INFORMATION</small>'+(rows.length?'シナリオ情報':'技能情報')+'</h2><dl class="scenario-facts">'+rows.filter(([,v])=>String(v||'').trim()).map(([k,v])=>'<div><dt>'+esc(k)+'</dt><dd>'+esc(v)+'</dd></div>').join('')+skillRows.filter(([,v])=>String(v||'').trim()).map(([k,v])=>'<div class="pl-guide-skill"><dt>'+esc(k)+'</dt><dd class="rich-text">'+markdown(v)+'</dd></div>').join('')+'</dl></section>';
+    };
+    const ho=s&&q.ho&&Array.isArray(s.handouts)?s.handouts.map(x=>block(x.title||'HO',x.body,false)).join(''):'';
+    const tabContent=t=>{
+      const media=fileHtml(t.id);
+      const content=infoHtml(t.id)
+        +(d.quote_tabs.overview===t.id?block('概要',s&&q.overview?s.overview:'',false,'OVERVIEW'):'')
+        +(d.quote_tabs.story===t.id?block('あらすじ',s&&q.story?s.summary:'',false,'STORY'):'')
+        +(d.quote_tabs.ho===t.id?ho:'')
+        +t.blocks.map(b=>blockWithFiles(b,t.id)).join('')
+        +(media?'<section class="rule-card pl-guide-info"><h2 class="pl-guide-heading"><small>FILES</small>配布資料</h2>'+media+'</section>':'');
+      return content||'<p class="pl-guide-empty">掲載情報はありません。</p>';
+    };
+    const tabs=d.tabs;
+    const nav=tabs.length>1?'<div class="pl-guide-tablist" role="tablist" aria-label="案内メニュー">'+tabs.map((t,i)=>'<button type="button" role="tab" id="pl-tab-'+i+'" aria-controls="pl-panel-'+i+'" aria-selected="'+(i===0)+'" tabindex="'+(i===0?0:-1)+'" data-pl-tab="'+i+'">'+esc(t.title||'ご案内')+'</button>').join('')+'</div>':'';
+    const panels=tabs.map((t,i)=>'<div class="pl-guide-tabpanel" id="pl-panel-'+i+'" '+(tabs.length>1?'role="tabpanel" aria-labelledby="pl-tab-'+i+'" ':'')+'data-pl-panel="'+i+'"'+(i?' hidden':'')+'>'+tabContent(t)+'</div>').join('');
+    el.innerHTML='<div class="pl-guide-title"><small>PLAYER’S GUIDE</small><h1>'+esc(title)+'</h1><p>'+esc(d.subtitle||'')+'</p></div>'+imageHtml+nav+panels;
+    const buttons=[...el.querySelectorAll('[data-pl-tab]')],panelEls=[...el.querySelectorAll('[data-pl-panel]')];
+    let active=0;
+    const activate=(i,focus=false)=>{
+      if(i<0||i>=buttons.length)return;
+      const changed=i!==active;active=i;
+      buttons.forEach((b,j)=>{b.setAttribute('aria-selected',String(i===j));b.tabIndex=i===j?0:-1;});
+      panelEls.forEach((p,j)=>{p.hidden=i!==j;if(i===j&&changed){p.classList.remove('pl-guide-tab-enter');void p.offsetWidth;p.classList.add('pl-guide-tab-enter');}});
+      if(focus)buttons[i].focus({preventScroll:true});
+      if(changed)buttons[i].scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+    };
+    buttons.forEach((b,i)=>{
+      b.addEventListener('click',()=>activate(i));
+      b.addEventListener('keydown',event=>{let next;if(event.key==='ArrowRight')next=(i+1)%buttons.length;else if(event.key==='ArrowLeft')next=(i+buttons.length-1)%buttons.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=buttons.length-1;else return;event.preventDefault();activate(next,true);});
+    });
     bindScenarioGallery(el,trailers,s?.title||title);
     el.querySelectorAll('[data-pl-file]').forEach(btn=>btn.addEventListener('click',()=>{try{const i=Number(btn.dataset.plFile);if(!attachments[i])throw Error();plGuideOpenAttachment(files[i],attachments[i]);}catch(_){alert('ファイルを開けませんでした。');}}));
   }catch(_){el.textContent='限定ページを表示できません。共有URLの末尾まで正しくコピーされているか、公開状況を確認してください。';}
