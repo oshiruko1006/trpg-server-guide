@@ -9,6 +9,14 @@
   const preserved=/^(transparent|currentcolor|inherit|initial|unset|revert|none|var\()/i;
   const toRGB=value=>{
     const v=value.trim();if(!v||preserved.test(v))return null;
+    // CSSOM serializes some colors as hex or named colors in different engines.
+    const hex=v.match(/^#([0-9a-f]{3,8})$/i);
+    if(hex&&[3,4,6,8].includes(hex[1].length)){
+      let s=hex[1];if(s.length<=4)s=[...s].map(c=>c+c).join('');
+      return [0,2,4].map(i=>parseInt(s.slice(i,i+2),16)).concat(s.length===8?parseInt(s.slice(6),16)/255:1);
+    }
+    if(v.toLowerCase()==='white')return [255,255,255,1];
+    if(v.toLowerCase()==='black')return [0,0,0,1];
     probe.style.color='';probe.style.color=v;if(!probe.style.color)return null;
     const m=probe.style.color.match(/^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,\s/]+([\d.]+))?\s*\)$/i);
     if(!m)return null;
@@ -52,7 +60,7 @@
   }
   function mirror(rules){
     let result='';
-    for(const rule of rules){
+    for(const rule of Array.from(rules||[])){
       if(rule.type===1&&rule.selectorText&&rule.style){
         if(rule.selectorText.includes('data-theme')||rule.selectorText.includes('theme-control')||rule.selectorText.includes('theme-toggle')||rule.selectorText.includes('theme-option')||rule.selectorText.includes('theme-menu')||rule.selectorText.includes('cms-theme-host'))continue;
         let decl='';
@@ -62,8 +70,30 @@
           decl+=prop+':'+adapt(value,prop)+(priority?' !important':'')+';';
         }
         if(decl)result+=scope(rule.selectorText)+'{'+decl+'}\n';
-      }else if(rule.cssRules&&(rule.type===4||rule.type===12)){
+        // CSS nesting is supported by recent browsers. Emotion normally emits
+        // flat rules, but also handle nested conditional color declarations.
+        if(rule.cssRules?.length){
+          const nested=mirrorNested(rule.cssRules,rule.selectorText);
+          if(nested)result+=nested;
+        }
+      }else if(rule.cssRules&&(rule.type===4||rule.type===12||rule.type===18)){
         const nested=mirror(rule.cssRules);if(nested)result+=rule.cssText.slice(0,rule.cssText.indexOf('{'))+'{'+nested+'}\n';
+      }
+    }
+    return result;
+  }
+  function mirrorNested(rules,parent){
+    let result='';
+    for(const rule of Array.from(rules||[])){
+      if(rule.selectorText&&rule.style){
+        const selector=rule.selectorText.includes('&')?rule.selectorText.replace(/&/g,':is('+parent+')'):':is('+parent+') '+rule.selectorText;
+        let decl='';
+        for(const prop of props){const value=rule.style.getPropertyValue(prop);if(value)decl+=prop+':'+adapt(value,prop)+(rule.style.getPropertyPriority(prop)?' !important':'')+';';}
+        if(decl)result+=scope(selector)+'{'+decl+'}\n';
+        if(rule.cssRules?.length)result+=mirrorNested(rule.cssRules,selector);
+      }else if(rule.cssRules){
+        const nested=mirrorNested(rule.cssRules,parent);
+        if(nested)result+=rule.cssText.slice(0,rule.cssText.indexOf('{'))+'{'+nested+'}\n';
       }
     }
     return result;
@@ -78,11 +108,12 @@
     if(doc!==document)doc.documentElement.dataset.theme=root.dataset.theme||'light';
     if(root.dataset.theme!=='dark')return;
     let css='';
-    for(const sheet of doc.styleSheets){
+    for(const sheet of Array.from(doc.styleSheets||[])){
       if(sheet.ownerNode===s.layer||sheet.ownerNode?.getAttribute('href')?.includes('/theme.css')||sheet.ownerNode?.getAttribute('href')?.includes('/cms-theme.css'))continue;
       try{css+=mirror(sheet.cssRules||[]);}catch(_){/* External stylesheets may be inaccessible. */}
     }
     if(css!==s.last){s.layer.textContent=css;s.last=css;}
+    doc.documentElement.dataset.cmsThemeReady=css.length?'true':'fallback';
     // Ensure custom widget CSS follows dynamically emitted rules.
     if(s.layer.nextSibling)doc.head.appendChild(s.layer);
   }
@@ -92,13 +123,13 @@
     requestAnimationFrame(()=>{pending=false;refresh();});
   }
   function refresh(){
-    update(document);
+    try{update(document);}catch(error){console.warn('CMS theme colors:',error);}
     for(const frame of document.querySelectorAll('iframe')){
       if(!frames.has(frame)){frames.add(frame);frame.addEventListener('load',schedule);}
       try{
         const doc=frame.contentDocument;if(!doc||!doc.head)continue;
         if(!doc.getElementById('cms-preview-theme')){
-          const link=doc.createElement('link');link.id='cms-preview-theme';link.rel='stylesheet';link.href='/admin/theme-test/cms-theme.css?v=1';doc.head.appendChild(link);
+          const link=doc.createElement('link');link.id='cms-preview-theme';link.rel='stylesheet';link.href='/admin/theme-test/cms-theme.css?v=2';doc.head.appendChild(link);
         }
         update(doc);
       }catch(_){/* Cross-origin preview is left unchanged. */}
@@ -110,5 +141,6 @@
   // Poll only while visible, and keep generated styles unchanged when identical.
   setInterval(()=>{if(!document.hidden&&root.dataset.theme==='dark')schedule();},900);
   document.addEventListener('visibilitychange',schedule);
+  refresh();
   schedule();
 })();

@@ -33,3 +33,15 @@ html[data-theme="dark"] .cms-theme-host{color:#b3dfca;--switch-paper:#2e2c28;--s
 .cms-theme-host .theme-toggle:focus-visible,.cms-theme-host .theme-option:focus-visible{outline:2px solid #88bba3;outline-offset:2px}
 .cms-theme-host.cms-theme-keyboard{display:none}
 @media(max-width:600px){.cms-theme-host .theme-toggle{width:36px;height:36px}}
+
+/* Decap 3.18 core fallback: the root and major surfaces must remain dark
+   even before the Emotion stylesheet has been mirrored. */
+html[data-theme="dark"] #nc-root{color:#e5dfd4;background-color:#22211f;min-height:100vh}
+html[data-theme="dark"] #nc-root :is(h1,h2,h3,h4,h5,h6,p){color:#e5dfd4}
+html[data-theme="dark"] #nc-root :is([class*="EditorContainer"],[class*="ControlPaneContainer"],[class*="PreviewPaneContainer"],[class*="AppMainContainer"],[class*="CollectionMain"],[class*="SidebarContainer"]){background-color:#22211f!important;color:#e5dfd4}
+html[data-theme="dark"] #nc-root :is([class*="ToolbarContainer"],[class*="AppHeader"],[class*="HeaderContainer"],[class*="MediaLibraryContainer"],[class*="ModalContainer"],[class*="DropdownList"],[class*="CardContainer"],[class*="EntryCard"],[role="dialog"],[role="listbox"],[role="menu"]){background-color:#2e2c28!important;color:#e5dfd4;border-color:#47483f}
+html[data-theme="dark"] #nc-root :is([class*="-control"],[class*="-menu"],[class*="-singleValue"],[class*="-input-container"]){color:#e5dfd4}
+html[data-theme="dark"] #nc-root :is([class*="-control"],[class*="-menu"]){background-color:#282722!important;border-color:#47483f}
+html[data-theme="dark"] #nc-root [role="option"][aria-selected="true"]{background-color:#405448!important;color:#b3dfca!important}
+html[data-theme="dark"] #nc-root [role="option"]:hover{background-color:#405448;color:#b3dfca}
+html[data-theme="dark"] #nc-root [contenteditable="true"]{background-color:#282722;color:#e5dfd4}
