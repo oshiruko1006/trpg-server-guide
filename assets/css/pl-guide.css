@@ -54,4 +54,9 @@ body.pl-guide-image-open{overflow:hidden}
 .pl-guide-image-dialog .pl-guide-image-close{flex:0 0 auto;background:rgba(255,255,255,.14);color:white;font-size:28px;line-height:1;padding:6px 13px;border-radius:8px}
 .pl-guide-image-dialog-body{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px 16px 20px;box-sizing:border-box;overflow:auto}
 .pl-guide-image-dialog-body img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
-@media(max-width:600px){.pl-guide-attachment-image{max-width:min(100%,180px)}.pl-guide-attachment-image img{max-height:145px}.pl-guide-image-dialog-body{padding:6px 8px 12px}}
+@media(max-width:600px){
+  .pl-guide-attachment-image{flex:0 0 100%;width:100%;max-width:100%}
+  .pl-guide-files .pl-guide-attachment-image button{width:100%;box-sizing:border-box}
+  .pl-guide-attachment-image img{width:100%;height:auto;max-height:none}
+  .pl-guide-image-dialog-body{padding:6px 8px 12px}
+}

@@ -11,7 +11,7 @@ PAGE = """<!doctype html>
 <meta name="referrer" content="no-referrer">
 <title>PL GUIDE｜聖バニラ教会</title>
 <link rel="stylesheet" href="/assets/css/style.css">
-<link rel="stylesheet" href="/assets/css/pl-guide.css?v=4">
+<link rel="stylesheet" href="/assets/css/pl-guide.css?v=5">
 </head><body data-page="pl-guide"><main id="content"><p>読み込み中…</p></main>
 <footer>聖バニラ教会</footer>
 <script src="/assets/js/pl-guide-crypto.js" defer></script>
