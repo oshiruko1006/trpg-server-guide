@@ -1,0 +1,61 @@
+/* Test-only: Decap 3.18 responsive editor. Preserve desktop and all native actions. */
+@media (max-width:767px), (pointer:coarse) and (max-width:799px) {
+  #nc-root .vanilla-responsive-shell {
+    width:100%!important;min-width:0!important;max-width:100%!important;
+    box-sizing:border-box!important;padding-top:var(--vanilla-responsive-header-height,104px)!important;
+    height:var(--vanilla-cms-viewport-bottom,100dvh)!important;
+  }
+  #nc-root .vanilla-responsive-header {
+    display:grid!important;grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:"back meta" "actions actions";align-items:center;
+    width:100%!important;min-width:0!important;max-width:100%!important;
+    height:auto!important;min-height:0!important;box-sizing:border-box;
+    padding:4px 8px 6px;gap:4px 6px;
+  }
+  #nc-root .vanilla-responsive-header>a:first-child {
+    grid-area:back;min-width:0;height:auto!important;min-height:40px;
+    padding:4px!important;border:0!important;gap:5px;overflow-wrap:anywhere;
+  }
+  #nc-root .vanilla-responsive-header>a:first-child>div:first-child{margin-right:3px!important;flex:none}
+  #nc-root .vanilla-responsive-header>a:first-child>div:last-child{min-width:0}
+  #nc-root .vanilla-responsive-header>a:first-child>div:last-child>div:first-child{font-size:12px;line-height:1.35}
+  #nc-root .vanilla-responsive-header>div:nth-child(2) {
+    grid-area:actions;display:flex!important;flex-wrap:wrap;gap:4px;align-items:center;
+    justify-content:space-between;min-width:0;width:100%;height:auto!important;
+    padding:0!important;border:0!important;
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div {
+    min-width:0;max-width:100%;height:auto!important;flex-wrap:wrap;gap:4px;
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2) button {
+    margin:0!important;min-width:0;max-width:100%;padding-inline:9px!important;font-size:12px;
+  }
+  #nc-root .vanilla-responsive-header>div:last-child {
+    grid-area:meta;height:auto!important;padding:0!important;border:0!important;min-width:0;
+  }
+  #nc-root .vanilla-responsive-header [role="menu"],
+  #nc-root .vanilla-responsive-header [class*="DropdownList"]{max-width:calc(100vw - 20px)!important}
+  #nc-root .vanilla-responsive-shell>div:last-child{width:100%;min-width:0;max-width:100%}
+  /* Mobile edits use the left control pane only; desktop preview is unchanged. */
+  #nc-root .vanilla-responsive-shell .SplitPane{width:100%!important;min-width:0!important}
+  #nc-root .vanilla-responsive-shell .SplitPane>.Pane1{width:100%!important;min-width:0!important;max-width:100%!important;flex:1 1 100%!important}
+  #nc-root .vanilla-responsive-shell .SplitPane>.Pane2,
+  #nc-root .vanilla-responsive-shell .SplitPane>.Resizer,
+  #nc-root .vanilla-responsive-shell [class*="ViewControls"]{display:none!important}
+  #nc-root .vanilla-responsive-shell [class*="ControlPaneContainer"]{min-width:0;max-width:100%;box-sizing:border-box;padding-inline:8px!important}
+  #nc-root .vanilla-responsive-shell [class*="ControlTopbar"]{gap:6px;flex-wrap:wrap;min-width:0}
+  #nc-root .vanilla-responsive-shell label{max-width:100%;overflow-wrap:anywhere}
+  #nc-root .vanilla-responsive-shell input:not([type="checkbox"]):not([type="radio"]),
+  #nc-root .vanilla-responsive-shell select,
+  #nc-root .vanilla-responsive-shell textarea{box-sizing:border-box;max-width:100%!important;min-width:0}
+  #nc-root .vanilla-responsive-shell [data-testid^="object-control-"]{min-width:0;max-width:100%;box-sizing:border-box;padding-inline:6px!important}
+  #nc-root .vanilla-responsive-shell [data-testid^="styled-list-item-top-bar-"]{min-width:0;max-width:100%;flex-wrap:wrap;overflow-wrap:anywhere}
+  #nc-root .vanilla-responsive-shell .vanilla-md-editor{max-width:100%!important}
+  #nc-root .vanilla-responsive-shell .vanilla-tags-widget,
+  #nc-root .vanilla-responsive-shell .vanilla-batch-paths{min-width:0;max-width:100%;box-sizing:border-box;padding:9px}
+  #nc-root .vanilla-responsive-shell .vanilla-tags-buttons{gap:5px}
+  #nc-root .vanilla-responsive-shell .vanilla-tags-custom{gap:5px}
+  #nc-root .vanilla-responsive-shell .vanilla-batch-grid{grid-template-columns:repeat(auto-fit,minmax(min(120px,100%),1fr))}
+  #nc-root .vanilla-responsive-shell .vanilla-batch-file{max-width:100%;box-sizing:border-box}
+  #nc-root .vanilla-responsive-shell .vanilla-batch-file input{max-width:100%}
+}
