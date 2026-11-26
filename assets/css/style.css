@@ -580,3 +580,20 @@ body[data-page="detail"] .scenario-facts>.scenario-fact-skills{grid-column:1/-1}
 body[data-page="detail"] .scenario-fact-skills dd{font-weight:500;line-height:1.65}
 body[data-page="detail"] .scenario-fact-skills dd>:first-child{margin-top:0}
 body[data-page="detail"] .scenario-fact-skills dd>:last-child{margin-bottom:0}
+
+/* Scenario body attachments: compact desktop image, full text width on mobile. */
+.scenario-inline-image{margin:12px 0;max-width:min(100%,320px)}
+.scenario-inline-image .scenario-inline-image-open{position:relative;display:block;max-width:100%;padding:0;border:1px solid #d8e4da;background:#f4f3ee;border-radius:8px;overflow:hidden;cursor:zoom-in;line-height:0}
+.scenario-inline-image img{display:block;width:auto;height:auto;max-width:100%;max-height:240px;object-fit:contain}
+.scenario-inline-image-open span{position:absolute;right:6px;bottom:6px;display:grid;place-items:center;border-radius:50%;width:24px;height:24px;background:#253a30ad;color:#fff;font:16px/1 sans-serif}
+.scenario-inline-image figcaption{font-size:11px;line-height:1.4;color:#857467;overflow-wrap:anywhere;margin-top:4px}
+body.scenario-inline-image-active{overflow:hidden}
+.scenario-inline-image-dialog{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;box-sizing:border-box;padding:0;margin:0;border:0;background:rgba(15,16,16,.95);color:white}
+.scenario-inline-image-dialog:not([open]){display:none}
+.scenario-inline-image-dialog[open]{display:flex;flex-direction:column}
+.scenario-inline-image-dialog::backdrop{background:rgba(15,16,16,.95)}
+.scenario-inline-image-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;font-size:13px;overflow-wrap:anywhere}
+.scenario-inline-image-bar button{flex:0 0 auto;padding:6px 13px;border-radius:8px;background:#ffffff24;color:white;font-size:28px;line-height:1}
+.scenario-inline-image-body{flex:1;min-height:0;display:flex;justify-content:center;align-items:center;padding:8px 16px 20px;overflow:auto}
+.scenario-inline-image-body img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+@media(max-width:600px){.scenario-inline-image{max-width:100%}.scenario-inline-image .scenario-inline-image-open{width:100%}.scenario-inline-image img{width:100%;max-height:none}.scenario-inline-image-body{padding:6px 8px 12px}}

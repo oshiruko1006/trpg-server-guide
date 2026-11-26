@@ -75,7 +75,7 @@ for f in sorted((root / 'content/scenarios').glob('*.json')):
 <meta property="og:url" content="{og_url}"><meta property="og:image" content="{og_image}">
 <meta name="twitter:card" content="{twitter_card}"><meta name="twitter:title" content="{og_title}">
 <meta name="twitter:description" content="{og_description}"><meta name="twitter:image" content="{og_image}">
-<link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="/assets/css/header.css"></head><body data-page="detail" data-slug="{slug}"><header>
+<link rel="stylesheet" href="/assets/css/style.css?v=scenario-images-1"><link rel="stylesheet" href="/assets/css/header.css"></head><body data-page="detail" data-slug="{slug}"><header>
   <a class="brand" href="/"><span>聖バニラ教会</span><img src="https://my-trpg-room.pages.dev/images/vanilla.webp" alt="猫のアイコン"></a>
   <nav aria-label="メインメニュー">
   <a href="/"><span>HOME</span><small>聖規則</small></a>
@@ -83,7 +83,7 @@ for f in sorted((root / 'content/scenarios').glob('*.json')):
   <a href="/request.html"><span>REQUEST</span><small>KP依頼</small></a>
   <a href="/scenario/"><span>SCENARIO</span><small>回せるシナリオ</small></a>
 </nav>
-</header><main id="content"><p>読み込み中…</p></main><footer>聖バニラ教会</footer><script src="/assets/js/site.js" defer></script></body></html>''', encoding='utf-8')
+</header><main id="content"><p>読み込み中…</p></main><footer>聖バニラ教会</footer><script src="/assets/js/site.js?v=scenario-images-1" defer></script></body></html>''', encoding='utf-8')
 (out / 'data/scenarios.json').write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding='utf-8')
 print(f'Built {out}; published scenarios: {len(items)}; hidden scenarios excluded: {len(list((root / "content/scenarios").glob("*.json"))) - len(items)}')
 

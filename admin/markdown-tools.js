@@ -18,6 +18,7 @@
       case 'smallMuted': return glyph('Aa','is-small-muted');
       case 'ul': return svg(path('M9 6h11M9 12h11M9 18h11'),h('circle',{cx:4,cy:6,r:1,fill:'currentColor'}),h('circle',{cx:4,cy:12,r:1,fill:'currentColor'}),h('circle',{cx:4,cy:18,r:1,fill:'currentColor'}));
       case 'ol': return svg(path('M10 6h10M10 12h10M10 18h10M3 4l2-1v6M3 9h4M3 13c0-3 5-3 4 0l-4 4h4'));
+      case 'image': return svg(h('rect',{x:3,y:3,width:18,height:18,rx:2}),h('circle',{cx:8.5,cy:8.5,r:1.5}),path('M3 17l5-5 4 4 4-5 5 6'));
       case 'link': return svg(path('M10 13a4 4 0 0 0 6 .4l4-4a4 4 0 0 0-5.7-5.7l-2 2M14 11a4 4 0 0 0-6-.4l-4 4a4 4 0 0 0 5.7 5.7l2-2'));
       case 'mint': case 'sand': return h('span',{className:'vanilla-md-swatch is-'+kind,'aria-hidden':true});
       default: return glyph('?');
@@ -178,14 +179,64 @@
       this.root = React.createRef();
       this.toolbar = React.createRef();
       this.selection = null;
+      this.imageControlID = null;
+      this.imageSelection = null;
+      this.imagePending = false;
     }
     componentDidMount() { mountedEditors.add(this); requestViewportSync(); }
-    componentWillUnmount() { mountedEditors.delete(this); deactivate(this); requestViewportSync(); }
+    componentWillUnmount() {
+      mountedEditors.delete(this); deactivate(this); requestViewportSync();
+      if(this.imageControlID)this.props.onRemoveMediaControl?.(this.imageControlID);
+    }
+    canInsertImage() {
+      return this.props.collection?.get?.('name')==='scenarios' && typeof this.props.onOpenMediaLibrary==='function' && typeof this.props.onRemoveInsertedMedia==='function';
+    }
+    chooseImage() {
+      if(!this.canInsertImage())return;
+      const input=this.area.current;
+      if(!input)return;
+      const value=String(this.props.value||'');
+      this.imageSelection={value,end:(this.selection||[input.selectionStart,input.selectionEnd])[1]};
+      if(!this.imageControlID)this.imageControlID=crypto.randomUUID();
+      this.imagePending=true;
+      deactivate(this);
+      input.blur();
+      this.props.onOpenMediaLibrary({controlID:this.imageControlID,forImage:true,allowMultiple:false,value:'',field:this.props.field});
+    }
+    componentDidUpdate() {
+      if(!this.imagePending||!this.imageControlID)return;
+      const media=this.props.mediaPaths?.get?.(this.imageControlID);
+      if(!media)return;
+      this.imagePending=false;
+      const saved=this.imageSelection;
+      this.imageSelection=null;
+      this.props.onRemoveInsertedMedia(this.imageControlID);
+      const values=typeof media==='string'?[media]:Array.isArray(media)?media:media.toArray?.()||[];
+      const lines=values.map(value=>{
+        const raw=String(value||'').trim();
+        if(!/^(?:\/assets\/images\/|https:\/\/)[^\x00-\x1f<>"'\\]+$/i.test(raw)||!/\.(?:png|jpe?g|gif|webp|avif|bmp|ico)(?:[?#].*)?$/i.test(raw))return '';
+        const url=raw.replace(/[\s()]/g,c=>encodeURIComponent(c).replace(/\(/g,'%28').replace(/\)/g,'%29'));
+        let label=raw.split(/[?#]/)[0].split('/').pop()||'画像';
+        try{label=decodeURIComponent(label);}catch(_){}
+        label=label.replace(/[\[\]\r\n]/g,' ');
+        return '!['+label+']('+url+')';
+      }).filter(Boolean);
+      if(!lines.length){window.alert('対応する画像形式を選択してください。');return;}
+      const value=String(this.props.value||'');
+      const pos=saved?.value===value?Math.min(value.length,Math.max(0,saved.end)):value.length;
+      const before=value.slice(0,pos),after=value.slice(pos);
+      const insertion=(before&&!before.endsWith('\n')?'\n':'')+lines.join('\n')+(after&&!after.startsWith('\n')?'\n':'');
+      this.props.onChange(before+insertion+after);
+      const caret=before.length+insertion.length;
+      this.selection=[caret,caret];
+      requestAnimationFrame(()=>{const input=this.area.current;if(input)input.setSelectionRange(caret,caret);});
+    }
     rememberSelection() {
       const el = this.area.current;
       if (el) this.selection = [el.selectionStart, el.selectionEnd];
     }
     format(kind) {
+      if(kind==='image'){this.chooseImage();return;}
       const el = this.area.current;
       if (!el) return;
       const value = typeof this.props.value === 'string' ? this.props.value : String(this.props.value || '');
@@ -234,6 +285,7 @@
     render() {
       const value = typeof this.props.value === 'string' ? this.props.value : String(this.props.value || '');
       const actions = [['bold', '太字'], ['italic', '斜体'], ['h2', '見出し'], ['h3', '小見出し'], ['ul', '箇条書き'], ['ol', '番号'], ['link', 'リンク'], ['mint','囲み・ミント'], ['sand','囲み・ベージュ'], ['underline','下線'], ['smallMuted','小文字＋薄文字']];
+      if(this.canInsertImage())actions.push(['image','画像を挿入']);
       return h('div', { className: 'vanilla-md-editor', ref:this.root },
         h('div', { className: 'vanilla-md-toolbar', ref:this.toolbar, role: 'toolbar', 'aria-label': 'Markdown装飾' },
           ...actions.map(([kind, label]) => h('button', {
@@ -256,7 +308,7 @@
           onChange: e => { this.selection = [e.target.selectionStart, e.target.selectionEnd]; this.props.onChange(e.target.value); },
           'aria-label': (this.props.field && this.props.field.get && this.props.field.get('label')) || '本文'
         }),
-        h('p', { className: 'vanilla-md-help' }, '選択した文字に装飾を付けられます。改行はそのまま保存します。')
+        h('p', { className: 'vanilla-md-help' }, '選択した文字に装飾を付けられます。改行はそのまま保存します。'+(this.canInsertImage()?' 画像ボタンで本文中に公開画像を挿入できます。':''))
       );
     }
   }

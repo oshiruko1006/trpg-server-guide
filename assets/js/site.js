@@ -23,6 +23,41 @@ function inlineMd(value) {
   links.forEach((link,i) => { s = s.replace(`@@LINK${i}@@`,link); });
   return s;
 }
+// Standalone Markdown image lines: only public raster images, no raw HTML.
+function scenarioMarkdownImage(line){
+  if(page!=='detail'&&page!=='pl-guide')return '';
+  const match=line.trim().match(/^!\[([^\]\n]*)\]\(((?:\/assets\/images\/|https:\/\/)[^\s<>"'\\()]+)\)$/i);
+  if(!match||!/\.(?:png|jpe?g|gif|webp|avif|bmp|ico)(?:[?#].*)?$/i.test(match[2]))return '';
+  const src=match[2],caption=match[1];
+  return '<figure class="scenario-inline-image"><button type="button" class="scenario-inline-image-open" aria-label="'+esc(caption||'画像')+'を拡大"><img src="'+esc(src)+'" alt="'+esc(caption||'添付画像')+'" loading="lazy" decoding="async" referrerpolicy="no-referrer"><span aria-hidden="true">＋</span></button>'+(caption?'<figcaption>'+esc(caption)+'</figcaption>':'')+'</figure>';
+}
+let scenarioImageDialog=null;
+document.addEventListener('click',event=>{
+  const button=event.target.closest?.('.scenario-inline-image-open');
+  if(!button)return;
+  const original=button.querySelector('img');
+  if(!original)return;
+  if(!scenarioImageDialog){
+    const dialog=document.createElement('dialog');
+    dialog.className='scenario-inline-image-dialog';
+    dialog.setAttribute('aria-label','添付画像の拡大表示');
+    dialog.innerHTML='<div class="scenario-inline-image-bar"><span></span><button type="button" aria-label="閉じる">×</button></div><div class="scenario-inline-image-body"><img alt="" referrerpolicy="no-referrer"></div>';
+    document.body.appendChild(dialog);
+    const close=()=>{if(dialog.open)dialog.close();};
+    dialog.querySelector('button').addEventListener('click',close);
+    dialog.addEventListener('click',e=>{if(e.target===dialog||e.target===dialog.querySelector('.scenario-inline-image-body'))close();});
+    dialog.addEventListener('close',()=>{document.body.classList.remove('scenario-inline-image-active');dialog.querySelector('img').removeAttribute('src');dialog._opener?.focus({preventScroll:true});dialog._opener=null;});
+    scenarioImageDialog=dialog;
+  }
+  const dialog=scenarioImageDialog;
+  if(dialog.open)return;
+  const large=dialog.querySelector('img');
+  large.src=original.src;large.alt=original.alt;
+  dialog.querySelector('.scenario-inline-image-bar span').textContent=original.alt;
+  dialog._opener=button;dialog.showModal();document.body.classList.add('scenario-inline-image-active');
+  dialog.querySelector('button').focus({preventScroll:true});
+});
+
 function markdown(value) {
   const lines = String(value ?? '').replace(/\r\n?/g,'\n').split('\n');
   let result = '', paragraph = [], list = [], listType = '';
@@ -38,6 +73,8 @@ function markdown(value) {
     const boxStart=line.trim().match(/^:::(mint|sand|rose)$/);
     if(boxStart){flushP();flushL();boxTone=boxStart[1];continue;}
     if(!line.trim()){flushP();flushL();result += '<div class="markdown-blank-line" style="height:1em" aria-hidden="true"></div>';continue;}
+    const image=scenarioMarkdownImage(line);
+    if(image){flushP();flushL();result+=image;continue;}
     const heading = line.match(/^\s{0,3}(#{1,4})\s+(.+)$/);
     const bullet = line.match(/^\s*[-*+]\s+(.+)$/);
     const number = line.match(/^\s*\d+[.)]\s+(.+)$/);
