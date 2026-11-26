@@ -36,6 +36,7 @@ window.VanillaPLGuideRender=async function(envelope,{el,esc,markdown,sectionCard
     if(d.scenario){try{const res=await fetch('/data/scenarios.json');if(res.ok)s=(await res.json()).find(x=>x.slug===d.scenario)||null;}catch(_){}}
     const title=d.title||s?.title||'PL向け案内',q=d.quote||{};
     document.title=title+'｜PL GUIDE';
+    const scenarioTitleHtml=s?.slug?'<a class="pl-guide-scenario-link" href="/scenario/'+esc(encodeURIComponent(s.slug))+'/" target="_blank" rel="noopener noreferrer" aria-label="'+esc(title)+'のシナリオ詳細を別タブで開く">'+esc(title)+'<span class="pl-guide-scenario-link-icon" aria-hidden="true">↗</span></a>':esc(title);
     const block=(heading,body,always_open=false,heading_en='')=>String(body||'').trim()?sectionCard({heading,body,always_open,heading_en}):'';
     const trailers=s&&q.trailer?trailerUrls(s):[];
     const imageHtml=scenarioGalleryHtml(trailers,s?.title||title);
@@ -82,7 +83,7 @@ window.VanillaPLGuideRender=async function(envelope,{el,esc,markdown,sectionCard
     const tabs=d.tabs;
     const nav=tabs.length>1?'<div class="pl-guide-tablist" role="tablist" aria-label="案内メニュー">'+tabs.map((t,i)=>'<button type="button" role="tab" id="pl-tab-'+i+'" aria-controls="pl-panel-'+i+'" aria-selected="'+(i===0)+'" tabindex="'+(i===0?0:-1)+'" data-pl-tab="'+i+'">'+esc(t.title||'ご案内')+'</button>').join('')+'</div>':'';
     const panels=tabs.map((t,i)=>'<div class="pl-guide-tabpanel" id="pl-panel-'+i+'" '+(tabs.length>1?'role="tabpanel" aria-labelledby="pl-tab-'+i+'" ':'')+'data-pl-panel="'+i+'"'+(i?' hidden':'')+'>'+tabContent(t)+'</div>').join('');
-    el.innerHTML='<div class="pl-guide-title"><small>PLAYER’S GUIDE</small><h1>'+esc(title)+'</h1><p>'+esc(d.subtitle||'')+'</p></div>'+imageHtml+nav+panels;
+    el.innerHTML='<div class="pl-guide-title"><small>PLAYER’S GUIDE</small><h1>'+scenarioTitleHtml+'</h1><p>'+esc(d.subtitle||'')+'</p></div>'+imageHtml+nav+panels;
     const buttons=[...el.querySelectorAll('[data-pl-tab]')],panelEls=[...el.querySelectorAll('[data-pl-panel]')];
     let active=0;
     const activate=(i,focus=false)=>{
