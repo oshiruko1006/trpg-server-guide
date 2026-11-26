@@ -175,6 +175,10 @@ collections:
     widget: string
     required: false
     hint: 五十音順・検索に使用
+  - label: URL識別子（既存データ保持用）
+    name: slug
+    widget: hidden
+    required: false
   - label: 🖼️ トレーラー画像（個別追加・既存画像）
     name: trailers
     widget: list
@@ -199,16 +203,50 @@ collections:
     widget: string
     required: false
     hint: シナリオ名の右側に小さく表示し、キーワード検索にも使用します
-  - label: URL識別子（既存データ保持用）
-    name: slug
-    widget: hidden
-    required: false
   - label: システム
     name: system
     widget: select
     options:
     - CoC6版
     - CoC7版
+  - label: 対象年齢
+    name: age_rating
+    widget: select
+    default: 全年齢
+    options:
+    - 全年齢
+    - R-15
+    - R-18
+    hint: 公開ページの基本情報と絞り込みに反映します
+  - label: 舞台
+    name: setting
+    widget: string
+    required: false
+  - label: 新規・継続
+    name: character_policy
+    widget: select
+    required: false
+    options:
+    - 新規限定
+    - 継続限定
+    - どちらも可
+    - 指定なし
+  - label: 秘匿HO
+    name: secret_ho
+    widget: select
+    required: false
+    options:
+    - あり
+    - なし
+    - 一部あり
+  - label: PvP
+    name: pvp
+    widget: select
+    required: false
+    options:
+    - なし
+    - 可能性あり
+    - あり
   - label: プレイ人数
     name: players
     widget: select
@@ -260,19 +298,6 @@ collections:
     default: false
     required: false
     hint: 一度でもKPを担当したシナリオならオンにしてください。
-  - label: 対象年齢
-    name: age_rating
-    widget: select
-    default: 全年齢
-    options:
-    - 全年齢
-    - R-15
-    - R-18
-    hint: 公開ページの基本情報と絞り込みに反映します
-  - label: 舞台
-    name: setting
-    widget: string
-    required: false
   - label: シナリオ形式
     name: scenario_type
     widget: select
@@ -326,31 +351,6 @@ collections:
     name: aftereffects_note
     widget: string
     required: false
-  - label: 新規・継続
-    name: character_policy
-    widget: select
-    required: false
-    options:
-    - 新規限定
-    - 継続限定
-    - どちらも可
-    - 指定なし
-  - label: 秘匿HO
-    name: secret_ho
-    widget: select
-    required: false
-    options:
-    - あり
-    - なし
-    - 一部あり
-  - label: PvP
-    name: pvp
-    widget: select
-    required: false
-    options:
-    - なし
-    - 可能性あり
-    - あり
   - label: 必須技能
     name: required_skills
     widget: vanilla_markdown

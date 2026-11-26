@@ -2,12 +2,16 @@
 (function(){
   'use strict';
   const groups=[
+    {title:'トレーラー',fields:['trailers','trailer_batch'],kind:'trailers'},
+    {title:'シナリオ基本情報',fields:['author','system','age_rating','setting','character_policy','secret_ho','pvp'],kind:'basic'},
     {title:'プレイ人数',fields:['players','players_display','kpc_allowed'],switchLabel:'KPC可'},
     {title:'所要時間',fields:['duration','duration_display']},
     {title:'準備状況',fields:['preparation_status','kp_experienced'],switchLabel:'KP経験有'},
     {title:'シナリオ形式',fields:['scenario_type','scenario_type_note']},
     {title:'ロスト率',fields:['loss_rate','loss_rate_custom','loss_rate_note']},
-    {title:'後遺症',fields:['aftereffects','aftereffects_custom','aftereffects_note']}
+    {title:'後遺症',fields:['aftereffects','aftereffects_custom','aftereffects_note']},
+    {title:'技能関係',fields:['required_skills','recommended_skills','optional_skills'],kind:'skills'},
+    {title:'ハンドアウト（HO）',fields:['handouts'],kind:'ho'}
   ];
   const state=new WeakMap();
   let queued=false,lastRoute='';
@@ -33,6 +37,26 @@
     group.controls.forEach(c=>c.classList.remove('vanilla-field-group-lead','vanilla-field-group-folded','vanilla-field-group-member','vanilla-field-group-last'));
     state.delete(group.controls[0]);active.delete(group);
   }
+  function listCount(control){
+    return control.querySelectorAll('[data-testid^="styled-list-item-top-bar-"]').length;
+  }
+  function groupSummary(group){
+    const [lead,...rest]=group.controls;
+    if(group.kind==='basic')return [currentValue(rest[0]),currentValue(rest[1])].filter(Boolean).join(' ・ ')||'未設定';
+    if(group.kind==='skills'){
+      const count=group.controls.filter(c=>String(c.querySelector('textarea')?.value||'').trim()).length;
+      return count?'入力済み '+count+'/3':'未設定';
+    }
+    if(group.kind==='ho')return listCount(lead)+'件';
+    if(group.kind==='trailers'){
+      const individual=listCount(lead),batch=rest[0].querySelectorAll('.vanilla-batch-item').length;
+      return ['個別 '+individual+'件','一括 '+batch+'件'].join(' ・ ');
+    }
+    const value=currentValue(lead);
+    const filled=rest.filter(c=>Array.from(c.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]),textarea')).some(i=>String(i.value||'').trim())).length;
+    const enabled=group.switchLabel&&rest.some(c=>c.querySelector('[role="switch"][aria-checked="true"]'));
+    return [value,enabled?group.switchLabel:'',filled?'補足等 '+filled+'件':''].filter(Boolean).join(' ・ ')||'未設定';
+  }
   function update(group){
     const [lead,...rest]=group.controls;
     // A native validation error is always visible; opening doesn't affect stored values.
@@ -40,11 +64,7 @@
     lead.classList.toggle('vanilla-field-group-folded',!group.open);
     rest.forEach(c=>c.classList.toggle('vanilla-field-group-folded',!group.open));
     group.button.setAttribute('aria-expanded',String(group.open));
-    const value=currentValue(lead);
-    const filled=rest.filter(c=>Array.from(c.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]),textarea')).some(i=>String(i.value||'').trim())).length;
-    const enabled=group.switchLabel&&rest.some(c=>c.querySelector('[role="switch"][aria-checked="true"]'));
-    const detail=[value,enabled?group.switchLabel:'',filled?'補足等 '+filled+'件':''].filter(Boolean).join(' ・ ');
-    setText(group.summary,detail||'未設定');
+    setText(group.summary,groupSummary(group));
     setText(group.arrow,group.open?'▴':'▾');
   }
   function attach(def,controls){
@@ -66,7 +86,7 @@
     const summary=document.createElement('span');summary.className='vanilla-field-group-summary';
     const arrow=document.createElement('span');arrow.className='vanilla-field-group-arrow';arrow.setAttribute('aria-hidden','true');
     button.append(title,summary,arrow);
-    const group={controls,button,summary,arrow,open,switchLabel:def.switchLabel};
+    const group={controls,button,summary,arrow,open,switchLabel:def.switchLabel,kind:def.kind};
     button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();group.open=!group.open;update(group);});
     bar.appendChild(button);
     lead.classList.add('vanilla-field-group-lead');

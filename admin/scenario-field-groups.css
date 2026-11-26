@@ -21,3 +21,6 @@
   #nc-root .vanilla-field-group-member{padding-inline:7px}
   #nc-root .vanilla-field-group-toggle{padding:8px 7px}
 }
+
+/* One native list can also be an outer collapsible group (HO). */
+#nc-root .vanilla-field-group-lead.vanilla-field-group-last:not(.vanilla-field-group-folded){border-bottom:1px solid #d1e3da;border-radius:9px;padding-bottom:10px}
