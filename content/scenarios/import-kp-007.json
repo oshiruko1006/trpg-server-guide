@@ -1,15 +1,60 @@
 {
   "title": "VOID",
-  "players": "4PL",
-  "published": true,
-  "preparation_status": "準備完了",
-  "kp_experienced": true,
-  "system": "CoC6版",
   "reading": "ぼいど",
-  "duration": "長編",
-  "duration_display": "20時間",
+  "trailer_batch": [
+    "/assets/images/VOID_1.png",
+    "/assets/images/VOID_2.png",
+    "/assets/images/VOID_3.png",
+    "/assets/images/VOID_NPC%E6%A6%82%E8%A6%81.png"
+  ],
+  "system": "CoC6版",
   "age_rating": "全年齢",
   "character_policy": "新規限定",
   "secret_ho": "あり",
-  "pvp": "可能性あり"
+  "pvp": "可能性あり",
+  "players": "4PL",
+  "duration": "長編",
+  "duration_display": "20時間",
+  "preparation_status": "準備完了",
+  "kp_experienced": true,
+  "scenario_type": "シティ",
+  "loss_rate": "中",
+  "required_skills": "",
+  "recommended_skills": "戦闘技能(日本刀、ショットガン、サブマシンガン、拳銃)、探索技能、コンピュータ、交渉技能",
+  "optional_skills": "応急手当、機械修理",
+  "tags": [
+    "RP中心",
+    "熱い",
+    "NPC交流多め",
+    "協力型",
+    "ファンタジー",
+    "ヒロイック",
+    "エモ",
+    "バディ",
+    "戦闘有",
+    "探索中心",
+    "選択重視"
+  ],
+  "overview": "諸君は「選択」を迫られているのだ。\n科学技術による「勝利の可能性」か、 それを放棄することによる「確実な敗北」かを。",
+  "summary": "西暦2030年、リボット社は史上初のチューリング・テストをパスしたアンドロイドを 開発し、VOID(ボイド)と名付け世界に発表した。\n VOIDは瞬く間に世界に広まり、今やアンドロイドがいる生活は人々にとって当たり前と なったのだ。\nそれから20年後の2050年 2つの事件が世間を騒がしていた。\n\nアンドロイドによる連続殺人事件\nアンドロイドの連続破壊事件\n\n警視庁はこの2つの事件を終息させる為新たに 公安局刑事課アンドロイド事件捜査係を設立したのだった。",
+  "handouts": [
+    {
+      "title": "HO1：新米刑事",
+      "body": "22歳限定/日本刀推奨\n\n貴方は今年刑事になったばかりの新人だ。\nこの若さでの抜擢は異例である。"
+    },
+    {
+      "title": "HO2：新型アンドロイド",
+      "body": "ショットガン推奨\n\n貴方はHO1のパートナーロボットだ。\n最新型の機能が揃えられている。"
+    },
+    {
+      "title": "HO3：刑事",
+      "body": "30代限定/サブマシンガン推奨\n\n貴方は他の課から移動してきた刑事だ。\n今まであらゆる事件を解決してきたことだろう。"
+    },
+    {
+      "title": "HO：旧型アンドロイド",
+      "body": "拳銃推奨\n\n貴方はHO3のパートナーロボットだ。\nHO3を信頼している、とても忠実なアンドロイドである。"
+    }
+  ],
+  "cautions": "本シナリオはPvPの可能性や、人によっては気分を害するような要素があります。\nまたHOによってはPCに大きな設定がつくものもあります。\n神話生物や呪文等に独自の解釈を含みます。\nなんでも許せる方のみ通過してください。",
+  "published": true
 }
