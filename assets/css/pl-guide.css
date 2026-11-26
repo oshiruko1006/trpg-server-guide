@@ -36,3 +36,22 @@ body[data-page="pl-guide"] .rule-card{margin-bottom:14px}
 .pl-guide-tabpanel .pl-guide-files{margin-top:8px}
 @media(max-width:600px){.pl-guide-tablist{gap:5px;margin-bottom:12px}.pl-guide-tablist button{min-width:74px;font-size:12px;padding:8px 10px}}
 @media(prefers-reduced-motion:reduce){.pl-guide-tab-enter{animation:none}.pl-guide-tablist button{transition:none}}
+
+/* Compact inline attachments; original raster image opens in an in-page modal. */
+.pl-guide-files{align-items:flex-start}
+.pl-guide-attachment-image{margin:0;min-width:0;max-width:min(100%,240px);flex:0 1 auto}
+.pl-guide-files .pl-guide-attachment-image button{position:relative;display:block;padding:0;border:1px solid #d8e4da;border-radius:8px;overflow:hidden;background:#f4f3ee;cursor:zoom-in;max-width:100%;line-height:0}
+.pl-guide-attachment-image img{display:block;width:auto;height:auto;max-width:100%;max-height:180px;object-fit:contain}
+.pl-guide-attachment-image figcaption{font-size:11px;line-height:1.4;color:#857467;overflow-wrap:anywhere;margin-top:4px}
+.pl-guide-image-zoom{position:absolute;right:5px;bottom:5px;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(30,40,35,.65);color:white;font:16px/1 sans-serif}
+body.pl-guide-image-open{overflow:hidden}
+.pl-guide-image-dialog{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;box-sizing:border-box;background:rgba(15,16,16,.95);color:white}
+.pl-guide-image-dialog:not([open]){display:none}
+.pl-guide-image-dialog[open]{display:flex;flex-direction:column}
+.pl-guide-image-dialog::backdrop{background:rgba(15,16,16,.95)}
+.pl-guide-image-dialog-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:0 0 auto;padding:12px 16px}
+.pl-guide-image-dialog-name{font-size:13px;overflow-wrap:anywhere;min-width:0}
+.pl-guide-image-dialog .pl-guide-image-close{flex:0 0 auto;background:rgba(255,255,255,.14);color:white;font-size:28px;line-height:1;padding:6px 13px;border-radius:8px}
+.pl-guide-image-dialog-body{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px 16px 20px;box-sizing:border-box;overflow:auto}
+.pl-guide-image-dialog-body img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+@media(max-width:600px){.pl-guide-attachment-image{max-width:min(100%,180px)}.pl-guide-attachment-image img{max-height:145px}.pl-guide-image-dialog-body{padding:6px 8px 12px}}

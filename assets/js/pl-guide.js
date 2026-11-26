@@ -22,12 +22,7 @@ function plGuideOpenAttachment(file,attachment){
   const url=URL.createObjectURL(new Blob([bytes],{type:type||'application/octet-stream'}));
   const a=document.createElement('a');
   a.href=url;
-  if(type){
-    a.target='_blank';
-    a.rel='noopener noreferrer';
-  }else{
-    a.download=String(file.name||'資料').replace(/[\/\\]/g,'_');
-  }
+  a.download=String(file.name||'資料').replace(/[\/\\]/g,'_');
   try{document.body.appendChild(a);a.click();}
   finally{a.remove();setTimeout(()=>URL.revokeObjectURL(url),300000);}
 }
@@ -48,9 +43,15 @@ window.VanillaPLGuideRender=async function(envelope,{el,esc,markdown,sectionCard
     const skills=s&&q.skills?[['必須技能',s.required_skills],['推奨技能',s.recommended_skills],['準推奨技能',s.optional_skills]]:[];
     const files=d.files;
     const attachments=files.map(f=>{try{return plGuideAttachment(f,C);}catch(_){return null;}});
+    // Preview URLs exist only in this browser after successful decryption.
+    const imageUrls=attachments.map(a=>a?.type?URL.createObjectURL(new Blob([a.bytes],{type:a.type})):'');
+    window.addEventListener('pagehide',event=>{if(!event.persisted)imageUrls.filter(Boolean).forEach(url=>URL.revokeObjectURL(url));});
     const fileHtml=(tabId,blockId='')=>{
       const list=files.map((f,i)=>({f,i})).filter(({f})=>f.tab_id===tabId&&f.block_id===blockId);
-      return list.length?'<div class="pl-guide-files">'+list.map(({f,i})=>'<button type="button" data-pl-file="'+i+'">'+esc(f.name||'資料')+(attachments[i]?.type?'　↗':'　↓')+'</button>').join('')+'</div>':'';
+      return list.length?'<div class="pl-guide-files">'+list.map(({f,i})=>{
+        const name=esc(f.name||'資料');
+        return imageUrls[i]?'<figure class="pl-guide-attachment-image"><button type="button" data-pl-image="'+i+'" aria-label="'+name+'を拡大"><img src="'+esc(imageUrls[i])+'" alt="'+name+'" loading="lazy" decoding="async"><span class="pl-guide-image-zoom" aria-hidden="true">＋</span></button><figcaption>'+name+'</figcaption></figure>':'<button type="button" data-pl-file="'+i+'">'+name+'　↓</button>';
+      }).join('')+'</div>':'';
     };
     const blockWithFiles=(b,tabId)=>{
       const media=fileHtml(tabId,b.id),body=String(b.body||'');
@@ -97,6 +98,24 @@ window.VanillaPLGuideRender=async function(envelope,{el,esc,markdown,sectionCard
       b.addEventListener('keydown',event=>{let next;if(event.key==='ArrowRight')next=(i+1)%buttons.length;else if(event.key==='ArrowLeft')next=(i+buttons.length-1)%buttons.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=buttons.length-1;else return;event.preventDefault();activate(next,true);});
     });
     bindScenarioGallery(el,trailers,s?.title||title);
+    if(imageUrls.some(Boolean)){
+      const dialog=document.createElement('dialog');
+      dialog.className='pl-guide-image-dialog';
+      dialog.setAttribute('aria-label','添付画像の拡大表示');
+      dialog.innerHTML='<div class="pl-guide-image-dialog-bar"><span class="pl-guide-image-dialog-name"></span><button type="button" class="pl-guide-image-close" aria-label="閉じる">×</button></div><div class="pl-guide-image-dialog-body"><img alt=""></div>';
+      document.body.appendChild(dialog);
+      const large=dialog.querySelector('img'),caption=dialog.querySelector('.pl-guide-image-dialog-name'),closeButton=dialog.querySelector('.pl-guide-image-close');
+      let opener=null;
+      const close=()=>{if(dialog.open)dialog.close();};
+      closeButton.addEventListener('click',close);
+      dialog.addEventListener('click',event=>{if(event.target===dialog||event.target===dialog.querySelector('.pl-guide-image-dialog-body'))close();});
+      dialog.addEventListener('close',()=>{document.body.classList.remove('pl-guide-image-open');large.removeAttribute('src');opener?.focus({preventScroll:true});opener=null;});
+      el.querySelectorAll('[data-pl-image]').forEach(btn=>btn.addEventListener('click',()=>{
+        const i=Number(btn.dataset.plImage),url=imageUrls[i];if(!url||dialog.open)return;
+        opener=btn;large.src=url;large.alt=files[i].name||'添付画像';caption.textContent=large.alt;
+        dialog.showModal();document.body.classList.add('pl-guide-image-open');closeButton.focus({preventScroll:true});
+      }));
+    }
     el.querySelectorAll('[data-pl-file]').forEach(btn=>btn.addEventListener('click',()=>{try{const i=Number(btn.dataset.plFile);if(!attachments[i])throw Error();plGuideOpenAttachment(files[i],attachments[i]);}catch(_){alert('ファイルを開けませんでした。');}}));
   }catch(_){el.textContent='限定ページを表示できません。共有URLの末尾まで正しくコピーされているか、公開状況を確認してください。';}
 };
