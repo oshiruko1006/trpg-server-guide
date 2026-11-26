@@ -24,3 +24,14 @@
 
 /* One native list can also be an outer collapsible group (HO). */
 #nc-root .vanilla-field-group-lead.vanilla-field-group-last:not(.vanilla-field-group-folded){border-bottom:1px solid #d1e3da;border-radius:9px;padding-bottom:10px}
+
+/* Switch registration methods without moving or remounting either native field. */
+#nc-root .vanilla-trailer-tabs{order:-1;display:flex;flex:0 0 100%;gap:5px;min-width:0;margin:0 0 6px}
+#nc-root .vanilla-trailer-tabs button{flex:1;min-width:0;border:1px solid #d1e3da;border-radius:6px;background:#fff;color:#58776a;padding:8px 4px;font:600 12px/1.4 "Noto Sans JP",sans-serif;cursor:pointer;text-align:center}
+#nc-root .vanilla-trailer-tabs button[aria-pressed=true]{background:#d6eae0;border-color:#91b9a3;color:#315e4b}
+#nc-root .vanilla-trailer-tabs button:focus-visible{outline:2px solid #789f8b;outline-offset:1px}
+#nc-root .vanilla-trailer-group.vanilla-field-group-folded .vanilla-trailer-tabs{display:none!important}
+#nc-root .vanilla-trailer-group.vanilla-trailer-batch>div:first-child>label{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%);white-space:nowrap;padding:0!important;margin:0!important}
+#nc-root .vanilla-trailer-group.vanilla-trailer-batch>:not(:first-child){display:none!important}
+#nc-root .vanilla-trailer-group.vanilla-trailer-individual:not(.vanilla-field-group-folded){border-bottom:1px solid #d1e3da;border-radius:9px;padding-bottom:10px}
+#nc-root .vanilla-field-group-member.vanilla-trailer-tab-hidden{display:none!important}

@@ -34,7 +34,8 @@
   }
   function clear(group){
     group.button.remove();
-    group.controls.forEach(c=>c.classList.remove('vanilla-field-group-lead','vanilla-field-group-folded','vanilla-field-group-member','vanilla-field-group-last'));
+    group.tabs?.remove();
+    group.controls.forEach(c=>c.classList.remove('vanilla-field-group-lead','vanilla-field-group-folded','vanilla-field-group-member','vanilla-field-group-last','vanilla-trailer-group','vanilla-trailer-individual','vanilla-trailer-batch','vanilla-trailer-tab-hidden'));
     state.delete(group.controls[0]);active.delete(group);
   }
   function listCount(control){
@@ -64,21 +65,30 @@
     lead.classList.toggle('vanilla-field-group-folded',!group.open);
     rest.forEach(c=>c.classList.toggle('vanilla-field-group-folded',!group.open));
     group.button.setAttribute('aria-expanded',String(group.open));
+    if(group.kind==='trailers'){
+      if(hasError(group.controls[1-group.tab])&&!hasError(group.controls[group.tab]))group.tab=1-group.tab;
+      lead.classList.toggle('vanilla-trailer-individual',group.tab===0);
+      lead.classList.toggle('vanilla-trailer-batch',group.tab===1);
+      rest[0].classList.toggle('vanilla-trailer-tab-hidden',group.tab===0);
+      group.tabButtons.forEach((b,i)=>b.setAttribute('aria-pressed',String(group.tab===i)));
+      setText(group.tabButtons[0],'個別登録（'+listCount(lead)+'）');
+      setText(group.tabButtons[1],'一括登録（'+rest[0].querySelectorAll('.vanilla-batch-item').length+'）');
+    }
     setText(group.summary,groupSummary(group));
     setText(group.arrow,group.open?'▴':'▾');
   }
   function attach(def,controls){
     const lead=controls[0],bar=lead.firstElementChild;
     let group=state.get(lead);
-    if(group&&(group.controls.some((c,i)=>c!==controls[i])||!group.button.isConnected||group.button.parentElement!==bar)){
-      const wasOpen=group.open;clear(group);group=null;
+    if(group&&(group.controls.some((c,i)=>c!==controls[i])||!group.button.isConnected||group.button.parentElement!==bar||(group.tabs&&group.tabs.parentElement!==bar))){
+      const wasOpen=group.open,wasTab=group.tab;clear(group);group=null;
       // If Decap rerenders the topbar, preserve the user's current fold choice.
-      return create(def,controls,wasOpen);
+      return create(def,controls,wasOpen,wasTab);
     }
     if(!group)return create(def,controls,false);
     update(group);
   }
-  function create(def,controls,open){
+  function create(def,controls,open,tab){
     const lead=controls[0],bar=lead.firstElementChild;
     const button=document.createElement('button');
     button.type='button';button.className='vanilla-field-group-toggle';
@@ -89,6 +99,20 @@
     const group={controls,button,summary,arrow,open,switchLabel:def.switchLabel,kind:def.kind};
     button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();group.open=!group.open;update(group);});
     bar.appendChild(button);
+    if(def.kind==='trailers'){
+      lead.classList.add('vanilla-trailer-group');
+      group.tab=tab??(listCount(lead)===0&&controls[1].querySelectorAll('.vanilla-batch-item').length>0?1:0);
+      const tabs=document.createElement('div');
+      tabs.className='vanilla-trailer-tabs';tabs.setAttribute('role','group');tabs.setAttribute('aria-label','トレーラー登録方法');
+      group.tabs=tabs;
+      group.tabButtons=[0,1].map(i=>{
+        const b=document.createElement('button');
+        b.type='button';
+        b.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();group.tab=i;update(group);});
+        tabs.appendChild(b);return b;
+      });
+      bar.appendChild(tabs);
+    }
     lead.classList.add('vanilla-field-group-lead');
     controls.slice(1).forEach(c=>c.classList.add('vanilla-field-group-member'));
     controls[controls.length-1].classList.add('vanilla-field-group-last');
