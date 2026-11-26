@@ -13,7 +13,7 @@ PAGE = """<!doctype html>
 <script src="/assets/js/theme.js?v=1"></script>
 <link rel="stylesheet" href="/assets/css/style.css?v=theme-1">
 <link rel="stylesheet" href="/assets/css/pl-guide.css?v=theme-1">
-<link rel="stylesheet" href="/assets/css/theme.css?v=1"></head><body data-page="pl-guide"><main id="content"><p>読み込み中…</p></main>
+<link rel="stylesheet" href="/assets/css/theme.css?v=2"></head><body data-page="pl-guide"><main id="content"><p>読み込み中…</p></main>
 <footer>聖バニラ教会</footer>
 <script src="/assets/js/pl-guide-crypto.js" defer></script>
 <script src="/assets/js/pl-guide-layout.js?v=2" defer></script>
