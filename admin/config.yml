@@ -467,3 +467,32 @@ collections:
     name: published
     widget: boolean
     default: false
+
+- name: pl_guides
+  label: PL GUIDE（PL限定ページ）
+  folder: content/pl-guides
+  create: true
+  extension: json
+  format: json
+  slug: '{{year}}{{month}}{{day}}-{{hour}}{{minute}}{{second}}'
+  identifier_field: title
+  sortable_fields:
+  - field: commit_date
+    default_sort: desc
+  - title
+  editor:
+    preview: false
+  fields:
+  - label: 管理用の名前（公開GitHubに残ります）
+    name: title
+    widget: string
+    hint: 個人名・秘匿情報・共有URLは入力しないでください。ページのタイトルは下の暗号化された編集欄で設定します。
+  - label: PL限定ページの内容・共有URL
+    name: encrypted_guide
+    widget: vanilla_pl_guide
+    hint: 内容は暗号化して保存。共有URLはGitHubに保存されません。必ず控えてください。複製した場合はURLを再発行してください。
+  - label: 限定ページを公開する
+    name: published
+    widget: boolean
+    default: false
+    hint: OFFにして保存・デプロイすると現在の限定ページが非公開になります。

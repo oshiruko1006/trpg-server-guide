@@ -86,3 +86,6 @@ for f in sorted((root / 'content/scenarios').glob('*.json')):
 </header><main id="content"><p>読み込み中…</p></main><footer>聖バニラ教会</footer><script src="/assets/js/site.js" defer></script></body></html>''', encoding='utf-8')
 (out / 'data/scenarios.json').write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding='utf-8')
 print(f'Built {out}; published scenarios: {len(items)}; hidden scenarios excluded: {len(list((root / "content/scenarios").glob("*.json"))) - len(items)}')
+
+from build_pl_guides import build_pl_guides
+build_pl_guides(root, out)

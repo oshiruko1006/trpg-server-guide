@@ -2,7 +2,7 @@
 const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const el = document.getElementById('content');
 const page = document.body.dataset.page;
-const urls = {home:'/data/home.json',character:'/data/character.json',request:'/data/request.json',scenario:'/data/scenarios.json',detail:'/data/scenarios.json'};
+const urls = {home:'/data/home.json',character:'/data/character.json',request:'/data/request.json',scenario:'/data/scenarios.json',detail:'/data/scenarios.json','pl-guide':'./guide.json'};
 
 // Render a limited, HTML-escaped Markdown subset without allowing raw HTML or script URLs.
 function inlineMd(value) {
@@ -132,7 +132,8 @@ const authorHtml = s => String(s.author||'').trim()
 const titleWithAuthor = (s, heading) => `<span class="scenario-title-author" style="display:inline-flex;align-items:baseline;gap:.4em .7em;flex-wrap:wrap;max-width:100%;"><${heading} style="margin:0;">${esc(s.title)}</${heading}>${authorHtml(s)}</span>`;
 const scenarioCard = (s, view) => `<article class="scenario scenario-entry scenario-${view}"><a class="scenario-entry-link" href="/scenario/${encodeURIComponent(s.slug)}/"><div class="scenario-cover-wrap">${trailerThumb(s)}<div class="scenario-cover-badges" style="position:absolute;top:10px;right:10px;z-index:2;display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:6px;max-width:calc(100% - 20px)">${s.preparation_status?statusBadge(s):''}${s.kp_experienced===true?'<span class="kp-experience-badge" style="position:static;inset:auto;transform:none">✓ KP経験有</span>':''}</div></div><div class="scenario-entry-body"><div class="scenario-title-row">${titleWithAuthor(s,'h2')}</div><p class="muted">${info(s)}</p><div class="scenario-tags">${tagsHtml(scenarioTags(s))}</div>${view==='list'?`<p class="scenario-excerpt">${esc(String(s.summary||'').replace(/[#*_`~\[\]]/g,'').slice(0,115))}</p>`:''}</div></a>${externalLinksHtml(s,'scenario-card-links')}</article>`;
 
-fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(d=>{
+fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(async d=>{
+  if(page==='pl-guide'){ await window.VanillaPLGuideRender(d, {el,esc,markdown,sectionCard,trailerUrls}); return; }
   if(page==='home'){
     const sections = d.sections || (d.rules?[{heading:'ルール',body:d.rules}]:[]);
     el.innerHTML = `<div class="rule-list">${sections.map(sectionCard).join('')}</div>`;
@@ -250,4 +251,4 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     }));
     render();
   }
-}).catch(err=>{console.error(err);el.textContent='データを読み込めませんでした。';});
+}).catch(err=>{if(page==='pl-guide'){el.textContent='限定ページを表示できません。公開状況と共有URLを確認してください。';return;}console.error(err);el.textContent='データを読み込めませんでした。';});

@@ -1,0 +1,19 @@
+body[data-page="pl-guide"] main{max-width:920px;margin:0 auto;padding:24px 16px 30px}
+.pl-guide-title{text-align:center;padding:16px 4px 20px}
+.pl-guide-title small,.pl-guide-heading small{display:block;color:#83a998;font-size:.7rem;letter-spacing:.15em}
+.pl-guide-title h1{margin:8px 0;overflow-wrap:anywhere}
+.pl-guide-title p{color:#857467;margin:0}
+.pl-guide-trailers{display:grid;gap:10px;margin-bottom:16px}
+.pl-guide-trailers img{display:block;max-width:100%;height:auto;margin:auto;border-radius:12px}
+.pl-guide-info{padding:18px;margin:0 0 14px}
+.pl-guide-heading{font-size:1.12rem;margin:0 0 12px}
+.pl-guide-info .scenario-facts{margin:0;gap:7px}
+.pl-guide-info .scenario-facts>div{padding:9px 10px}
+.pl-guide-info .scenario-facts dd{font-size:.88rem}
+.pl-guide-skill{grid-column:1/-1}
+.pl-guide-skill dd{font-weight:500}
+.pl-guide-skill dd>:first-child{margin-top:0}
+.pl-guide-skill dd>:last-child{margin-bottom:0}
+.pl-guide-files{display:flex;flex-wrap:wrap;gap:8px}
+.pl-guide-files button{overflow-wrap:anywhere;max-width:100%}
+body[data-page="pl-guide"] .rule-card{margin-bottom:14px}

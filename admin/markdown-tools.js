@@ -260,5 +260,6 @@
       );
     }
   }
+  window.VanillaMarkdownControl = MarkdownTools;
   window.CMS.registerWidget('vanilla_markdown', MarkdownTools);
 })();
