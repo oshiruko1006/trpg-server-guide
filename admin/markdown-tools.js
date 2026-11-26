@@ -182,13 +182,15 @@
       this.imageControlID = null;
       this.imageSelection = null;
       this.imagePending = false;
+      this.privateImageInput = React.createRef();
+      this.privateImageSelection = null;
     }
     componentDidMount() { mountedEditors.add(this); requestViewportSync(); }
     // Decap's Widget wrapper delegates its update decision to this method.
     // Its default ignores mediaPaths; a chosen image must reach componentDidUpdate
     // even when neither the text nor focus style has changed.
     shouldComponentUpdate(nextProps) {
-      if(!this.canInsertImage())return true;
+      if(typeof this.props.onInsertPrivateImage==='function'||!this.canInsertImage())return true;
       if(this.imagePending && this.imageControlID && nextProps.mediaPaths?.get?.(this.imageControlID))return true;
       return this.props.value!==nextProps.value ||
         this.props.classNameWrapper!==nextProps.classNameWrapper ||
@@ -201,13 +203,23 @@
       if(this.imageControlID)this.props.onRemoveMediaControl?.(this.imageControlID);
     }
     canInsertImage() {
-      return this.props.collection?.get?.('name')==='scenarios' && typeof this.props.onOpenMediaLibrary==='function' && typeof this.props.onRemoveInsertedMedia==='function';
+      return typeof this.props.onInsertPrivateImage==='function' || (this.props.collection?.get?.('name')==='scenarios' && typeof this.props.onOpenMediaLibrary==='function' && typeof this.props.onRemoveInsertedMedia==='function');
     }
     chooseImage() {
       if(!this.canInsertImage())return;
       const input=this.area.current;
       if(!input)return;
       const value=String(this.props.value||'');
+      if(typeof this.props.onInsertPrivateImage==='function'){
+        const picker=this.privateImageInput.current;
+        if(!picker)return;
+        this.privateImageSelection={value,end:(this.selection||[input.selectionStart,input.selectionEnd])[1]};
+        picker.value='';
+        deactivate(this);
+        input.blur();
+        picker.click();
+        return;
+      }
       this.imageSelection={value,end:(this.selection||[input.selectionStart,input.selectionEnd])[1]};
       if(!this.imageControlID)this.imageControlID=crypto.randomUUID();
       this.imagePending=true;
@@ -326,7 +338,12 @@
           onChange: e => { this.selection = [e.target.selectionStart, e.target.selectionEnd]; this.props.onChange(e.target.value); },
           'aria-label': (this.props.field && this.props.field.get && this.props.field.get('label')) || '本文'
         }),
-        h('p', { className: 'vanilla-md-help' }, '選択した文字に装飾を付けられます。改行はそのまま保存します。'+(this.canInsertImage()?' 画像ボタンで本文中に公開画像を挿入できます。':''))
+        typeof this.props.onInsertPrivateImage==='function'?h('input',{ref:this.privateImageInput,type:'file',accept:'image/png,image/jpeg,image/gif,image/webp,image/avif,image/bmp,image/x-icon',multiple:true,style:{display:'none'},onChange:e=>{
+          const files=Array.from(e.target.files||[]),selection=this.privateImageSelection;
+          e.target.value='';this.privateImageSelection=null;
+          if(files.length&&selection)this.props.onInsertPrivateImage(files,selection);
+        }}):null,
+        h('p', { className: 'vanilla-md-help' }, '選択した文字に装飾を付けられます。改行はそのまま保存します。'+(typeof this.props.onInsertPrivateImage==='function'?' 画像ボタンで暗号化画像を本文に挿入できます。':this.canInsertImage()?' 画像ボタンで本文中に公開画像を挿入できます。':''))
       );
     }
   }

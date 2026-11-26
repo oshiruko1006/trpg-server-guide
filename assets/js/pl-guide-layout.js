@@ -4,6 +4,20 @@
   const arr=v=>Array.isArray(v)?v:[];
   const quoteDefaults={trailer:true,info:true,skills:true,overview:false,story:false,ho:false};
   const quoteKeys=['info','skills','overview','story','ho'];
+  function plGuideImageType(bytes){
+  const has=(offset,values)=>values.every((v,i)=>bytes[offset+i]===v);
+  const ascii=(offset,s)=>has(offset,Array.from(s,c=>c.charCodeAt(0)));
+  if(has(0,[137,80,78,71,13,10,26,10]))return 'image/png';
+  if(has(0,[255,216,255]))return 'image/jpeg';
+  if(ascii(0,'GIF87a')||ascii(0,'GIF89a'))return 'image/gif';
+  if(ascii(0,'RIFF')&&ascii(8,'WEBP'))return 'image/webp';
+  if(ascii(4,'ftyp')&&(ascii(8,'avif')||ascii(8,'avis')))return 'image/avif';
+  if(ascii(0,'BM')&&bytes.length>=14)return 'image/bmp';
+  if(has(0,[0,0,1,0])&&bytes.length>=6)return 'image/x-icon';
+  // Never navigate to active formats (SVG, HTML, etc.) under the site's origin.
+  return '';
+}
+  const imageMarker=line=>String(line||'').trim().match(/^!\[([^\]\r\n]*)\]\(pl-image:(img-[A-Za-z0-9_-]{16})\)$/);
   function normalize(data){
     const d={...data,quote:{...quoteDefaults,...data.quote}};
     if(!Array.isArray(d.tabs)){
@@ -24,12 +38,18 @@
     const first=d.tabs[0].id;
     const exists=id=>d.tabs.some(t=>t.id===id);
     d.quote_tabs=Object.fromEntries(quoteKeys.map(k=>[k,exists(d.quote_tabs?.[k])?d.quote_tabs[k]:first]));
+    const referenced=new Map();
+    for(const t of d.tabs)for(const b of t.blocks)for(const line of String(b.body||'').split(/\r?\n/)){
+      const m=imageMarker(line);if(m&&!referenced.has(m[2]))referenced.set(m[2],{tab_id:t.id,block_id:b.id});
+    }
     d.files=arr(d.files).map(f=>{
+      if(f.id&&referenced.has(f.id))return {...f,...referenced.get(f.id),inline:true};
+      if(f.inline)f={...f,inline:false};
       const blockTab=d.tabs.find(t=>t.blocks.some(b=>b.id===f.block_id));
       return {...f,tab_id:blockTab?.id||(exists(f.tab_id)?f.tab_id:first),block_id:blockTab?f.block_id:''};
     });
     delete d.sections;delete d.notice;delete d.character;delete d.handout;
     return d;
   }
-  g.VanillaPLLayout={normalize,quoteKeys};
+  g.VanillaPLLayout={normalize,quoteKeys,imageMarker,imageType:plGuideImageType};
 })(window);

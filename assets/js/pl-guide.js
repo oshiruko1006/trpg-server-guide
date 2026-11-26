@@ -1,21 +1,8 @@
 /* Read only one encrypted guide; existing public scenario data is quoted on request. */
 // Old encrypted attachments have no MIME metadata. Inspect bytes, not filenames.
-function plGuideImageType(bytes){
-  const has=(offset,values)=>values.every((v,i)=>bytes[offset+i]===v);
-  const ascii=(offset,s)=>has(offset,Array.from(s,c=>c.charCodeAt(0)));
-  if(has(0,[137,80,78,71,13,10,26,10]))return 'image/png';
-  if(has(0,[255,216,255]))return 'image/jpeg';
-  if(ascii(0,'GIF87a')||ascii(0,'GIF89a'))return 'image/gif';
-  if(ascii(0,'RIFF')&&ascii(8,'WEBP'))return 'image/webp';
-  if(ascii(4,'ftyp')&&(ascii(8,'avif')||ascii(8,'avis')))return 'image/avif';
-  if(ascii(0,'BM')&&bytes.length>=14)return 'image/bmp';
-  if(has(0,[0,0,1,0])&&bytes.length>=6)return 'image/x-icon';
-  // Never navigate to active formats (SVG, HTML, etc.) under the site's origin.
-  return '';
-}
 function plGuideAttachment(file,C){
   const bytes=file.data?C.un64(file.data):new Uint8Array(0);
-  return {bytes,type:plGuideImageType(bytes)};
+  return {bytes,type:window.VanillaPLLayout.imageType(bytes)};
 }
 function plGuideOpenAttachment(file,attachment){
   const {bytes,type}=attachment;
@@ -47,19 +34,28 @@ window.VanillaPLGuideRender=async function(envelope,{el,esc,markdown,sectionCard
     // Preview URLs exist only in this browser after successful decryption.
     const imageUrls=attachments.map(a=>a?.type?URL.createObjectURL(new Blob([a.bytes],{type:a.type})):'');
     window.addEventListener('pagehide',event=>{if(!event.persisted)imageUrls.filter(Boolean).forEach(url=>URL.revokeObjectURL(url));});
+    const renderImage=(i,inline=false,label)=>{
+      const name=esc(label||files[i].name||'画像');
+      return '<figure class="pl-guide-attachment-image'+(inline?' pl-guide-inline-image':'')+'"><button type="button" data-pl-image="'+i+'" aria-label="'+name+'を拡大"><img src="'+esc(imageUrls[i])+'" alt="'+name+'" loading="lazy" decoding="async"><span class="pl-guide-image-zoom" aria-hidden="true">＋</span></button><figcaption>'+name+'</figcaption></figure>';
+    };
+    const inlineImage=line=>{
+      const m=window.VanillaPLLayout.imageMarker(line);if(!m)return '';
+      const i=files.findIndex(f=>f.id===m[2]&&f.inline);
+      return i>=0&&imageUrls[i]?renderImage(i,true,m[1]):'<p class="muted">画像が見つかりません。</p>';
+    };
     const fileHtml=(tabId,blockId='')=>{
-      const list=files.map((f,i)=>({f,i})).filter(({f})=>f.tab_id===tabId&&f.block_id===blockId);
+      const list=files.map((f,i)=>({f,i})).filter(({f})=>!f.inline&&f.tab_id===tabId&&f.block_id===blockId);
       return list.length?'<div class="pl-guide-files">'+list.map(({f,i})=>{
         const name=esc(f.name||'資料');
-        return imageUrls[i]?'<figure class="pl-guide-attachment-image"><button type="button" data-pl-image="'+i+'" aria-label="'+name+'を拡大"><img src="'+esc(imageUrls[i])+'" alt="'+name+'" loading="lazy" decoding="async"><span class="pl-guide-image-zoom" aria-hidden="true">＋</span></button><figcaption>'+name+'</figcaption></figure>':'<button type="button" data-pl-file="'+i+'">'+name+'　↓</button>';
+        return imageUrls[i]?renderImage(i):'<button type="button" data-pl-file="'+i+'">'+name+'　↓</button>';
       }).join('')+'</div>':'';
     };
     const blockWithFiles=(b,tabId)=>{
       const media=fileHtml(tabId,b.id),body=String(b.body||'');
       if(!body.trim()&&!media)return '';
-      if(!media)return block(b.heading||'補足',body,!!b.always_open,b.heading_en||'');
+      if(!media&&!body.split(/\r?\n/).some(window.VanillaPLLayout.imageMarker))return block(b.heading||'補足',body,!!b.always_open,b.heading_en||'');
       const heading='<span class="accordion-title-group">'+(b.heading_en?'<span class="accordion-title-en">'+esc(b.heading_en)+'</span>':'')+'<span class="accordion-title-ja">'+esc(b.heading||'補足資料')+'</span></span>';
-      const inner='<div class="rich-text">'+markdown(body)+'</div>'+media;
+      const inner='<div class="rich-text">'+markdown(body,inlineImage)+'</div>'+media;
       if(b.always_open)return '<section class="rule-card site-accordion rule-card-always"><h2 class="rule-static-heading"><span class="accordion-mark" aria-hidden="true"></span>'+heading+'</h2><div class="rule-static-body">'+inner+'</div></section>';
       return '<section class="rule-card site-accordion"><h2><button type="button" class="accordion-trigger" aria-expanded="false"><span class="accordion-mark" aria-hidden="true"></span>'+heading+'<span class="accordion-chevron" aria-hidden="true">⌄</span></button></h2><div class="accordion-panel"><div class="accordion-panel-inner">'+inner+'</div></div></section>';
     };

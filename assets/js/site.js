@@ -58,7 +58,7 @@ document.addEventListener('click',event=>{
   dialog.querySelector('button').focus({preventScroll:true});
 });
 
-function markdown(value) {
+function markdown(value, renderPrivateImage) {
   const lines = String(value ?? '').replace(/\r\n?/g,'\n').split('\n');
   let result = '', paragraph = [], list = [], listType = '';
   let boxTone = '', boxLines = [];
@@ -66,14 +66,14 @@ function markdown(value) {
   const flushL = () => {if(list.length){result += `<${listType}>${list.map(x=>`<li>${inlineMd(x)}</li>`).join('')}</${listType}>`;list=[];listType='';}};
   for(const line of lines){
     if(boxTone){
-      if(line.trim()===':::'){result += `<div class="text-callout text-callout-${boxTone}">${markdown(boxLines.join('\n'))}</div>`;boxTone='';boxLines=[];}
+      if(line.trim()===':::'){result += `<div class="text-callout text-callout-${boxTone}">${markdown(boxLines.join('\n'),renderPrivateImage)}</div>`;boxTone='';boxLines=[];}
       else boxLines.push(line);
       continue;
     }
     const boxStart=line.trim().match(/^:::(mint|sand|rose)$/);
     if(boxStart){flushP();flushL();boxTone=boxStart[1];continue;}
     if(!line.trim()){flushP();flushL();result += '<div class="markdown-blank-line" style="height:1em" aria-hidden="true"></div>';continue;}
-    const image=scenarioMarkdownImage(line);
+    const image=(typeof renderPrivateImage==='function'?renderPrivateImage(line):'')||scenarioMarkdownImage(line);
     if(image){flushP();flushL();result+=image;continue;}
     const heading = line.match(/^\s{0,3}(#{1,4})\s+(.+)$/);
     const bullet = line.match(/^\s*[-*+]\s+(.+)$/);
@@ -82,7 +82,7 @@ function markdown(value) {
     else if(bullet||number){flushP();const type=bullet?'ul':'ol';if(listType&&listType!==type)flushL();listType=type;list.push((bullet||number)[1]);}
     else {flushL();paragraph.push(line);}
   }
-  if(boxTone){result += `<div class="text-callout text-callout-${boxTone}">${markdown(boxLines.join('\n'))}</div>`;}
+  if(boxTone){result += `<div class="text-callout text-callout-${boxTone}">${markdown(boxLines.join('\n'),renderPrivateImage)}</div>`;}
   flushP();flushL();return result;
 }
 const textBlock = value => `<p class="preserve-lines">${esc(value)}</p>`;
