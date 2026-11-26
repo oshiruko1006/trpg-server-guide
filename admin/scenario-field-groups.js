@@ -2,8 +2,9 @@
 (function(){
   'use strict';
   const groups=[
-    {title:'プレイ人数',fields:['players','players_display']},
+    {title:'プレイ人数',fields:['players','players_display','kpc_allowed'],switchLabel:'KPC可'},
     {title:'所要時間',fields:['duration','duration_display']},
+    {title:'準備状況',fields:['preparation_status','kp_experienced'],switchLabel:'KP経験有'},
     {title:'シナリオ形式',fields:['scenario_type','scenario_type_note']},
     {title:'ロスト率',fields:['loss_rate','loss_rate_custom','loss_rate_note']},
     {title:'後遺症',fields:['aftereffects','aftereffects_custom','aftereffects_note']}
@@ -29,7 +30,7 @@
   }
   function clear(group){
     group.button.remove();
-    group.controls.forEach(c=>c.classList.remove('vanilla-field-group-lead','vanilla-field-group-folded','vanilla-field-group-member'));
+    group.controls.forEach(c=>c.classList.remove('vanilla-field-group-lead','vanilla-field-group-folded','vanilla-field-group-member','vanilla-field-group-last'));
     state.delete(group.controls[0]);active.delete(group);
   }
   function update(group){
@@ -40,8 +41,9 @@
     rest.forEach(c=>c.classList.toggle('vanilla-field-group-folded',!group.open));
     group.button.setAttribute('aria-expanded',String(group.open));
     const value=currentValue(lead);
-    const filled=rest.filter(c=>Array.from(c.querySelectorAll('input,textarea')).some(i=>String(i.value||'').trim())).length;
-    const detail=[value,filled?'補足等 '+filled+'件':''].filter(Boolean).join(' ・ ');
+    const filled=rest.filter(c=>Array.from(c.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]),textarea')).some(i=>String(i.value||'').trim())).length;
+    const enabled=group.switchLabel&&rest.some(c=>c.querySelector('[role="switch"][aria-checked="true"]'));
+    const detail=[value,enabled?group.switchLabel:'',filled?'補足等 '+filled+'件':''].filter(Boolean).join(' ・ ');
     setText(group.summary,detail||'未設定');
     setText(group.arrow,group.open?'▴':'▾');
   }
@@ -64,11 +66,12 @@
     const summary=document.createElement('span');summary.className='vanilla-field-group-summary';
     const arrow=document.createElement('span');arrow.className='vanilla-field-group-arrow';arrow.setAttribute('aria-hidden','true');
     button.append(title,summary,arrow);
-    const group={controls,button,summary,arrow,open};
+    const group={controls,button,summary,arrow,open,switchLabel:def.switchLabel};
     button.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();group.open=!group.open;update(group);});
     bar.appendChild(button);
     lead.classList.add('vanilla-field-group-lead');
     controls.slice(1).forEach(c=>c.classList.add('vanilla-field-group-member'));
+    controls[controls.length-1].classList.add('vanilla-field-group-last');
     state.set(lead,group);active.add(group);update(group);
   }
   function apply(){
@@ -98,7 +101,7 @@
     for(const group of [...active])if(!valid.has(group.controls[0]))clear(group);
   }
   function schedule(){if(!queued){queued=true;requestAnimationFrame(apply);}}
-  new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-invalid']});
+  new MutationObserver(schedule).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-invalid','aria-checked']});
   document.addEventListener('input',schedule,true);
   document.addEventListener('change',schedule,true);
   window.addEventListener('hashchange',schedule);
