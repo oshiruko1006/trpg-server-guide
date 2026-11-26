@@ -17,3 +17,17 @@
 .vanilla-md-editor textarea{box-sizing:border-box;display:block;width:100%;min-width:0;max-width:100%;min-height:190px;padding:12px;border:1px solid #c9d0ce;border-radius:7px;resize:vertical;font:15px/1.75 system-ui,sans-serif;white-space:pre-wrap;overflow-wrap:anywhere}
 .vanilla-md-help{font:12px/1.5 system-ui,sans-serif;color:#697a75;margin:6px 0 0}
 @media(max-width:767px){.vanilla-md-toolbar{gap:4px}.vanilla-md-toolbar button{flex-basis:34px;width:34px;height:36px}}
+
+/* Mobile: keep formatting within reach of the currently edited field. */
+@media (max-width:767px), (pointer:coarse) and (max-width:900px){
+  .vanilla-md-editor{max-width:min(100%,var(--vanilla-md-visible-width,calc(100vw - 32px)))}
+  .vanilla-md-toolbar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;min-width:0;max-width:100%}
+  .vanilla-md-toolbar button{width:100%;min-width:0;height:36px;padding:0;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+  .vanilla-md-active>.vanilla-md-toolbar{visibility:hidden}
+  .vanilla-md-floating-toolbar{position:fixed;z-index:299;box-sizing:border-box;max-width:none;padding:6px;margin:0;background:#fffefa;border:1px solid #c6dfd2;border-radius:9px;box-shadow:0 3px 12px #173b3026}
+  .vanilla-md-floating-toolbar[hidden]{display:none!important}
+}
+@media (min-width:480px) and (max-width:767px), (pointer:coarse) and (min-width:480px) and (max-width:900px){
+  .vanilla-md-toolbar{grid-template-columns:repeat(11,minmax(0,1fr))}
+}
+@media (min-width:901px), (min-width:768px) and (pointer:fine){.vanilla-md-floating-toolbar{display:none!important}}
