@@ -1,12 +1,35 @@
 {
   "title": "芋虫。",
+  "reading": "いもむし",
+  "trailers": [
+    [
+      "/assets/images/imomushi-trailer1.png"
+    ],
+    [
+      "/assets/images/imomushi-trailer2.png"
+    ]
+  ],
+  "system": "CoC6版",
+  "age_rating": "全年齢",
+  "setting": "現代日本",
+  "character_policy": "どちらも可",
   "players": "タイマン",
-  "published": true,
+  "duration": "短編",
+  "duration_display": "4時間",
   "preparation_status": "準備完了",
   "kp_experienced": true,
-  "system": "CoC6版",
-  "reading": "いもむし",
-  "duration": "短編",
-  "age_rating": "全年齢",
-  "character_policy": "どちらも可"
+  "scenario_type": "クローズド",
+  "loss_rate": "低",
+  "aftereffects": "可能性あり",
+  "tags": [
+    "RP中心",
+    "探索中心",
+    "ダイス勝負有",
+    "グロ",
+    "インモラル",
+    "うちよそ"
+  ],
+  "overview": "”非”推奨技能：四肢を使用する全ての技能",
+  "cautions": "江戸川乱歩著「芋虫」から着想を得たシナリオ。\n四肢を使用する技能を\"非\"推奨としていることから察しが付くプレイヤーも多いと思うが、まさに生きながらにして手足を捥がれ、ままならぬ我が身を芋虫のように動かし抗う探索者の姿が見たい、ロールしたいプレイヤー向け。\nタイマンと称しているだけあってこのシナリオには協力NPCが登場するが、PCとの関係性はあまり重要視されない。\n後遺症の問題もあるので、新規PC同士でじっくり楽しむのもよいだろう。",
+  "published": true
 }
