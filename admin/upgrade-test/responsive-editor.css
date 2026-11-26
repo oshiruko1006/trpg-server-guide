@@ -151,3 +151,71 @@
     #nc-root .vanilla-responsive-header>div:nth-child(2){justify-content:flex-start}
   }
 }
+
+/* Mobile form density. Keep the accepted header and floating toolbar unchanged. */
+@media (max-width:767px), (pointer:coarse) and (max-width:799px) {
+  #nc-root .vanilla-responsive-shell>div:last-child{font-size:13px;line-height:1.5}
+  #nc-root .vanilla-responsive-shell>div:last-child [class*="ControlPaneContainer"]{font-size:13px}
+  /* EditorControl always has an aria-label and a top bar containing its field label. */
+  #nc-root .vanilla-responsive-shell>div:last-child div[aria-label]:has(>div>label[for]){
+    margin-top:11px;
+  }
+  #nc-root .vanilla-responsive-shell>div:last-child div[aria-label]:has(>div>label[for]):first-of-type{
+    margin-top:16px;
+  }
+  #nc-root .vanilla-responsive-shell>div:last-child label[for]{
+    font-size:12px;line-height:1.35;
+  }
+  #nc-root .vanilla-responsive-shell>div:last-child div[aria-label]:has(>div>label[for])>div:first-child>label{
+    padding:3px 6px;
+  }
+  #nc-root .vanilla-responsive-shell>div:last-child :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]),select,textarea){
+    font-size:14px!important;line-height:1.5;
+  }
+  #nc-root .vanilla-responsive-shell>div:last-child :is(input[type="text"],input[type="url"],input[type="number"],input[type="email"],input:not([type])){
+    padding:8px 10px;min-height:38px;
+  }
+  #nc-root .vanilla-responsive-shell>div:last-child select{
+    height:auto;min-height:40px;padding-block:7px;text-indent:5px;
+  }
+  #nc-root .vanilla-responsive-shell>div:last-child textarea{padding:9px 10px}
+  #nc-root .vanilla-responsive-shell .vanilla-md-editor textarea{
+    font-size:14px!important;line-height:1.6;min-height:150px;padding:9px 10px;
+  }
+  #nc-root .vanilla-responsive-shell .vanilla-md-help,
+  #nc-root .vanilla-responsive-shell>div:last-child [class*="ControlHint"]{
+    font-size:11px;line-height:1.5;margin-top:4px;
+  }
+  #nc-root .vanilla-responsive-shell>div:last-child div[aria-label]:has(>div>label[for])>p{
+    font-size:11px;line-height:1.5;padding-top:4px;
+  }
+  /* Compact collapsed list items, without changing their collapse, reorder or remove actions. */
+  #nc-root .vanilla-responsive-shell [data-testid^="styled-list-item-top-bar-"]{
+    padding-block:3px;min-height:30px;
+  }
+  #nc-root .vanilla-responsive-shell [data-testid^="styled-list-item-top-bar-"]+div{
+    font-size:13px;line-height:1.4;padding:7px 10px;
+  }
+  #nc-root .vanilla-responsive-shell div:has(>[data-testid^="styled-list-item-top-bar-"]){
+    margin-top:10px;
+  }
+  #nc-root .vanilla-responsive-shell [data-testid^="object-control-"]{
+    padding-top:4px;padding-bottom:8px;
+  }
+  #nc-root .vanilla-responsive-shell>div:last-child [class*="ObjectWidgetTopBar"],
+  #nc-root .vanilla-responsive-shell>div:last-child [class*="ListWidgetTopBar"]{
+    font-size:13px;line-height:1.4;padding-block:6px;
+  }
+  #nc-root .vanilla-responsive-shell>div:last-child :is(button,[role="button"]){
+    font-size:12px;
+  }
+  #nc-root .vanilla-responsive-shell .vanilla-tags-label{font-size:12px;margin-bottom:5px}
+  #nc-root .vanilla-responsive-shell .vanilla-tags-group{margin-bottom:9px}
+  #nc-root .vanilla-responsive-shell .vanilla-tag-button{font-size:12px;padding:5px 9px;min-height:30px}
+  #nc-root .vanilla-responsive-shell .vanilla-tags-custom{margin:10px 0}
+  #nc-root .vanilla-responsive-shell .vanilla-batch-paths{font-size:12px}
+  #nc-root .vanilla-responsive-shell .vanilla-batch-paths p{margin-bottom:8px;line-height:1.5}
+  #nc-root .vanilla-responsive-shell .vanilla-batch-actions{gap:6px;margin:6px 0}
+  #nc-root .vanilla-responsive-shell .vanilla-batch-actions button,
+  #nc-root .vanilla-responsive-shell .vanilla-batch-file{font-size:12px;padding:6px 9px}
+}
