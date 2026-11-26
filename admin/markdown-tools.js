@@ -27,11 +27,48 @@
   // clipped editor pane, but leave all editing and saving to the original widget.
   const mobile = window.matchMedia('(max-width: 767px), (pointer: coarse) and (max-width: 900px)');
   let activeEditor = null, floatingToolbar = null, frame = 0;
+  let viewportFrame = 0, viewportTimers = [];
+  const mountedEditors = new Set();
   function viewport() {
     const v = window.visualViewport;
     return {left:v?.offsetLeft || 0, top:v?.offsetTop || 0,
       width:v?.width || document.documentElement.clientWidth,
       height:v?.height || window.innerHeight};
+  }
+  // Decap 3.0.12 uses an absolute, percentage-height editor shell.
+  // Sync its height even when no Markdown field is focused.
+  function findEditorShell(area) {
+    for (let n = area?.parentElement; n && n !== document.body; n = n.parentElement) {
+      const style = window.getComputedStyle(n);
+      if (style.position === 'absolute' && style.overflowY === 'hidden' &&
+          (n.classList.contains('vanilla-cms-mobile-shell') ||
+           String(n.className).includes('EditorContainer') ||
+           parseFloat(style.minWidth) >= 800)) return n;
+    }
+    return null;
+  }
+  function syncViewport() {
+    viewportFrame = 0;
+    if (!mobile.matches) {
+      document.documentElement.style.removeProperty('--vanilla-cms-viewport-bottom');
+      return;
+    }
+    const v = viewport();
+    const bottom = Math.round(v.top + v.height);
+    if (bottom > 100) document.documentElement.style.setProperty('--vanilla-cms-viewport-bottom', bottom + 'px');
+    for (const editor of mountedEditors) {
+      const shell = findEditorShell(editor.area.current);
+      if (shell) shell.classList.add('vanilla-cms-mobile-shell');
+    }
+    scheduleToolbar();
+  }
+  function requestViewportSync() {
+    if (!viewportFrame) viewportFrame = window.requestAnimationFrame(syncViewport);
+  }
+  function settleViewport() {
+    requestViewportSync();
+    viewportTimers.forEach(id => window.clearTimeout(id));
+    viewportTimers = [80, 250, 600].map(ms => window.setTimeout(requestViewportSync, ms));
   }
   function editorTop(area, v) {
     // The Decap control pane scrolls beneath its own editor header.
@@ -59,7 +96,7 @@
     frame = 0;
     if (!activeEditor || !floatingToolbar) return;
     const area = activeEditor.area.current;
-    if (!mobile.matches || !area?.isConnected) { deactivate(); return; }
+    if (!mobile.matches || !area?.isConnected || (document.activeElement !== area && !floatingToolbar.contains(document.activeElement))) { deactivate(); return; }
     const v = viewport(), top = editorTop(area, v);
     // Keep the bar within the visible viewport even when the keyboard pans it.
     floatingToolbar.style.left = (v.left + 8) + 'px';
@@ -77,7 +114,7 @@
     if (activeEditor && !frame) frame = window.requestAnimationFrame(positionToolbar);
   }
   function activate(editor) {
-    if (!mobile.matches) return;
+    if (!mobile.matches || document.activeElement !== editor.area.current) return;
     if (activeEditor === editor && floatingToolbar) { scheduleToolbar(); return; }
     deactivate();
     const original = editor.toolbar.current;
@@ -104,14 +141,16 @@
     positionToolbar();
   }
   window.addEventListener('scroll', scheduleToolbar, true);
-  window.addEventListener('resize', scheduleToolbar);
-  window.visualViewport?.addEventListener('resize', scheduleToolbar);
-  window.visualViewport?.addEventListener('scroll', scheduleToolbar);
+  window.addEventListener('resize', settleViewport);
+  window.visualViewport?.addEventListener('resize', settleViewport);
+  window.visualViewport?.addEventListener('scroll', requestViewportSync);
+  window.addEventListener('pageshow', settleViewport);
   mobile.addEventListener?.('change', () => {
     if (!mobile.matches) deactivate();
-    else scheduleToolbar();
+    settleViewport();
   });
   document.addEventListener('focusin', e => {
+    settleViewport();
     if (!activeEditor) return;
     if (!activeEditor.root.current?.contains(e.target) && !floatingToolbar?.contains(e.target)) deactivate();
   });
@@ -119,6 +158,18 @@
     if (!activeEditor || activeEditor.root.current?.contains(e.target) || floatingToolbar?.contains(e.target)) return;
     // Scrolling the form must not dismiss the active toolbar; another control does.
     if (e.target.closest?.('button,a,input,select,textarea,[role="button"],[role="dialog"]')) deactivate();
+  });
+  document.addEventListener('focusout', settleViewport);
+  document.addEventListener('click', e => {
+    if (!activeEditor || floatingToolbar?.contains(e.target) ||
+        activeEditor.area.current === e.target) return;
+    if (activeEditor.root.current?.contains(e.target) &&
+        e.target.closest?.('.vanilla-md-toolbar')) return;
+    // A tap on empty space ends editing; a scroll gesture does not emit a click.
+    const area = activeEditor.area.current;
+    deactivate();
+    if (document.activeElement === area) area.blur();
+    settleViewport();
   });
   class MarkdownTools extends React.Component {
     constructor(props) {
@@ -128,7 +179,8 @@
       this.toolbar = React.createRef();
       this.selection = null;
     }
-    componentWillUnmount() { deactivate(this); }
+    componentDidMount() { mountedEditors.add(this); requestViewportSync(); }
+    componentWillUnmount() { mountedEditors.delete(this); deactivate(this); requestViewportSync(); }
     rememberSelection() {
       const el = this.area.current;
       if (el) this.selection = [el.selectionStart, el.selectionEnd];
@@ -192,7 +244,12 @@
           }, toolbarIcon(kind)))),
         h('textarea', {
           ref: this.area, value, rows: 9, spellCheck: false,
-          onFocus: () => { this.rememberSelection(); activate(this); },
+          onFocus: () => { this.rememberSelection(); activate(this); settleViewport(); },
+          onBlur: e => {
+            this.rememberSelection();
+            if (!floatingToolbar?.contains(e.relatedTarget)) deactivate(this);
+            settleViewport();
+          },
           onSelect: () => this.rememberSelection(),
           onClick: () => { this.rememberSelection(); activate(this); },
           onKeyUp: () => this.rememberSelection(),
