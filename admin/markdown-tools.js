@@ -184,6 +184,18 @@
       this.imagePending = false;
     }
     componentDidMount() { mountedEditors.add(this); requestViewportSync(); }
+    // Decap's Widget wrapper delegates its update decision to this method.
+    // Its default ignores mediaPaths; a chosen image must reach componentDidUpdate
+    // even when neither the text nor focus style has changed.
+    shouldComponentUpdate(nextProps) {
+      if(!this.canInsertImage())return true;
+      if(this.imagePending && this.imageControlID && nextProps.mediaPaths?.get?.(this.imageControlID))return true;
+      return this.props.value!==nextProps.value ||
+        this.props.classNameWrapper!==nextProps.classNameWrapper ||
+        this.props.hasActiveStyle!==nextProps.hasActiveStyle ||
+        this.props.field!==nextProps.field ||
+        this.props.collection!==nextProps.collection;
+    }
     componentWillUnmount() {
       mountedEditors.delete(this); deactivate(this); requestViewportSync();
       if(this.imageControlID)this.props.onRemoveMediaControl?.(this.imageControlID);
@@ -201,7 +213,13 @@
       this.imagePending=true;
       deactivate(this);
       input.blur();
-      this.props.onOpenMediaLibrary({controlID:this.imageControlID,forImage:true,allowMultiple:false,value:'',field:this.props.field});
+      try{
+        this.props.onOpenMediaLibrary({controlID:this.imageControlID,forImage:true,allowMultiple:false,value:'',field:this.props.field});
+      }catch(error){
+        this.imagePending=false;this.imageSelection=null;
+        console.error('Image picker failed',error);
+        window.alert('画像選択画面を開けませんでした。再読み込みしてお試しください。');
+      }
     }
     componentDidUpdate() {
       if(!this.imagePending||!this.imageControlID)return;
