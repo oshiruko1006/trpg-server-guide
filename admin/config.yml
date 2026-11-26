@@ -161,6 +161,11 @@ collections:
   format: json
   slug: '{{year}}{{month}}{{day}}-{{hour}}{{minute}}{{second}}'
   identifier_field: title
+  sortable_fields:
+  - field: commit_date
+    default_sort: desc
+  - title
+  - author
   fields:
   - label: タイトル
     name: title
