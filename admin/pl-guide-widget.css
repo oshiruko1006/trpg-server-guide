@@ -16,3 +16,13 @@
 .pl-admin-scenario-results{max-height:260px;overflow:auto;display:grid;gap:3px;overscroll-behavior:contain}
 .pl-admin .pl-admin-scenario-results button{text-align:left;white-space:normal;overflow-wrap:anywhere;background:#fffdfa;border-color:#e0e8df;min-height:35px}
 .pl-admin .pl-admin-scenario-results button[aria-pressed=true]{background:#d9eee3;border-color:#92bca7}
+
+.pl-admin-tab-nav{display:flex;flex-wrap:wrap;gap:5px}
+.pl-admin-tab-nav button[aria-pressed=true]{background:#d7eee2;border-color:#82b69d;font-weight:700}
+.pl-admin-tab-editor{padding:9px;border:1px solid #c6dfd2;border-radius:8px;min-width:0;background:#f7faf7}
+.pl-admin-tab-editor>.pl-admin-field:first-child{margin-top:0}
+.pl-admin-block-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
+.pl-admin-block-head>button{flex:1;text-align:left;min-width:0;overflow-wrap:anywhere}
+.pl-admin-block-head .pl-admin-actions{margin:0}
+.pl-admin-quote-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.pl-admin-quote-row>select{flex:1;min-width:110px;max-width:100%}

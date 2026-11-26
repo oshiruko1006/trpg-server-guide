@@ -1,20 +1,11 @@
 /* Never pass unencrypted guide contents to Decap. */
 (function(){
   'use strict';
-  const C=window.VanillaPLCrypto,R=window.React,M=window.VanillaMarkdownControl;
-  if(!C||!R||!M||!window.CMS)return;
+  const C=window.VanillaPLCrypto,R=window.React,M=window.VanillaMarkdownControl,L=window.VanillaPLLayout;
+  if(!C||!R||!M||!L||!window.CMS)return;
   const h=R.createElement, origin='https://trpg-server-guide.pages.dev';
-  const blank=()=>({v:1,scenario:'',title:'',subtitle:'参加PL向け事前案内',quote:{trailer:true,info:true,skills:true,overview:false,story:false,ho:false},sections:[],files:[]});
-  // Convert the previous three fixed inputs to editable sections without changing their text.
-  const normalizeDraft=d=>{
-    const merged={...blank(),...d,quote:{...blank().quote,...d.quote}};
-    const old=[['参加にあたって','notice','NOTICE'],['キャラクター作成','character','CHARACTER CREATION'],['公開HO・事前情報','handout','HANDOUT']]
-      .filter(([,key])=>String(merged[key]||'').trim())
-      .map(([heading,key,heading_en])=>({heading,body:merged[key],heading_en,always_open:false}));
-    merged.sections=[...old,...(Array.isArray(merged.sections)?merged.sections:[])];
-    delete merged.notice;delete merged.character;delete merged.handout;
-    return merged;
-  };
+  const blank=()=>L.normalize({v:1,scenario:'',title:'',subtitle:'参加PL向け事前案内',quote:{trailer:true,info:true,skills:true,overview:false,story:false,ho:false},tabs:[{id:'tab-'+C.random(12),title:'シナリオ情報',blocks:[]}],files:[]});
+  const normalizeDraft=d=>L.normalize(d);
   const searchText=v=>String(v||'').normalize('NFKC').toLocaleLowerCase('ja').replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60)).replace(/\s+/g,'');
   const store=(id,key)=>{try{localStorage.setItem('vanilla.pl.key.'+id,key);return true;}catch(_){return false;}};
   const recall=id=>{try{return localStorage.getItem('vanilla.pl.key.'+id)||'';}catch(_){return '';}};
@@ -23,7 +14,7 @@
   const markdown=(label,value,onChange)=>h('div',{className:'pl-admin-field'},h('strong',null,label),h(M,{value,onChange,field:{get:k=>k==='label'?label:undefined}}));
   const check=(label,checked,onChange)=>h('label',{className:'pl-admin-check',key:label},h('input',{type:'checkbox',checked,onChange:e=>onChange(e.target.checked)}),label);
   class Guide extends R.Component{
-    constructor(p){super(p);this.state={draft:null,url:'',scenarios:[],scenarioQuery:'',scenarioPicker:false,message:'',busy:false,dirty:false,paste:''};this.id='';this.key='';this.draft=null;this.seq=0;this.dead=false;this.dirty=false;this.busy=false;this.reading=false;}
+    constructor(p){super(p);this.state={draft:null,url:'',scenarios:[],scenarioQuery:'',scenarioPicker:false,activeTab:'',collapsedBlocks:{},message:'',busy:false,dirty:false,paste:''};this.id='';this.key='';this.draft=null;this.seq=0;this.dead=false;this.dirty=false;this.busy=false;this.reading=false;}
     componentDidMount(){
       this.dead=false;
       fetch('/data/scenarios.json').then(r=>{if(!r.ok)throw Error();return r.json();}).then(a=>{if(!this.dead)this.setState({scenarios:a.filter(x=>x.slug&&x.title).sort((a,b)=>(a.reading||a.title).localeCompare(b.reading||b.title,'ja'))});}).catch(()=>{this.status('シナリオ一覧を読み込めません。');});
@@ -42,7 +33,7 @@
     }
     restore=()=>{const s=this.state.paste.trim();try{const u=new URL(s);const m=u.pathname.match(/^\/pl-guide\/([A-Za-z0-9_-]{22})\/?$/);if(u.origin!==origin||!m||m[1]!==this.id||!C.validKey(u.hash.slice(1)))throw Error();this.unlock(u.hash.slice(1));}catch(_){this.status('このページの共有URLを末尾まで貼り付けてください。');}};
     create=()=>{if(this.props.value||this.draft)return;this.id=C.random(16);this.key=C.random(32);this.draft=blank();const saved=store(this.id,this.key);this.update({url:this.url(),draft:this.draft,message:saved?'':'鍵を端末に保存できません。共有URLを必ず控えてください。'});this.encrypt();};
-    change=(field,value)=>{if(!this.draft)return;this.draft={...this.draft,[field]:value};this.update({draft:this.draft});this.encrypt();};
+    change=(field,value)=>{if(!this.draft)return;this.draft=L.normalize({...this.draft,[field]:value});this.update({draft:this.draft});this.encrypt();};
     async encrypt(){
       const seq=++this.seq,id=this.id,key=this.key,data=this.draft;
       this.dirty=true;this.busy=true;this.update({busy:true,dirty:true});
@@ -56,23 +47,56 @@
       const old=this.draft.files||[],total=old.reduce((n,f)=>n+f.size,0)+files.reduce((n,f)=>n+f.size,0);
       if(files.some(f=>f.size>1048576)||total>2097152){this.status('添付は1ファイル1MB、合計2MBまでです。');return;}
       this.reading=true;this.update({busy:true});
-      try{const added=await Promise.all(files.map(async f=>({name:f.name,size:f.size,data:C.b64(new Uint8Array(await f.arrayBuffer()))})));if(this.dead)return;this.change('files',[...(this.draft.files||[]),...added]);}
+      try{const added=await Promise.all(files.map(async f=>({name:f.name,size:f.size,tab_id:this.activeTab().id,block_id:'',data:C.b64(new Uint8Array(await f.arrayBuffer()))})));if(this.dead)return;this.change('files',[...(this.draft.files||[]),...added]);}
       catch(_){this.status('添付ファイルを読み込めませんでした。');}
       finally{this.reading=false;this.update({busy:this.busy});}
     };
-    editSection=(i,patch)=>this.change('sections',this.draft.sections.map((x,j)=>j===i?{...x,...patch}:x));
-    moveSection=(i,j)=>{const a=[...this.draft.sections];[a[i],a[j]]=[a[j],a[i]];this.change('sections',a);};
-    renderSection(x,i,n){
-      return h('div',{key:i,className:'pl-admin-block'},
-        field('題目',x.heading,v=>this.editSection(i,{heading:v,heading_en:''})),
-        markdown('本文',x.body,v=>this.editSection(i,{body:v})),
-        check('常に表示',!!x.always_open,v=>this.editSection(i,{always_open:v})),
-        h('div',{className:'pl-admin-actions'},
-          button('上へ',()=>this.moveSection(i,i-1),i===0),
-          button('下へ',()=>this.moveSection(i,i+1),i===n-1),
-          button('削除',()=>this.change('sections',this.draft.sections.filter((_,j)=>j!==i)))
-        )
-      );
+    activeTab=()=>this.draft.tabs.find(t=>t.id===this.state.activeTab)||this.draft.tabs[0];
+    updateTab=(id,patch)=>this.change('tabs',this.draft.tabs.map(t=>t.id===id?{...t,...patch}:t));
+    addTab=()=>{const t={id:'tab-'+C.random(12),title:'新しいタブ',blocks:[]};this.change('tabs',[...this.draft.tabs,t]);this.update({activeTab:t.id});};
+    moveTab=(id,delta)=>{const a=[...this.draft.tabs],i=a.findIndex(t=>t.id===id),j=i+delta;if(i<0||j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];this.change('tabs',a);};
+    removeTab=id=>{if(this.draft.tabs.length<=1)return;const t=this.draft.tabs.find(t=>t.id===id);if(!window.confirm('「'+(t.title||'名称未設定')+'」を削除しますか？ タブ内の本文は削除され、引用情報・添付ファイルは残るタブへ移動します。'))return;const tabs=this.draft.tabs.filter(t=>t.id!==id);this.change('tabs',tabs);this.update({activeTab:tabs[0].id});};
+    editBlock=(tab,id,patch)=>this.updateTab(tab.id,{blocks:tab.blocks.map(b=>b.id===id?{...b,...patch}:b)});
+    moveBlock=(tab,i,delta)=>{const a=[...tab.blocks],j=i+delta;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];this.updateTab(tab.id,{blocks:a});};
+    removeBlock=(tab,b)=>{if(!window.confirm('この情報ブロックを削除しますか？ 添付ファイルはタブ内の配布資料へ移動します。'))return;this.updateTab(tab.id,{blocks:tab.blocks.filter(x=>x.id!==b.id)});};
+    addBlock=tab=>{const b={id:'block-'+C.random(12),heading:'',body:'',always_open:false};this.updateTab(tab.id,{blocks:[...tab.blocks,b]});this.update({collapsedBlocks:{...this.state.collapsedBlocks,[b.id]:false}});};
+    tabSelect=(value,onChange,label)=>h('select',{value,onChange:e=>onChange(e.target.value),'aria-label':label},...this.draft.tabs.map(t=>h('option',{key:t.id,value:t.id},t.title||'名称未設定')));
+    renderBlock(tab,b,i){
+      const closed=!!this.state.collapsedBlocks[b.id];
+      return h('div',{key:b.id,className:'pl-admin-block'},
+        h('div',{className:'pl-admin-block-head'},button((closed?'▸ ':'▾ ')+(b.heading||'新しいブロック'),()=>this.update({collapsedBlocks:{...this.state.collapsedBlocks,[b.id]:!closed}})),
+          h('div',{className:'pl-admin-actions'},button('↑',()=>this.moveBlock(tab,i,-1),i===0),button('↓',()=>this.moveBlock(tab,i,1),i===tab.blocks.length-1),button('削除',()=>this.removeBlock(tab,b)))),
+        closed?null:h('div',null,
+          field('題目',b.heading||'',v=>this.editBlock(tab,b.id,{heading:v,heading_en:''})),
+          markdown('本文',b.body||'',v=>this.editBlock(tab,b.id,{body:v})),
+          check('常に表示',!!b.always_open,v=>this.editBlock(tab,b.id,{always_open:v})),
+          h('label',{className:'pl-admin-field'},h('span',null,'別のタブに移動'),this.tabSelect(tab.id,to=>{
+            if(to===tab.id)return;
+            const tabs=this.draft.tabs.map(t=>t.id===tab.id?{...t,blocks:t.blocks.filter(x=>x.id!==b.id)}:t.id===to?{...t,blocks:[...t.blocks,b]}:t);
+            this.change('tabs',tabs);this.update({activeTab:to});
+          },'ブロックの移動先'))
+        ));
+    }
+    renderTabs(){
+      const d=this.draft,tab=this.activeTab(),index=d.tabs.findIndex(t=>t.id===tab.id);
+      return h('div',{className:'pl-admin-field'},h('strong',null,'タブ・情報ブロック管理'),
+        h('div',{className:'pl-admin-tab-nav'},...d.tabs.map(t=>h('button',{key:t.id,type:'button','aria-pressed':t.id===tab.id,onClick:()=>this.update({activeTab:t.id})},t.title||'名称未設定')),button('＋ タブ追加',this.addTab)),
+        h('div',{className:'pl-admin-tab-editor',key:tab.id},
+          field('タブ名',tab.title,v=>this.updateTab(tab.id,{title:v})),
+          h('div',{className:'pl-admin-actions'},button('← 前へ',()=>this.moveTab(tab.id,-1),index===0),button('後ろへ →',()=>this.moveTab(tab.id,1),index===d.tabs.length-1),button('タブ削除',()=>this.removeTab(tab.id),d.tabs.length===1)),
+          ...tab.blocks.map((b,i)=>this.renderBlock(tab,b,i)),
+          button('＋ 情報ブロック追加',()=>this.addBlock(tab))));
+    }
+    renderFiles(){
+      const d=this.draft;
+      const locations=d.tabs.flatMap(t=>[{value:t.id+'|',label:(t.title||'名称未設定')+' ／ 配布資料'},...t.blocks.map(b=>({value:t.id+'|'+b.id,label:(t.title||'名称未設定')+' ／ '+(b.heading||'新しいブロック')}))]);
+      return h('div',{className:'pl-admin-field'},h('strong',null,'添付ファイル（暗号化・1件1MB / 合計2MB）'),
+        h('p',null,'追加後、表示するタブや情報ブロックを選べます。'),
+        h('input',{type:'file',multiple:true,onChange:this.addFiles,disabled:this.state.busy||this.reading}),
+        ...d.files.map((f,i)=>h('div',{key:i,className:'pl-admin-block'},
+          h('div',{className:'pl-admin-actions'},h('span',null,f.name),button('削除',()=>this.change('files',this.draft.files.filter((_,j)=>j!==i)))),
+          h('label',{className:'pl-admin-field'},h('span',null,'表示先'),h('select',{value:f.tab_id+'|'+f.block_id,onChange:e=>{const [tab_id,block_id]=e.target.value.split('|');this.change('files',this.draft.files.map((x,j)=>j===i?{...x,tab_id,block_id}:x));}},...locations.map(x=>h('option',{key:x.value,value:x.value},x.label))))
+        )));
     }
     renderScenarioPicker(d,s){
       const query=searchText(s.scenarioQuery);
@@ -98,9 +122,11 @@
       const quoteLabels={trailer:'トレーラー',info:'シナリオ基本情報',skills:'必須・推奨・準推奨技能',overview:'概要',story:'あらすじ',ho:'公開サイトに載っているHO'};
       const link=h('div',{className:'pl-admin-link'},h('strong',null,'共有URL（必ず控える）'),h('input',{readOnly:true,value:s.url,onFocus:e=>e.target.select(),'aria-label':'共有URL'}),h('div',{className:'pl-admin-actions'},button('URLをコピー',this.copy),button('URL再発行',this.rotate,s.busy||this.reading)),h('p',null,'URLを知る人は閲覧できます。保存・デプロイ後に有効になります。'));
       const select=this.renderScenarioPicker(d,s);
-      const quotes=h('div',{className:'pl-admin-field'},h('strong',null,'既存シナリオから表示する項目'),...Object.entries(quoteLabels).map(([k,label])=>check(label,!!d.quote[k],v=>this.change('quote',{...this.draft.quote,[k]:v}))));
-      const sections=h('div',{className:'pl-admin-field'},h('strong',null,'自由追加ブロック'),...d.sections.map((x,i)=>this.renderSection(x,i,d.sections.length)),button('＋ ブロック追加',()=>this.change('sections',[...this.draft.sections,{heading:'',body:'',always_open:false}])));
-      const files=h('div',{className:'pl-admin-field'},h('strong',null,'添付ファイル（暗号化・1件1MB / 合計2MB）'),h('input',{type:'file',multiple:true,onChange:this.addFiles,disabled:s.busy||this.reading}),...d.files.map((f,i)=>h('div',{key:i,className:'pl-admin-actions'},h('span',null,f.name),button('削除',()=>this.change('files',this.draft.files.filter((_,j)=>j!==i))))));
+      const quotes=h('div',{className:'pl-admin-field'},h('strong',null,'既存シナリオから表示する項目'),
+        ...Object.entries(quoteLabels).map(([k,label])=>h('div',{key:k,className:'pl-admin-quote-row'},
+          check(label,!!d.quote[k],v=>this.change('quote',{...this.draft.quote,[k]:v})),
+          k!=='trailer'&&d.quote[k]?this.tabSelect(d.quote_tabs[k],v=>this.change('quote_tabs',{...this.draft.quote_tabs,[k]:v}),label+'の表示先'):null)));
+      const sections=this.renderTabs(),files=this.renderFiles();
       return h('div',{className:'pl-admin'},status,link,select,
         field('ページタイトル（空欄ならシナリオ名）',d.title,v=>this.change('title',v)),
         field('サブタイトル',d.subtitle,v=>this.change('subtitle',v)),quotes,
