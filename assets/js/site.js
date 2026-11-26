@@ -132,8 +132,27 @@ const authorHtml = s => String(s.author||'').trim()
 const titleWithAuthor = (s, heading) => `<span class="scenario-title-author" style="display:inline-flex;align-items:baseline;gap:.4em .7em;flex-wrap:wrap;max-width:100%;"><${heading} style="margin:0;">${esc(s.title)}</${heading}>${authorHtml(s)}</span>`;
 const scenarioCard = (s, view) => `<article class="scenario scenario-entry scenario-${view}"><a class="scenario-entry-link" href="/scenario/${encodeURIComponent(s.slug)}/"><div class="scenario-cover-wrap">${trailerThumb(s)}<div class="scenario-cover-badges" style="position:absolute;top:10px;right:10px;z-index:2;display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:6px;max-width:calc(100% - 20px)">${s.preparation_status?statusBadge(s):''}${s.kp_experienced===true?'<span class="kp-experience-badge" style="position:static;inset:auto;transform:none">✓ KP経験有</span>':''}</div></div><div class="scenario-entry-body"><div class="scenario-title-row">${titleWithAuthor(s,'h2')}</div><p class="muted">${info(s)}</p><div class="scenario-tags">${tagsHtml(scenarioTags(s))}</div>${view==='list'?`<p class="scenario-excerpt">${esc(String(s.summary||'').replace(/[#*_`~\[\]]/g,'').slice(0,115))}</p>`:''}</div></a>${externalLinksHtml(s,'scenario-card-links')}</article>`;
 
+const scenarioGalleryHtml = (images,title) => images.length ? `<div class="scenario-gallery-viewer"><button class="trailer-open scenario-main-trailer" type="button" data-index="0" aria-label="トレーラーを拡大"><img src="${esc(images[0])}" alt="${esc(title)}のトレーラー"></button>${images.length>1?`<div class="scenario-gallery-controls"><button type="button" class="gallery-prev" aria-label="前のトレーラー">‹</button><span class="gallery-count">1 / ${images.length}</span><button type="button" class="gallery-next" aria-label="次のトレーラー">›</button></div><div class="scenario-gallery-thumbs">${images.map((src,i)=>`<button type="button" data-gallery-index="${i}" aria-label="トレーラー${i+1}を表示" aria-pressed="${i===0}"><img src="${esc(src)}" alt="" loading="lazy"></button>`).join('')}</div>`:''}</div>` : '';
+const bindScenarioGallery = (el,images,title) => {
+    if(images.length>1){let current=0;const main=el.querySelector('.scenario-main-trailer'),count=el.querySelector('.gallery-count'),thumbs=[...el.querySelectorAll('[data-gallery-index]')];const change=i=>{current=(i+images.length)%images.length;main.querySelector('img').src=images[current];main.dataset.index=String(current);count.textContent=`${current+1} / ${images.length}`;thumbs.forEach((b,j)=>b.setAttribute('aria-pressed',String(j===current)));};el.querySelector('.gallery-prev').addEventListener('click',()=>change(current-1));el.querySelector('.gallery-next').addEventListener('click',()=>change(current+1));thumbs.forEach(b=>b.addEventListener('click',()=>change(Number(b.dataset.galleryIndex))));}
+    if(images.length){
+      const overlay=document.createElement('div');overlay.className='trailer-lightbox';overlay.hidden=true;
+      overlay.innerHTML='<div class="lightbox-top"><span class="lightbox-counter"></span><button type="button" class="lightbox-close" aria-label="閉じる">×</button></div><button type="button" class="lightbox-prev" aria-label="前の画像">‹</button><img class="lightbox-image" alt="拡大トレーラー"><button type="button" class="lightbox-next" aria-label="次の画像">›</button>';
+      document.body.appendChild(overlay);
+      let active=0,previousFocus=null;
+      const show=i=>{active=(i+images.length)%images.length;overlay.querySelector('.lightbox-image').src=images[active];overlay.querySelector('.lightbox-image').alt=`${title}のトレーラー ${active+1}`;overlay.querySelector('.lightbox-counter').textContent=`${active+1} / ${images.length}`;};
+      const close=()=>{overlay.hidden=true;document.body.classList.remove('lightbox-active');document.removeEventListener('keydown',onKey);previousFocus?.focus();};
+      const onKey=e=>{if(e.key==='Escape')close();if(e.key==='ArrowLeft')show(active-1);if(e.key==='ArrowRight')show(active+1);if(e.key==='Tab'){e.preventDefault();overlay.querySelector('.lightbox-close').focus();}};
+      el.querySelectorAll('.trailer-open').forEach(b=>b.addEventListener('click',()=>{previousFocus=b;show(Number(b.dataset.index));overlay.hidden=false;document.body.classList.add('lightbox-active');overlay.querySelector('.lightbox-close').focus();document.addEventListener('keydown',onKey);}));
+      overlay.querySelector('.lightbox-close').addEventListener('click',close);
+      overlay.querySelector('.lightbox-prev').addEventListener('click',()=>show(active-1));
+      overlay.querySelector('.lightbox-next').addEventListener('click',()=>show(active+1));
+      overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+    }
+};
+
 fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(async d=>{
-  if(page==='pl-guide'){ await window.VanillaPLGuideRender(d, {el,esc,markdown,sectionCard,trailerUrls}); return; }
+  if(page==='pl-guide'){ await window.VanillaPLGuideRender(d, {el,esc,markdown,sectionCard,trailerUrls,scenarioGalleryHtml,bindScenarioGallery}); return; }
   if(page==='home'){
     const sections = d.sections || (d.rules?[{heading:'ルール',body:d.rules}]:[]);
     el.innerHTML = `<div class="rule-list">${sections.map(sectionCard).join('')}</div>`;
@@ -167,7 +186,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     if(!s){el.textContent='シナリオが見つかりません。';return;}
     const extras=Array.isArray(s.extra_sections)?s.extra_sections:[];
     const images = trailerUrls(s);
-    const gallery = images.length ? `<div class="scenario-gallery-viewer"><button class="trailer-open scenario-main-trailer" type="button" data-index="0" aria-label="トレーラーを拡大"><img src="${esc(images[0])}" alt="${esc(s.title)}のトレーラー"></button>${images.length>1?`<div class="scenario-gallery-controls"><button type="button" class="gallery-prev" aria-label="前のトレーラー">‹</button><span class="gallery-count">1 / ${images.length}</span><button type="button" class="gallery-next" aria-label="次のトレーラー">›</button></div><div class="scenario-gallery-thumbs">${images.map((src,i)=>`<button type="button" data-gallery-index="${i}" aria-label="トレーラー${i+1}を表示" aria-pressed="${i===0}"><img src="${esc(src)}" alt="" loading="lazy"></button>`).join('')}</div>`:''}</div>` : '';
+    const gallery = scenarioGalleryHtml(images,s.title);
     const headingEn={
       'シナリオ情報':'SCENARIO INFORMATION','あらすじ':'STORY','ハンドアウト':'HANDOUTS',
       '概要':'OVERVIEW','注意事項':'IMPORTANT NOTES'
@@ -185,21 +204,7 @@ fetch(urls[page]).then(r=>{if(!r.ok)throw Error('load');return r.json();}).then(
     const handouts=Array.isArray(s.handouts)?s.handouts:[];
     const hoHtml=handouts.some(h=>h.title||h.body)?`<section class="scenario-detail-block">${detailHeading('ハンドアウト')}<div class="scenario-handouts">${handouts.filter(h=>h.title||h.body).map(h=>`<article class="scenario-ho"><h3>${esc(h.title||'HO')}</h3><div class="rich-text">${markdown(h.body||'')}</div></article>`).join('')}</div></section>`:'';
     el.innerHTML=`<a href="/scenario/">← SCENARIO一覧へ</a><div class="scenario-detail-head"><div class="scenario-eyebrow-row"><span class="scenario-eyebrow">SCENARIO</span><div class="scenario-detail-status">${statusBadge(s)}${s.kp_experienced===true?'<span class="kp-detail-badge">✓ KP経験有</span>':''}</div></div>${titleWithAuthor(s,'h1')}${infoBar}<div class="scenario-tags">${tagsHtml(scenarioTags(s))}</div></div>${gallery}${externalLinksHtml(s,'scenario-detail-links')}${overview}${block('概要',s.overview)}${block('あらすじ',s.summary)}${hoHtml}${block('注意事項',s.cautions)}${extras.map(x=>block(x.heading||'',x.body)).join('')}`;
-    if(images.length>1){let current=0;const main=el.querySelector('.scenario-main-trailer'),count=el.querySelector('.gallery-count'),thumbs=[...el.querySelectorAll('[data-gallery-index]')];const change=i=>{current=(i+images.length)%images.length;main.querySelector('img').src=images[current];main.dataset.index=String(current);count.textContent=`${current+1} / ${images.length}`;thumbs.forEach((b,j)=>b.setAttribute('aria-pressed',String(j===current)));};el.querySelector('.gallery-prev').addEventListener('click',()=>change(current-1));el.querySelector('.gallery-next').addEventListener('click',()=>change(current+1));thumbs.forEach(b=>b.addEventListener('click',()=>change(Number(b.dataset.galleryIndex))));}
-    if(images.length){
-      const overlay=document.createElement('div');overlay.className='trailer-lightbox';overlay.hidden=true;
-      overlay.innerHTML='<div class="lightbox-top"><span class="lightbox-counter"></span><button type="button" class="lightbox-close" aria-label="閉じる">×</button></div><button type="button" class="lightbox-prev" aria-label="前の画像">‹</button><img class="lightbox-image" alt="拡大トレーラー"><button type="button" class="lightbox-next" aria-label="次の画像">›</button>';
-      document.body.appendChild(overlay);
-      let active=0,previousFocus=null;
-      const show=i=>{active=(i+images.length)%images.length;overlay.querySelector('.lightbox-image').src=images[active];overlay.querySelector('.lightbox-image').alt=`${s.title}のトレーラー ${active+1}`;overlay.querySelector('.lightbox-counter').textContent=`${active+1} / ${images.length}`;};
-      const close=()=>{overlay.hidden=true;document.body.classList.remove('lightbox-active');document.removeEventListener('keydown',onKey);previousFocus?.focus();};
-      const onKey=e=>{if(e.key==='Escape')close();if(e.key==='ArrowLeft')show(active-1);if(e.key==='ArrowRight')show(active+1);if(e.key==='Tab'){e.preventDefault();overlay.querySelector('.lightbox-close').focus();}};
-      el.querySelectorAll('.trailer-open').forEach(b=>b.addEventListener('click',()=>{previousFocus=b;show(Number(b.dataset.index));overlay.hidden=false;document.body.classList.add('lightbox-active');overlay.querySelector('.lightbox-close').focus();document.addEventListener('keydown',onKey);}));
-      overlay.querySelector('.lightbox-close').addEventListener('click',close);
-      overlay.querySelector('.lightbox-prev').addEventListener('click',()=>show(active-1));
-      overlay.querySelector('.lightbox-next').addEventListener('click',()=>show(active+1));
-      overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
-    }
+    bindScenarioGallery(el,images,s.title);
   }
   if(page==='scenario'){
     const options=(key)=>[...new Set(d.map(s=>s[key]).filter(Boolean))];

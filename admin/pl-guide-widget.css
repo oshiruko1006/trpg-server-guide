@@ -8,3 +8,11 @@
 .pl-admin-link,.pl-admin-block{border:1px solid #c6dfd2;padding:10px;border-radius:7px;margin:6px 0;min-width:0}
 .pl-admin-status{color:#426d60;font-size:12px;overflow-wrap:anywhere}
 .pl-admin-link p{font-size:11px;margin:4px 0}
+
+.pl-admin-scenario-selected,.pl-admin-scenario-results-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.pl-admin-scenario-selected{padding:7px 9px;background:#f0f7f3;border-radius:6px;overflow-wrap:anywhere}
+.pl-admin-scenario-picker{border:1px solid #c6dfd2;border-radius:7px;padding:6px;min-width:0}
+.pl-admin-scenario-results-head{padding:0 3px 5px;font-size:12px;color:#587b6a}
+.pl-admin-scenario-results{max-height:260px;overflow:auto;display:grid;gap:3px;overscroll-behavior:contain}
+.pl-admin .pl-admin-scenario-results button{text-align:left;white-space:normal;overflow-wrap:anywhere;background:#fffdfa;border-color:#e0e8df;min-height:35px}
+.pl-admin .pl-admin-scenario-results button[aria-pressed=true]{background:#d9eee3;border-color:#92bca7}

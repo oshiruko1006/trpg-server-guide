@@ -3,8 +3,15 @@ body[data-page="pl-guide"] main{max-width:920px;margin:0 auto;padding:24px 16px 
 .pl-guide-title small,.pl-guide-heading small{display:block;color:#83a998;font-size:.7rem;letter-spacing:.15em}
 .pl-guide-title h1{margin:8px 0;overflow-wrap:anywhere}
 .pl-guide-title p{color:#857467;margin:0}
-.pl-guide-trailers{display:grid;gap:10px;margin-bottom:16px}
-.pl-guide-trailers img{display:block;max-width:100%;height:auto;margin:auto;border-radius:12px}
+body[data-page="pl-guide"] .scenario-gallery-viewer{width:70%;max-width:680px;margin:14px auto 20px}
+body[data-page="pl-guide"] .scenario-main-trailer{max-width:none}
+body[data-page="pl-guide"] .scenario-main-trailer img{max-height:520px}
+body[data-page="pl-guide"] .scenario-gallery-controls{margin:7px 0;gap:16px}
+body[data-page="pl-guide"] .scenario-gallery-controls button{font-size:21px;padding:1px 12px}
+body[data-page="pl-guide"] .scenario-gallery-thumbs{gap:7px;flex-wrap:nowrap;overflow-x:auto;justify-content:safe center}
+body[data-page="pl-guide"] .scenario-gallery-thumbs button{width:66px;height:48px;flex:0 0 auto}
+@media(max-width:900px){body[data-page="pl-guide"] .scenario-gallery-viewer{width:80%}}
+@media(max-width:600px){body[data-page="pl-guide"] .scenario-gallery-viewer{width:100%;margin:12px auto 17px}body[data-page="pl-guide"] .scenario-main-trailer img{max-height:none}body[data-page="pl-guide"] .scenario-gallery-thumbs button{width:62px;height:45px}}
 .pl-guide-info{padding:18px;margin:0 0 14px}
 .pl-guide-heading{font-size:1.12rem;margin:0 0 12px}
 .pl-guide-info .scenario-facts{margin:0;gap:7px}

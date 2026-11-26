@@ -11,12 +11,12 @@ PAGE = """<!doctype html>
 <meta name="referrer" content="no-referrer">
 <title>PL GUIDE｜聖バニラ教会</title>
 <link rel="stylesheet" href="/assets/css/style.css">
-<link rel="stylesheet" href="/assets/css/pl-guide.css">
+<link rel="stylesheet" href="/assets/css/pl-guide.css?v=2">
 </head><body data-page="pl-guide"><main id="content"><p>読み込み中…</p></main>
 <footer>聖バニラ教会</footer>
 <script src="/assets/js/pl-guide-crypto.js" defer></script>
-<script src="/assets/js/pl-guide.js" defer></script>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/pl-guide.js?v=2" defer></script>
+<script src="/assets/js/site.js?v=pl-guide-2" defer></script>
 </body></html>"""
 def build_pl_guides(root, out):
     seen = set()
