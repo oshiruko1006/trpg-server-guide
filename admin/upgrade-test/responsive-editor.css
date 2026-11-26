@@ -59,3 +59,34 @@
   #nc-root .vanilla-responsive-shell .vanilla-batch-file{max-width:100%;box-sizing:border-box}
   #nc-root .vanilla-responsive-shell .vanilla-batch-file input{max-width:100%}
 }
+
+/* Mobile compact header; keep native publish/delete/settings actions intact. */
+@media (max-width:767px), (pointer:coarse) and (max-width:799px) {
+  #nc-root .vanilla-responsive-header{padding:3px 8px 5px;gap:2px 5px}
+  #nc-root .vanilla-responsive-header>a:first-child{min-height:30px;padding:2px!important;gap:4px}
+  #nc-root .vanilla-responsive-header>a:first-child>div:first-child{font-size:19px}
+  #nc-root .vanilla-responsive-header>a:first-child>div:last-child>div:first-child{font-size:11px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #nc-root .vanilla-responsive-header>a:first-child>div:last-child>div:last-child{margin-top:2px;font-size:11px;line-height:1.2}
+  #nc-root .vanilla-responsive-header>div:last-child button{padding:2px!important;min-height:30px;height:auto;min-width:30px}
+  #nc-root .vanilla-responsive-header>div:last-child img,
+  #nc-root .vanilla-responsive-header>div:last-child button>svg{width:24px;height:24px;max-width:24px}
+  #nc-root .vanilla-responsive-header>div:nth-child(2){justify-content:flex-start;gap:3px 6px}
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div{gap:3px;min-height:0}
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:first-child button{
+    min-height:30px;height:30px;line-height:1.25;font-size:11px;padding-inline:8px!important;
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:first-child button[aria-haspopup],
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:first-child [class*="Dropdown"]>button{
+    padding-right:24px!important;
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:last-child>div{margin-right:0}
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:last-child button,
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:last-child a{
+    display:inline-flex;align-items:center;gap:3px;font-size:11px;line-height:1.2;
+    padding:4px!important;min-height:30px;white-space:nowrap;
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:last-child button span{margin-right:0}
+  /* The original toolbar stays mounted for the formatting handlers, but never
+     occupies space in a mobile field. Its fixed clone is mounted in body. */
+  #nc-root .vanilla-responsive-shell .vanilla-md-editor>.vanilla-md-toolbar{display:none!important}
+}
