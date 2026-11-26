@@ -90,3 +90,64 @@
      occupies space in a mobile field. Its fixed clone is mounted in body. */
   #nc-root .vanilla-responsive-shell .vanilla-md-editor>.vanilla-md-toolbar{display:none!important}
 }
+
+/* One-line mobile editor header: keep the status and native action handlers.
+   The long collection heading is visually hidden, not removed from the link. */
+@media (max-width:767px), (pointer:coarse) and (max-width:799px) {
+  #nc-root .vanilla-responsive-shell{padding-top:var(--vanilla-responsive-header-height,48px)!important}
+  #nc-root .vanilla-responsive-header{
+    grid-template-columns:auto minmax(0,1fr) auto;
+    grid-template-areas:"back actions meta";
+    padding:4px 6px;gap:4px;align-items:center;
+  }
+  #nc-root .vanilla-responsive-header>a:first-child{
+    min-height:36px;min-width:0;padding:0 2px!important;gap:3px;
+  }
+  #nc-root .vanilla-responsive-header>a:first-child>div:first-child{font-size:19px;margin-right:0!important}
+  #nc-root .vanilla-responsive-header>a:first-child>div:last-child>div:first-child{
+    position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+  }
+  #nc-root .vanilla-responsive-header>a:first-child>div:last-child>div:last-child{
+    margin:0;font-size:11px;line-height:1.3;white-space:nowrap;
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2){
+    display:flex!important;justify-content:flex-end;flex-wrap:wrap;gap:2px 4px;
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div{
+    gap:3px;flex-wrap:wrap;align-items:center;
+  }
+  /* react-aria-menubutton uses role=button, not necessarily a native button. */
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:first-child :is(button,[role="button"]){
+    box-sizing:border-box;margin:0!important;height:34px!important;min-height:34px!important;
+    line-height:1.2!important;font-size:11px!important;padding:0 7px!important;
+    display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;
+    min-width:0;
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:first-child :is([aria-haspopup],[class*="DropdownButton"],[class*="PublishButton"],[class*="PublishedToolbarButton"]){
+    padding-right:20px!important;
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:first-child :is([aria-haspopup],[class*="DropdownButton"],[class*="PublishButton"],[class*="PublishedToolbarButton"]):after{
+    top:50%!important;right:7px!important;transform:translateY(-50%);
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:last-child :is(button,a){
+    width:34px;height:34px;min-height:34px;padding:3px!important;justify-content:center;
+  }
+  #nc-root .vanilla-responsive-header>div:nth-child(2)>div:last-child :is(button,a)>span{
+    position:absolute!important;width:1px;height:1px;padding:0;margin:-1px!important;
+    overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+  }
+  #nc-root .vanilla-responsive-header>div:last-child :is(button,[role="button"]){
+    box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+    width:34px;height:34px;min-width:34px;min-height:34px;padding:3px!important;
+  }
+  #nc-root .vanilla-responsive-header>div:last-child :is(img,svg){width:24px;height:24px}
+  #nc-root .vanilla-responsive-header>div:last-child [class*="SettingsWrapper"]>a{
+    max-width:42px;padding:2px;font-size:10px;
+  }
+  /* The status link and the account remain reachable on exceptionally narrow screens. */
+  @media(max-width:300px){
+    #nc-root .vanilla-responsive-header{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"back meta" "actions actions"}
+    #nc-root .vanilla-responsive-header>div:nth-child(2){justify-content:flex-start}
+  }
+}
